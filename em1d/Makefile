@@ -1,10 +1,14 @@
 #====================================================================================================
 # Makefile test
 #====================================================================================================
-bin	= em1d.exe
-sources	= $(shell ls *.cpp)
-headers = $(shell ls *.hpp)
+bin	 = em1d.exe
+builddir = ./build
+srcdir   = ./src
+
+sources	= $(shell ls $(srcdir)/*.cpp)
+headers = $(shell ls $(srcdir)/*.hpp)
 objects	= $(sources:.cpp=.o)
+objects := $(subst $(srcdir),$(builddir),$(objects))
 
 # other variables
 cc	:=  g++
@@ -22,7 +26,8 @@ $(bin):	$(objects)
 #####################################################################################################
 # If any source file is more recent than its object file, or if any header has changed,
 # it is compiled
-%.o: %.cpp $(headers) 
+# %.o: %.cpp $(headers)
+$(objects): $(sources) $(headers) 
 	@echo "COMPILING: $(cc) $(cflags) $(opt) $<"
 	@$(cc) -c $(cflags) $(opt) $< -o $@
 
@@ -45,7 +50,7 @@ prof:
 c:clean
 clean:
 	@echo "Removing object files"
-	@( /bin/rm -f *.o )
+	@( /bin/rm -f $(objects))
 	
 .PHONY: cleanbin cb
 cb:cleanbin
@@ -53,15 +58,9 @@ cleanbin:
 	@echo "Removing executables"
 	@( /bin/rm -f *.exe)
 	
-.PHONY: cleandat cd
-cd:cleandat
-cleandat:
-	@echo "Removing data files"
-	@( /bin/rm -f *.dat)
-	
 .PHONY: cleanall ca
 ca:cleanall
-cleanall: clean cleanbin cleandat
+cleanall: clean cleanbin
 
 ####################################################################################################
 .PHONY: doc
