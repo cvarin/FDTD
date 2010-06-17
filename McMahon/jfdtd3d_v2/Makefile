@@ -28,10 +28,10 @@ OUTPATH=./output/
 # OBJECT FILES FOR THIS PROGRAM
 OBJS = $(SRCPATH)jfdtd3d.o $(SRCPATH)global.o $(SRCPATH)structure.o $(JSCIPATH)jio.o $(JSCIPATH)jmaterials.o $(JSCIPATH)jconsts.o $(JSCIPATH)jmath_mesh.o $(JSCIPATH)jmath_vector.o 
 
-all: jfdtd3d filecombine 3dto2d
+all: jfdtd3d.exe filecombine.exe 3dto2d.exe
 
-jfdtd3d: jfdtd3d.o global.o structure.o
-	$(CCL) $(OBJS) -o jfdtd3d
+jfdtd3d.exe: jfdtd3d.o global.o structure.o
+	$(CCL) $(OBJS) -o jfdtd3d.exe
 
 jfdtd3d.o: 
 	$(CC) -I$(JSCIPATH) -I$(SRCPATH) $(CFLAGS) $(SRCPATH)jfdtd3d.cpp
@@ -45,22 +45,27 @@ structure.o:
 	$(CC) -I$(JSCIPATH) $(CFLAGS) structure.cpp
 	mv structure.o $(SRCPATH)structure.o
 
-filecombine: filecombine.o
-	$(CCL) $(SRCPATH)filecombine.o -o filecombine
+filecombine.exe: filecombine.o
+	$(CCL) $(SRCPATH)filecombine.o -o filecombine.exe
 
 filecombine.o:
 	$(CC) $(CFLAGS) $(SRCPATH)filecombine.cpp
 	mv filecombine.o $(SRCPATH)filecombine.o
 
-3dto2d: 3dto2d.o
-	$(CCL) $(SRCPATH)3dto2d.o -o 3dto2d
+3dto2d.exe: 3dto2d.o
+	$(CCL) $(SRCPATH)3dto2d.o -o 3dto2d.exe
 
 3dto2d.o:
 	$(CC) $(CFLAGS) $(SRCPATH)3dto2d.cpp
 	mv 3dto2d.o $(SRCPATH)3dto2d.o
 
 clean:
-	\rm $(SRCPATH)*.o *~ jfdtd3d filecombine 3dto2d
+	\rm $(SRCPATH)*.o
+	
+clean_bin:
+	\rm *.exe
+	
+clean_all: clean clean_bin
 
 clean_results:
 	\rm $(OUTPATH)*
