@@ -10,14 +10,14 @@ void write_field_to_file(const int n, const int ncell, const double *ex,
 int main()
 {   
      /************* Declarations **********************************************/
-     const int    ncell = 200;     // Number of cells
+     const int    ncell = 400;     // Number of cells
      const double dx = 0.01,       // Cell size [m]
                   dt = dx/(2*co);  // Time step [s]
-     int          NSTEPS = 3000;   // Number of time steps
+     int          NSTEPS = 1000;   // Number of time steps
      int          screenout = NSTEPS/10;  
-     int          fileout  = NSTEPS/10;  
+     int          fileout  = 10;  
 
-     const int    kstart  = 100;  // Boundary between mediums 1 and 2
+     const int    kstart  = (int)ncell/2;  // Boundary between mediums 1 and 2
      double       epsilon = 4.0;  /* Relative dielectric constant of medium 2 */
 
      const double t0 = 80.0,      // Center of the incident pulse
