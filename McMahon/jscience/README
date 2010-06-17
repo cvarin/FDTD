@@ -1,0 +1,49 @@
+===============================================================================
+===============================================================================
+
+   NAME: JSCIENCE: The general scientific library for all jcodes.
+
+   Copyright (c) 2006 - 2008 Jeffrey M. McMahon
+
+   VERSION: 1.00
+
+   DATE: 9/29/2008
+
+   DESCRIPTON: This set of codes contain important routines for all jcodes.
+
+===============================================================================
+===============================================================================
+
+Copyright (c)  2006 - 2008  Jeffrey M. McMahon.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+Texts.  A copy of the license is included in the section entitled "GNU
+Free Documentation License".
+
+
+I. SYSTEM REQUIREMENTS
+II. INSTALLING AND COMPILING
+
+
+
+
+=========================================================
+I. SYSTEM REQUIREMENTS 
+=========================================================
+
+- c++ compiler (g++, icc, etc)
+
+
+=========================================================
+II. INSTALLING AND COMPILING
+=========================================================
+
+Modify the Makefile for your particular system (compiler, linker, etc), and run the following commands:
+
+tar -xvf jscience.tar
+make clean
+make 
+
+

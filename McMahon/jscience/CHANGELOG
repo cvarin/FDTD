@@ -1,0 +1,55 @@
+===============================================================================
+===============================================================================
+
+   NAME: JSCIENCE: The general scientific library for all jcodes.
+
+   Copyright (c) 2006 - 2008 Jeffrey M. McMahon
+
+   VERSION: 1.10
+
+   DATE: 1/13/2009
+
+   DESCRIPTON: This set of codes contain important routines for all jcodes.
+
+===============================================================================
+===============================================================================
+
+Copyright (c)  2006 - 2008  Jeffrey M. McMahon.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+Texts.  A copy of the license is included in the section entitled "GNU
+Free Documentation License".
+
+
+=========================================================
+VERSION: 1.00
+=========================================================
+
+* Initial launching of code, including:
+
+- jconsts.h/.cpp : Mathematical and physical constants
+- jmaterials.h/.cpp : Drude pluse 2 Lorentz pole dielectric model
+- jmath_basic.h/.cpp : Number comparison, machine accuracy, basic things
+- jmath_matrix.h/.cpp : Structures and classes for storing matricex
+- jmath_mesh.h/.cpp : Structures and classes for meshes
+- jmath_special.h/.cpp : Special function (Bessel, etc) calculation
+- jmath_vector.h/.cpp : Structures and classes for vectors (Linear Algebra) and subroutines for vector - vector operations
+
+
+=========================================================
+VERSION: 1.1
+=========================================================
+
+! many changes from 1.00 were not tracked, but some highlights are:
+
+Files added:
+
+- jio.h/.cpp : Some file input / output manipulation
+- jmath_geometry.h/.cpp : Geometric structures (triangles, etc) and classes, and subroutines to calculate properties of geometrical shapes (e.g. simplex coordinates of triangles and tetrahedra)
+- jplanewave.h/.cpp : Plane waves used in JFEM3D. 
+
+Files modified:
+
+- jmath_vector.h/.cpp : complex<double> vector class added
