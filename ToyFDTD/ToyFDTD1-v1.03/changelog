@@ -1,0 +1,87 @@
+changelog file for ToyFDTD1 
+
+1 December, 1999  Laurie E. Miller  lemiller@borg.umn.edu
+
+	* ToyFDTD1-v1.03.  Updating contact and web information.  Also note
+	the name has changed from ToyFDTD to ToyFDTD1.  ToyFDTD is now the 
+	name of this family of codes: ToyFDTD1, ToyFDTD2, ToyFDTD3...
+
+	* Tarball contains ToyFDTD1.c, ToyFDTD1.f90, README, Makefile, 
+	chengGbry.cmap, changelog, gpl.txt
+	
+12 August, 1999  Laurie E. Miller  lemiller@lcse.umn.edu
+	
+	* ToyFDTD-1.02.  Addition of F90 source code, and some tweaks to the C.
+	
+	* Tarball contains ToyFDTD.c, ToyFDTD.f90, README, Makefile, 
+	chengGbry.cmap, changelog, gpl.txt
+
+	* Changes to C source code from version 1.0: The changes here are not
+ 	huge, consisting of: 
+	1. Corrections to bloopers resulting from sleep 
+	   deprivation, and 
+	2. Tweaks that help the C and FORTRAN versions to be as identical
+	   as possible.  Here is a listing of the changes to the C code: 
+
+	* There is some change in the naming convention of the files, since
+ 	there are now C and FORTRAN versions of the 3D code.
+
+	* The URLs and email addresses have changed, though the old ones 
+        will still work just fine.
+
+	* The global constants ONE, TWO, etc. have been removed -- archaic 
+        holdover on my part.  The constant TWENTY_FIVE is now called
+        CELLS_PER_WAVELENGTH, since that's what it's used for.  
+
+	* The global constants MU_0, EPSILON_0, and PI have been defined
+        explicitly.  That way, you know what you're getting, and the C
+        and FORTRAN versions will match.
+
+	* The variables dtmu and dteps are no longer defined since they are
+        not used for anything.  
+
+	* Previously, the 3D scaled output was scaled not from 0 to 255, as 
+	the comments said, but from -1 to 255.  On all the volume visualization
+        tools I've worked with, the -1 is simply wrapped to the 255 value
+        which can be a nice feature since it shows you precisely where the
+        most negative value is.  However, it might cause problems on tools
+        I haven't worked with, so now the output is scaled from 0 through
+        254.  This gives an equal range of values above and below 127,
+        which is held to be data zero.  The colormap that is included in the 
+        tar file with this code still goes from 0 to 255, but 254 and 255 are 
+        assigned the same rgb values.  
+
+	* Making sure that the last data computed gets output is handled
+        differently.  In the 1.0 code the comments said that you should set 
+        MAXIMUM_ITERATION to some integer multiple of 
+        PLOT_MODULUS plus one.  The plus one should have been left off
+        -- this would be one of those sleep-deprivation things.  ;>  In this 
+        code the last timestep is output whether it's an integer multiple of
+        PLOT_MODULUS or not, so you just need to remember the last
+        3D output file may come after an interval shorter than the interval
+        separating previous output files.  
+
+	* The input stimulus is modified slightly.  Both the 1.0 stimulus 
+	function and the 1.02 stimulus function produce a somewhat aphysical
+        approximation to a plane wave insertion at one end of the mesh.
+        And both produce animations that look the same using the type
+        of scaled 3D output implemented here.   But which is closer to truly
+        physical depends on what physical setup you imagine you're using
+        for inserting the stimulus into the guide.  I changed it because the 
+        1.02 version of the stimulus is probably closer to what most people
+        are thinking of when they imagine a simplified plane wave inserted
+        from the end of the mesh.  
+
+	* "Source" now refers to the C or FORTRAN source code, and "stimulus"
+        refers to the input waveform of the simulation.  Previously both
+        were referred to as "source".  OK, so that's nitpicky, but I'm trying
+ 	to be helpful.  :)
+	
+
+12 April, 1999  Laurie E. Miller  lemiller@lcse.umn.edu
+	
+	* First release. 
+	
+	* Tarball contains ToyFDTD.c, README, Makefile, chengGbry.cmap
+
+	

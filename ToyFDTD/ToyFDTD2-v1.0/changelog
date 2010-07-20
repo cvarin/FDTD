@@ -1,0 +1,13 @@
+changelog file for ToyFDTD2 
+
+4 December, 1999  Laurie E. Miller  lemiller@borg.umn.edu
+	
+	* First release: ToyFDTD2-v1.0 
+	
+	* Tarball contains ToyFDTD2.c, README, Makefile, chengGbry.cmap,
+	changelog, gpl.txt
+
+	* Modified from ToyFDTD1-v1.03 by implementing an alternate
+	memory allocation scheme.  
+
+	

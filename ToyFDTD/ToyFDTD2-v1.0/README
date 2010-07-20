@@ -1,0 +1,255 @@
+README file for ToyFDTD2 v1.0
+ Copyright (C) 1998,1999 Laurie E. Miller, Paul Hayes, Matthew O'Keefe
+ Copyright (C) 1999 John Schneider
+
+With this README file you should also have received
+
+gpl.txt		A copy of the GNU General Public License
+
+changelog       Text file listing change history since v1.0
+
+ToyFDTD2.c	A listing of the ToyFDTD2 source code in C
+
+Makefile   	The makefile for compiling ToyFDTD2
+
+chengGbry.cmap	A useful colormap for viewing the results of ToyFDTD2 in 
+		animabob or viz. 
+
+
+/////////////////////////////////////////////////////////////////////////////
+Regarding ToyFDTD2, version 1.0:
+ Copyright (C) 1998,1999 Laurie E. Miller, Paul Hayes, Matthew O'Keefe 
+ Copyright (C) 1999 John Schneider
+
+ This program is free software; you can redistribute it and/or 
+     modify it under the terms of the GNU General Public License 
+     as published by the Free Software Foundation; either version 2
+     of the License, or any later version, with the following conditions
+     attached in addition to any and all conditions of the GNU
+     General Public License:
+     When reporting or displaying any results or animations created
+     using this code or modification of this code, make the appropriate
+     citation referencing ToyFDTD2 by name and including the version
+     number.  
+
+ This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty 
+     of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+     See the GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+     along with this program; if not, or if you cannot read your copy,
+     write to the Free Software Foundation, Inc.
+     59 Temple Place, Suite 330, Boston, MA  
+     02111-1307  USA
+
+/////////////////////////////////////////////////////////////////////////////
+
+ToyFDTD2-v1.0 as delivered uses 1.2 Mbytes of main memory to run and generates
+201 output files of 25 kbytes each for about 5 Mbytes total output.  If this
+will choke your machine, you should alter the global constants at the beginning
+of the code as a preventative measure.  However, this is a very tiny mesh for
+3D FDTD, so if it's going to choke your machine, you'll be needing to find 
+another if you're going to FDTD much.  
+
+/////////////////////////////////////////////////////////////////////////////
+
+What to do with the source now that you've got it:
+(The suggested commands in these notes are Unix commands.  If you're using
+ a different operating system, you'll want to use your system's equivalent
+ commands.)
+
+If you're reading this, I assume you've
+
+1. downloaded the tar file: ToyFDTD2-v1.0.tar.gz or ToyFDTD2-v1.0.tar
+
+2. if you chose ToyFDTD2-v1.0.tar.gz, un-gzipped it with a command like: 
+
+	gunzip ToyFDTD2-v1.0.tar.gz
+
+     for more info on gzip compression/uncompression see the ToyFAQ at
+	http://www.borg.umn.edu/toyfdtd/Toyfaq.html#targz
+
+3. untarred the tar file with a command like: 
+
+	tar xvf ToyFDTD2-v1.0.tar
+
+4. changed to the new directory just created: cd ToyFDTD2-v1.0
+
+Unless of course you're reading this on the web page, in which case you should
+go and do steps 1-4, and then
+
+5. compile the source code  -- type the command: 
+
+	make ToyFDTD2c
+
+6. run that baby: you can either
+	a. just type the name of the executable: 
+
+		ToyFDTD2c
+
+	   in which case the progress notes during the course of the simulation
+	   will appear on the screen, or
+
+	b. use a command like: 
+
+		ToyFDTD2c >&! c_runlog &
+
+	   in which case all the progress notes will be written to a file
+	   named c_runlog or which you can view a screenful at a 
+	   time using the command: 
+
+		more c_runlog
+
+/////////////////////////////////////////////////////////////////////////////
+
+OK, now you've got a whole bunch of files named somethingorother.bob in your 
+directory.  Each of these files is a string of binary data bytes.  You probably want 
+to look at them somehow.  If you have a volume visualization tool you know 
+and like, you should use that one, though you may need to alter the output 
+portion of the ToyFDTD2 source code to suit your tool.
+
+
+Here's another way:
+
+On the ToyFDTD R&R page, 
+
+	http://www.borg.umn.edu/toyfdtd/RandR.html
+
+you will see a link to BoB/AnimaBoB.  It's free.  Download yourself a copy 
+if you haven't already got one and get it running. 
+
+Next check those progress notes from your run; you'll see a command like:
+
+	bob -cmap chengGbry.cmap -s 133x21x9 *.bob
+
+at the beginning and at the end of the notes.  This activates bob with the
+colormap included in the tar file and feeds it the appropriate dimensions
+of the simulation mesh.  If you change the dimensions of the waveguide,
+the progress notes will show the new correct bob command for the different-
+sized mesh.  This is one good reason to keep your progress notes in a runlog
+file.  Once bob has fired up and loaded, make sure the x, y, and z dimensions
+are set to maximum, and then just hit "start" to see the files play.
+
+
+Or, here's another way:
+
+On the ToyFDTD R&R page, 
+
+	http://www.borg.umn.edu/toyfdtd/RandR.html
+
+you will see a link to Viz.  It's also free.  Download yourself a copy and get
+it running.  
+
+Next check those progress notes from your run; you'll see a command like:
+
+	viz ToyFDTD2c.viz
+
+at the beginning and at the end of the notes.  This activates viz with the
+colormap included in the tar file and feeds it the appropriate dimensions
+of the simulation mesh.  If you change the dimensions of the waveguide, the 
+.viz file will update accordingly when you run the new simulation.
+
+
+Yet another way:  
+
+The really nice volume visualization tools like AnimaBoB and Viz are what
+you want if you've got a suitable platform to run them on.  If you need
+something less resource-intensive, there are methods for outputting a 2D
+slice from each timestep of your simulation and then viewing those slices as
+a sequence of 2D images.  This isn't as nice, since you can't surf around your
+data at will the way you can with the volume viewers, but it is simpler and 
+fairly platform-independent.  An excellent way of handling this was 
+developed by John B. Schneider, Patrick J. Flynn, and Kurt L. Shlager,
+and can be found at
+
+     http://www.eecs.wsu.edu/~schneidj/Animations/
+
+Their site includes an excellent paper on the topic as well as free code.
+
+/////////////////////////////////////////////////////////////////////////////
+
+Playing with your ToyFDTD2:
+
+You can vary the simulation quite a bit and see different things just by
+changing the #define statements at the beginning.  With these you can alter
+the length, width and height of the waveguide, the frequency of the stimulus,
+the number of timesteps it runs, and how often it writes data to an output
+file.  I set this last control, (PLOT_MODULUS) to a fairly high number, which
+means it doesn't output very often.  This is to keep the amount of data
+choking your system low, but it also makes for a jerky simulation.  You
+may want to set it to a smaller number to smooth things out a bit so the
+results look nice when you view the data files with your volume visualization
+tool of choice.  
+
+You can of course alter the code in other ways to make different simulations.
+That's what it's there for.  Further suggestions on playing with it will 
+start to appear on the ToyFDTD page at
+
+	http://www.borg.umn.edu/toyfdtd/
+
+when I get caught up on my homework... and when my hand fatigue gets better.
+
+/////////////////////////////////////////////////////////////////////////////
+
+About the Makefile and make commands:
+
+If you type: 
+
+	make cleandata 
+
+in your ToyFDTD2 directory, it will remove all the data files (all files 
+ending in .bob or .viz and any runlog files).  If you want to keep
+your runlog file to keep track of simulations you've done, rename it something
+else first:
+
+	mv c_runlog whatever
+
+If you type:
+
+	make clean
+
+in your ToyFDTD2 directory, it will remove all the object and executable files,
+file copies ending in ~, and core files from any core dumps you've managed 
+to generate. 
+
+
+If you type:
+
+	make testc
+
+in your ToyFDTD2 directory, it will compile the C code, remove any 
+c_runlog file present, and execute ToyFDTD2c while running a time
+command and directing the progress notes to a c_runlog file.  The results
+of the time command will output to the screen when the run completes.
+
+
+If you view the Makefile, you'll see a bunch of lines starting with CFLAGS.
+All of them are commented out (by a # at the beginning of
+the line) except the last  CFLAGS.  Only one CFLAGS line should ever be 
+uncommented at once.  The last in each set, 
+
+	CFLAGS = -Xcpluscomm -g
+
+is what you want to use if you're going to run a debugger on the executable.
+The others (different level of compiler optimization) are there for your 
+convenience.  If you don't know what they are, you should talk to a 
+friendly neighborhood compiler guru before you try messing with them.
+
+/////////////////////////////////////////////////////////////////////////////
+
+ Contacting the perpetrators:
+
+ Laurie E. Miller, Paul Hayes, Matthew O'Keefe 
+
+ Department of Electrical and Computer Engineering
+      200 Union Street S. E.
+      Minneapolis, MN 55455
+
+ lemiller@borg.umn.edu
+ 
+ http://www.borg.umn.edu/toyfdtd/
+ http://www.borg.umn.edu/toyfdtd/ToyFDTD2.html
+ http://www.toyfdtd.org/
+
+/////////////////////////////////////////////////////////////////////////////
