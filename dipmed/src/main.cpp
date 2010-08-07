@@ -7,22 +7,9 @@
 int main(int argc, char **argv)
 {   
      IO io(argc,argv);
-     
-     /************* Declarations **********************************************/
-     int          screenout = io.nsteps/10;
-     int          fileout  = 10;  
 
      /************* Medium ****************************************************/
-     const int    kstart  = io.m2start;  
-     const int    kstop   = io.m2stop; 
      double       epsilon = 4.0;  /* Relative dielectric constant of medium 2 */
-
-     /************* Source ****************************************************/
-     const double t0 = 80.0,      // Center of the incident pulse
-                  spread = 40.0,  // Width of the incident pulse
-                  freq_in = 2.0e9;// Signal Frequency [Hz]
-     double       carrier = 0.0,  // Signal carrier
-                  enveloppe = 0.0;// Signal enveloppe
 
      /************* Boundary **************************************************/
      double    ex_low_1  = 0.0,// Temp variables for
@@ -43,7 +30,7 @@ int main(int argc, char **argv)
           
      /*************************************************************************/
      // Initialize the medium 2        
-     for(int k=kstart; k < kstop; k++) cb[k] = 1.0/epsilon;
+     for(int k=io.m2start; k < io.m2stop; k++) cb[k] = 1.0/epsilon;
 
      /*************************************************************************/
      // FDTD loop
@@ -59,8 +46,8 @@ int main(int argc, char **argv)
           for (int k=1; k < io.ncell; k++) ex[k] += cb[k]*0.5*(hy[k-1] - hy[k]); 
           
           // Put a Gaussian pulse in the middle
-          carrier = sin(2.0*Pi*freq_in*io.dt*T);
-          enveloppe = exp(-0.5*pow((t0-T)/spread,2.0));
+          double carrier = sin(2.0*Pi*io.freq_in*io.dt*T);
+          double enveloppe = exp(-0.5*pow((io.t0-T)/io.spread,2.0));
           ex[5] += carrier*enveloppe;
           
           // Absorbing boundary conditions for Ex
@@ -76,11 +63,11 @@ int main(int argc, char **argv)
           for(int k=0; k < io.ncell-1; k++) hy[k] += 0.5*(ex[k] - ex[k+1]); 
           
           // Outputs the progress of the calculation on screen
-          if(n%screenout==0) printf("Progress = %d/%d\n",n,io.nsteps);
+          if(n%io.screenout==0) printf("Progress = %d/%d\n",n,io.nsteps);
           
           /********************************************************************/
           // Writing fields to file                
-          if(n%fileout==0) io.write_field_to_file(n,ex,hy);
+          if(n%io.fileout==0) io.write_field_to_file(n,ex,hy);
           
           /********************************************************************/
           // Flush output buffers

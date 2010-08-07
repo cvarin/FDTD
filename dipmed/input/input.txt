@@ -7,3 +7,6 @@ m2stop = 250
 dx = 0.01
 time_scale = 0.5
 
+t0 = 80.0
+spread = 40.0
+freq_in = 2.0e9

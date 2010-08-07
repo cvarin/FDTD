@@ -18,8 +18,15 @@ struct IO
           double time_scale;
           double dt;
           
+          double t0;
+          double spread;
+          double freq_in;
+          
           std::string input_file;
           std::string output_dir;
+          
+          int screenout;
+          int fileout;
           
           /******** Member functions ******************************************/
           IO(int argc, char **argv);
