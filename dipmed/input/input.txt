@@ -3,3 +3,7 @@ step = 10
 ncell = 400
 m2start = 200
 m2stop = 400
+
+dx = 0.01
+time_scale = 0.5
+
