@@ -1,71 +1,55 @@
-#====================================================================================================
-# Makefile test
-#====================================================================================================
-bin	 = dipmed1D.exe
-builddir = ./build
-srcdir   = ./src
+################################################################################
+BIN  = dipmed1D.exe
+BUILD_DIR = ./build
+DATA_DIR  = ./output
+SRC_DIR   = ./src
+SRC_EXT = .cpp
+HEAD_EXT = .hpp
 
-sources	= $(shell ls $(srcdir)/*.cpp)
-headers = $(shell ls $(srcdir)/*.hpp)
-objects	= $(sources:.cpp=.o)
-objects := $(subst $(srcdir),$(builddir),$(objects))
+################### Fetch names ################################################
+VPATH = $(SRC_DIR)
+SRC   = $(foreach DIR, $(SRC_DIR), $(wildcard $(DIR)/*$(SRC_EXT)))
+HEADS = $(foreach DIR, $(SRC_DIR), $(wildcard $(DIR)/*$(HEAD_EXT)))
+INCLUDES = $(addprefix -I./, $(SRC_DIR) .)
+xnames = $(notdir $(SRC))
+NAMES = $(subst $(SRC_EXT),,$(xnames))
+OBJS  = $(addsuffix .o, $(NAMES))
+LINKS = $(addprefix $(BUILD_DIR)/,$(OBJS))
+DATA  = $(wildcard $(DATA_DIR)/*)
 
-# other variables
-cc	:=  g++
-cflags	:=  -Wall
-lib	:=  -lm
-opt	:=  -O3
+################### Commands ###################################################
+CPP   = g++
+# FLAGS = -fPIC -O3 -Wall
+FLAGS = -O3
+RM    = rm -fr
 
-#####################################################################################################
-# By default, build bin.
-# If any object is more recent than the program, link.
-$(bin):	$(objects)
-	@echo "LINKING:  $(bin)"
-	@$(cc) $(cflags) $(lib) $(opt) $(objects) -o $(bin)
+################### Compiling and linking ######################################
+all: $(BIN)
 
-#####################################################################################################
-# If any source file is more recent than its object file, or if any header has changed,
-# it is compiled
-# %.o: %.cpp $(headers)
-$(objects): $(sources) $(headers) 
-	@echo "COMPILING: $(cc) $(cflags) $(opt) $<"
-	@$(cc) -c $(cflags) $(opt) $< -o $@
+$(BIN): $(LINKS) $(HEADS)
+	@echo "LINKING: $(CPP) $(OBJS) -o $(BIN)"
+	@$(CPP) $(LINKS) $(INCLUDES) -o $(BIN)
 
-#####################################################################################################
-# Use the .PHONY declaration went you want to prevent the target ("debug" here) from being
-# interpreted as the name of a file. Here, if there was a file named "debug" in the directory,
-# make would not do anything because there are no dependencies (at the right of the colon), so
-# the target is always up to date!
-.PHONY:	debug
-debug:
-	make -e opt="-g"
+$(BUILD_DIR)/%.o: %$(SRC_EXT) $(HEADS)
+	@echo "COMPILING: $(CPP) $(FLAGS) -c $< -o $@"
+	@$(CPP) $(FLAGS) $(INCLUDES) -c $< -o $@
 
-#####################################################################################################
-.PHONY:	prof
-prof:
-	make -e opt="-pg"
+################### Run ########################################################
+.PHONY: r run
+r: run
+run: $(BIN)
+	./$(BIN)
 
-#####################################################################################################
+################### Clean ######################################################
 .PHONY: clean c
-c:clean
+c: clean
 clean:
-	@echo "Removing object files"
-	@( /bin/rm -f $(objects))
-	
-.PHONY: cleanbin cb
-cb:cleanbin
-cleanbin:
-	@echo "Removing executables"
-	@( /bin/rm -f *.exe)
-	
-.PHONY: cleanall ca
-ca:cleanall
-cleanall: clean cleanbin
+	${RM} $(LINKS) $(BIN)
 
-####################################################################################################
-.PHONY: doc
-doc: $(sources)
-	@echo "Building documentation"
-	doxygen doc/Doxyfile
+.PHONY: clean_data cd
+cd: clean_data
+clean_data:
+	$(RM) $(DATA)
 
-#####################################################################################################
+################### END of FILE ################################################
+

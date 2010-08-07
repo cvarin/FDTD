@@ -3,12 +3,17 @@
 #include <iostream>
 
 #include "constants.hpp"
+#include "IO.hpp"
 
 void write_field_to_file(const int n, const int ncell, const double *ex, 
                           const double *hy);
 
-int main()
+/****************** Main ******************************************************/
+int main(int argc, char **argv)
 {   
+     const char *outputdir = "./output/";
+     IO(argc,argv);
+     
      /************* Declarations **********************************************/
      const int    ncell = 400;     // Number of cells
      const double dx = 0.01,       // Cell size [m]
@@ -17,7 +22,12 @@ int main()
      int          screenout = NSTEPS/10;  
      int          fileout  = 10;  
 
-     const int    kstart  = (int)ncell/2;  // Boundary between mediums 1 and 2
+     const int    thickness = 50;
+     const int    center  = (int)ncell/2;  
+     const int    kstart  = center;  
+     const int    kstop   = ncell; 
+//      const int    kstart  = center - (int)center/2;  
+//      const int    kstop   = center + (int)center/2; 
      double       epsilon = 4.0;  /* Relative dielectric constant of medium 2 */
 
      const double t0 = 80.0,      // Center of the incident pulse
@@ -48,7 +58,7 @@ int main()
           
      /*************************************************************************/
      // Initialize the medium 2        
-     for(int k=kstart; k < ncell; k++) cb[k] = 1.0/epsilon;
+     for(int k=kstart; k < kstop; k++) cb[k] = 1.0/epsilon;
 
      /*************************************************************************/
      // FDTD loop
