@@ -13,12 +13,8 @@ int main(int argc, char **argv)
      int          fileout  = 10;  
 
      /************* Medium ****************************************************/
-     const int    thickness = 50;
-     const int    center  = (int)io.ncell/2;  
-     const int    kstart  = center;  
-     const int    kstop   = io.ncell; 
-//      const int    kstart  = center - (int)center/2;  
-//      const int    kstop   = center + (int)center/2; 
+     const int    kstart  = io.m2start;  
+     const int    kstop   = io.m2stop; 
      double       epsilon = 4.0;  /* Relative dielectric constant of medium 2 */
 
      /************* Source ****************************************************/
@@ -32,9 +28,7 @@ int main(int argc, char **argv)
      double    ex_low_1  = 0.0,// Temp variables for
                ex_low_2  = 0.0,// absorbing boundaries
                ex_high_1 = 0.0,
-               ex_high_2 = 0.0,
-               ex_high_3 = 0.0, 
-               ex_high_4 = 0.0;
+               ex_high_2 = 0.0;
 
      /*************************************************************************/
      // Initialize the E field and all cells to free space
@@ -74,9 +68,7 @@ int main(int argc, char **argv)
           ex_low_2  = ex_low_1;
           ex_low_1  = ex[1];
           
-          ex[io.ncell-1]  = ex_high_4;
-          ex_high_4 = ex_high_3;
-          ex_high_3 = ex_high_2;
+          ex[io.ncell-1] = ex_high_2;
           ex_high_2 = ex_high_1;
           ex_high_1 = ex[io.ncell-2];
           

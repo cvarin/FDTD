@@ -1,8 +1,8 @@
-nsteps = 1000
+nsteps = 2000
 step = 10
 ncell = 400
-m2start = 200
-m2stop = 400
+m2start = 150
+m2stop = 250
 
 dx = 0.01
 time_scale = 0.5
