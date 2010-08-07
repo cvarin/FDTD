@@ -1,0 +1,5 @@
+nsteps = 1000
+step = 10
+ncell = 400
+m2start = 200
+m2stop = 400

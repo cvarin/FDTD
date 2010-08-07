@@ -16,10 +16,23 @@ else:
 
 #########################################################################################
 # Simulation parameters
-nsteps = 1000
-step = 10
-ncell = 400
-m2start  = int(ncell/2)
+import os
+class read_input_file: 
+     def __init__(self, filename):
+          if not os.path.exists(filename): 
+               print "Can't find " + filename
+               exit()
+          infile = open(filename)
+          for line in infile:
+               array = line.split()
+               if not array[0].find("nsteps"): self.nsteps = int(array[2])
+               if not array[0].find("step"): self.step = int(array[2])
+               if not array[0].find("ncell"): self.ncell = int(array[2])
+               if not array[0].find("m2start"): self.m2start = int(array[2])
+               if not array[0].find("m2stop"): self.m2stop = int(array[2])
+          infile.close()
+
+f = read_input_file(argv[1] + "input.txt")
 
 #########################################################################################
 # The figure is created with frame 0
@@ -31,14 +44,14 @@ d = loadtxt(filename(0))
 curve1 = plot(d[:,0],d[:,1],label="Ex")
 curve2 = plot(d[:,0],d[:,2],label="Hy")
 legend()
-axvspan(m2start,ncell,facecolor='0.5', alpha=0.5)
-axis([0, ncell, -1.5, 1.5])
+axvspan(f.m2start,f.m2stop,facecolor='0.5', alpha=0.5)
+axis([0, f.ncell, -1.5, 1.5])
 
 #########################################################################################
 # Animation widgets
 axcolor = 'lightgoldenrodyellow'
 axdef  = axes([0.15, 0.02, 0.7, 0.02], axisbg=axcolor)
-progress = Slider(axdef,'', 0, nsteps, valinit=0)
+progress = Slider(axdef,'', 0, f.nsteps, valinit=0)
 
 resetax = axes([0.01, 0.02, 0.05, 0.1])
 playbutton = Button(resetax, '>||', color=axcolor, hovercolor='0.975')
@@ -61,11 +74,11 @@ def updatefig(*args):
   #######################################################################################
   # Update n
   playbutton.on_clicked(play_pause)
-  if(run): n += step
+  if(run): n += f.step
   else:
     val = int(progress.val)
     n = val - val%10
-  if(n <= nsteps): 
+  if(n <= f.nsteps): 
     progress.set_val(n)
     return True
   else: return False
