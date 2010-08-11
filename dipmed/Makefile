@@ -19,8 +19,8 @@ DATA  = $(wildcard $(DATA_DIR)/*)
 
 ################### Commands ###################################################
 CPP   = g++
-# FLAGS = -fPIC -O3 -Wall
-FLAGS = -O3
+FLAGS = -fPIC -O3 -Wall
+# FLAGS = -O3
 RM    = rm -fr
 
 ################### Compiling and linking ######################################

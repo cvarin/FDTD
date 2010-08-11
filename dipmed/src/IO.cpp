@@ -1,6 +1,7 @@
 
 #include "IO.hpp"
 
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
@@ -67,19 +68,24 @@ void IO::read_input_file()
      
      /************* Read the file *********************************************/
      printf("Reading %s\n",this->input_file.c_str());
-     int nparams = 10;
+     int nparams = 11;
      int results[nparams];
-     results[0] = fscanf(f,"nsteps = %i\n", &this->nsteps);
-     results[1] = fscanf(f,"step = %i\n", &this->step);
-     results[2] = fscanf(f,"ncell = %i\n", &this->ncell);
-     results[3] = fscanf(f,"m2start = %i\n", &this->m2start);
-     results[4] = fscanf(f,"m2stop = %i\n", &this->m2stop);
-     results[5] = fscanf(f,"dx = %lf\n", &this->dx);
-     results[6] = fscanf(f,"time_scale = %lf\n", &this->time_scale);
+     
+     int i = 0;
+     results[i++] = fscanf(f,"nsteps = %i\n", &this->nsteps);
+     if(this->nsteps <= 1) this->nsteps = 2;
+     results[i++] = fscanf(f,"step = %i\n", &this->step);
+     results[i++] = fscanf(f,"ncell = %i\n", &this->ncell);
+     results[i++] = fscanf(f,"m2start = %i\n", &this->m2start);
+     results[i++] = fscanf(f,"m2stop = %i\n", &this->m2stop);
+     results[i++] = fscanf(f,"epsilon = %lf\n", &this->epsilon);
+     results[i++] = fscanf(f,"dx = %lf\n", &this->dx);
+     results[i++] = fscanf(f,"time_scale = %lf\n", &this->time_scale);
      this->dt = this->time_scale*dx/co;
-     results[7] = fscanf(f,"t0 = %lf\n", &this->t0);
-     results[8] = fscanf(f,"spread = %lf\n", &this->spread);
-     results[9] = fscanf(f,"freq_in = %lf\n", &this->freq_in);
+     results[i++] = fscanf(f,"t0 = %lf\n", &this->t0);
+     results[i++] = fscanf(f,"spread = %lf\n", &this->spread);
+     results[i++] = fscanf(f,"freq_in = %lf\n", &this->freq_in);
+     assert(i-1-nparams);
      
      for(int i=nparams;i--;) 
      {
@@ -93,6 +99,7 @@ void IO::read_input_file()
                printf("ncell = 400\n");
                printf("m2start = 200\n");
                printf("m2stop = 400\n");
+               printf("epsilon = 4.0\n");
                printf("dx = 0.01");
                printf("time_scale = 0.5");
                printf("t0 = 80.0\n");
@@ -114,6 +121,7 @@ void IO::read_input_file()
      printf("ncell = %d\n",this->ncell);
      printf("m2start = %d\n",this->m2start);
      printf("m2stop = %d\n",this->m2stop);
+     printf("epsilon = %f\n",this->epsilon);
      printf("dx = %f\n",this->dx);
      printf("dt = %e (time scale %f)\n",this->dt,this->time_scale);
      printf("t0 = %f\n",this->t0);

@@ -8,25 +8,27 @@ struct IO
 {    
      public:
           /******** Members ***************************************************/
-          int nsteps;
-          int step;
-          int ncell;
-          int m2start;
-          int m2stop;
+          int nsteps;    // Number of time steps
+          int step;      // step size
+          int ncell;     // Number of cell
           
-          double dx;
-          double time_scale;
-          double dt;
+          int m2start;    // Cell where the medium starts
+          int m2stop;     // Cell where the medium stops
+          double epsilon; // Medium relative index
           
-          double t0;
-          double spread;
-          double freq_in;
+          double dx;         // Cell size
+          double time_scale; // time scale
+          double dt;         // Time increment
+          
+          double t0;         // Center of the gaussian pulse in time steps
+          double spread;     // 1/e width of the gaussian pulse
+          double freq_in;    // Carrier frequency
           
           std::string input_file;
           std::string output_dir;
           
-          int screenout;
-          int fileout;
+          int screenout;     // Period for screen output
+          int fileout;       // Period for file output
           
           /******** Member functions ******************************************/
           IO(int argc, char **argv);

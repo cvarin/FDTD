@@ -8,9 +8,6 @@ int main(int argc, char **argv)
 {   
      IO io(argc,argv);
 
-     /************* Medium ****************************************************/
-     double       epsilon = 4.0;  /* Relative dielectric constant of medium 2 */
-
      /************* Boundary **************************************************/
      double    ex_low_1  = 0.0,// Temp variables for
                ex_low_2  = 0.0,// absorbing boundaries
@@ -30,24 +27,18 @@ int main(int argc, char **argv)
           
      /*************************************************************************/
      // Initialize the medium 2        
-     for(int k=io.m2start; k < io.m2stop; k++) cb[k] = 1.0/epsilon;
+     for(int k=io.m2start; k < io.m2stop; k++) cb[k] = 1.0/io.epsilon;
 
-     /*************************************************************************/
-     // FDTD loop
-     double T = 0.0;        // Time
+     /*************************************************************************/     
      io.write_field_to_file(0,ex,hy);
-     if(io.nsteps <= 1) io.nsteps = 2;
      for(int n=1; n <= io.nsteps; n++)
-     {
-          T += 1.0;   // T keeps track of the number of times FDTD loop
-                    // is executed.
-                         
+     {                   
           // Calculate the Ex field
           for (int k=1; k < io.ncell; k++) ex[k] += cb[k]*0.5*(hy[k-1] - hy[k]); 
           
           // Put a Gaussian pulse in the middle
-          double carrier = sin(2.0*Pi*io.freq_in*io.dt*T);
-          double enveloppe = exp(-0.5*pow((io.t0-T)/io.spread,2.0));
+          double carrier = sin(2.0*Pi*io.freq_in*io.dt*n);
+          double enveloppe = exp(-0.5*pow((io.t0-n)/io.spread,2.0));
           ex[5] += carrier*enveloppe;
           
           // Absorbing boundary conditions for Ex
