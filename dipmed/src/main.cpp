@@ -1,13 +1,15 @@
 #include <cmath>
 #include <cstdlib>
+#include <cstdio>
 
 #include "constants.hpp"
-#include "IO.hpp"
+// #include "IO.hpp"
+#include "em1d.hpp"
 
 /****************** Main ******************************************************/
 int main(int argc, char **argv)
 {   
-     IO io(argc,argv);
+     em1d fdtd(argc,argv);
 
      /************* Boundary **************************************************/
      double    ex_low_1  = 0.0,// Temp variables for
@@ -17,11 +19,11 @@ int main(int argc, char **argv)
 
      /*************************************************************************/
      // Initialize the E field and all cells to free space
-     double *ex = (double *)calloc(io.ncell,sizeof(double));
-     double *hy = (double *)calloc(io.ncell,sizeof(double));
-     double *cb = (double *)calloc(io.ncell,sizeof(double));
+     double *ex = (double *)calloc(fdtd.ncell,sizeof(double));
+     double *hy = (double *)calloc(fdtd.ncell,sizeof(double));
+     double *cb = (double *)calloc(fdtd.ncell,sizeof(double));
 
-     for (int k=0; k <= io.ncell-1; k++)
+     for (int k=0; k <= fdtd.ncell-1; k++)
      { 
           ex[k]   = 0.0;
           hy[k]   = 0.0;
@@ -30,18 +32,18 @@ int main(int argc, char **argv)
           
      /*************************************************************************/
      // Initialize the medium 2        
-     for(int k=io.m2start; k < io.m2stop; k++) cb[k] = 1.0/io.epsilon;
+     for(int k=fdtd.m2start; k < fdtd.m2stop; k++) cb[k] = 1.0/fdtd.epsilon;
 
      /*************************************************************************/     
-     io.write_field_to_file(0,ex,hy);
-     for(int n=1; n <= io.nsteps; n++)
+     fdtd.write_field_to_file(0,ex,hy);
+     for(int n=1; n <= fdtd.nsteps; n++)
      {                   
           // Calculate the Ex field
-          for (int k=1; k < io.ncell; k++) ex[k] += cb[k]*0.5*(hy[k-1] - hy[k]); 
+          for (int k=1; k < fdtd.ncell; k++) ex[k] += cb[k]*0.5*(hy[k-1] - hy[k]); 
           
           // Put a Gaussian pulse in the middle
-          double carrier = sin(2.0*Pi*io.freq_in*io.dt*n);
-          double enveloppe = exp(-0.5*pow((io.t0-n)/io.spread,2.0));
+          double carrier = sin(2.0*Pi*fdtd.freq_in*fdtd.dt*n);
+          double enveloppe = exp(-0.5*pow((fdtd.t0-n)/fdtd.spread,2.0));
           ex[5] += carrier*enveloppe;
           
           // Absorbing boundary conditions for Ex
@@ -49,19 +51,19 @@ int main(int argc, char **argv)
           ex_low_2  = ex_low_1;
           ex_low_1  = ex[1];
           
-          ex[io.ncell-1] = ex_high_2;
+          ex[fdtd.ncell-1] = ex_high_2;
           ex_high_2 = ex_high_1;
-          ex_high_1 = ex[io.ncell-2];
+          ex_high_1 = ex[fdtd.ncell-2];
           
           // Calculate the Hy field
-          for(int k=0; k < io.ncell-1; k++) hy[k] += 0.5*(ex[k] - ex[k+1]); 
+          for(int k=0; k < fdtd.ncell-1; k++) hy[k] += 0.5*(ex[k] - ex[k+1]); 
           
           // Outputs the progress of the calculation on screen
-          if(n%io.screenout==0) printf("Progress = %d/%d\n",n,io.nsteps);
+          if(n%fdtd.screenout==0) printf("Progress = %d/%d\n",n,fdtd.nsteps);
           
           /********************************************************************/
           // Writing fields to file                
-          if(n%io.fileout==0) io.write_field_to_file(n,ex,hy);
+          if(n%fdtd.fileout==0) fdtd.write_field_to_file(n,ex,hy);
           
           /********************************************************************/
           // Flush output buffers

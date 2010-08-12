@@ -2,9 +2,8 @@
 #define INC_IO_hpp
 
 #include <string>
-#include <cstdio>
 
-struct IO
+class IO
 {    
      public:
           /******** Members ***************************************************/
