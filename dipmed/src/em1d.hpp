@@ -17,8 +17,9 @@ class em1d : public IO
           double ex_high;
 
           /******** Member functions ******************************************/
-          em1d(int _argc, char **_argv);
+          em1d(const int _argc, const char **_argv);
           ~em1d();
+          void advance_a_step(const int _n);
           void print_allocated_memory_in_Kbytes();
           void print_allocated_memory_in_Mbytes();
 };

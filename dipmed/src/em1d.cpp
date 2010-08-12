@@ -2,14 +2,14 @@
 #include "em1d.hpp"
 
 #include <cassert>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
-// #include <fstream>
 // 
-// #include "constants.hpp"
+#include "constants.hpp"
 
 /****************** Constructor/Destructor ************************************/
-em1d::em1d(int _argc, char **_argv):IO(_argc,_argv)
+em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
 {
     bytes_allocated = 0;
   
@@ -40,6 +40,10 @@ em1d::em1d(int _argc, char **_argv):IO(_argc,_argv)
     // Initialize the boundaries
     ex_low  = 0.0;
     ex_high = 0.0;
+    
+    /*************************************************************************/
+    // Save the initial field distribution
+    write_field_to_file(0,ex,hy);
 }
 
 /******************************************************************************/
@@ -53,6 +57,40 @@ em1d::~em1d()
 }
           
 /****************** Member functions ******************************************/
+void em1d::advance_a_step(const int _n)
+{
+    // Calculate the Ex field
+    for (int k=1; k < ncell; k++) ex[k] += cb[k]*time_scale*(hy[k-1] - hy[k]); 
+    
+    // Put a Gaussian pulse in the middle
+    double carrier = sin(2.0*Pi*freq_in*dt*_n);
+    double enveloppe = exp(-0.5*pow((t0-_n)/spread,2.0));
+    ex[5] += 2.0*carrier*enveloppe;
+    
+    // Absorbing boundary conditions for Ex
+    ex[0]  = ex_low;
+    ex_low = ex[1];
+    
+    ex[ncell-1] = ex_high;
+    ex_high = ex[ncell-2];
+    
+    // Calculate the Hy field
+    for(int k=0; k < ncell-1; k++) hy[k] += time_scale*(ex[k] - ex[k+1]); 
+    
+    // Outputs the progress of the calculation on screen
+    if(_n%screenout==0) printf("Progress = %d/%d\n",_n,nsteps);
+    
+    /********************************************************************/
+    // Writing fields to file                
+    if(_n%fileout==0) write_field_to_file(_n,ex,hy);
+    
+    /********************************************************************/
+    // Flush output buffers
+    fflush(stdout);
+    fflush(stderr);
+}
+
+/******************************************************************************/
 void em1d::print_allocated_memory_in_Kbytes()
 {
     printf("Memory allocated: %f KB\n",(double)bytes_allocated/1024);
@@ -63,7 +101,5 @@ void em1d::print_allocated_memory_in_Mbytes()
 {
     printf("Memory allocated: %f MB\n",(double)bytes_allocated/1024/1024);
 }
-
-/******************************************************************************/
 
 /****************** End of file ***********************************************/

@@ -9,7 +9,7 @@
 #include "constants.hpp"
 
 /****************** Constructor/Destructor ************************************/
-IO::IO(int _argc, char **_argv)
+IO::IO(const int _argc, const char **_argv)
 {
      if(_argc < 3)
      {
