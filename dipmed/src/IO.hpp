@@ -30,7 +30,7 @@ class IO
           int fileout;       // Period for file output
           
           /******** Member functions ******************************************/
-          IO(int argc, char **argv);
+          IO(int _argc, char **_argv);
           void copy_input_file();
           void read_input_file();
           void write_field_to_file(const int n, const double *ex, 
