@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdlib>
 
 #include "constants.hpp"
 #include "IO.hpp"
@@ -16,8 +17,10 @@ int main(int argc, char **argv)
 
      /*************************************************************************/
      // Initialize the E field and all cells to free space
-     double       ex[io.ncell], hy[io.ncell], // Field containers
-                  cb[io.ncell];         // Stores medium profile
+     double *ex = (double *)calloc(io.ncell,sizeof(double));
+     double *hy = (double *)calloc(io.ncell,sizeof(double));
+     double *cb = (double *)calloc(io.ncell,sizeof(double));
+
      for (int k=0; k <= io.ncell-1; k++)
      { 
           ex[k]   = 0.0;
@@ -64,6 +67,9 @@ int main(int argc, char **argv)
           // Flush output buffers
           fflush(stdout);
      }
+     free(cb);
+     free(hy);
+     free(ex);
      return 0;
 }
 
