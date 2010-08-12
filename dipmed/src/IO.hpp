@@ -16,7 +16,7 @@ class IO
           double epsilon; // Medium relative index
           
           double dx;         // Cell size
-          double time_scale; // time scale
+          static const double time_scale = 1.0; // time scale = 1.0 is Courant condition
           double dt;         // Time increment
           
           double t0;         // Center of the gaussian pulse in time steps

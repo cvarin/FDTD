@@ -27,7 +27,7 @@ IO::IO(int argc, char **argv)
      this->read_input_file();
      this->copy_input_file();
      this->screenout = this->nsteps/10;
-     this->fileout = 10;  
+     this->fileout = this->step;  
 }
           
 /****************** Member functions ******************************************/
@@ -68,7 +68,7 @@ void IO::read_input_file()
      
      /************* Read the file *********************************************/
      printf("Reading %s\n",this->input_file.c_str());
-     int nparams = 11;
+     int nparams = 10;
      int results[nparams];
      
      int i = 0;
@@ -80,7 +80,6 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"m2stop = %i\n", &this->m2stop);
      results[i++] = fscanf(f,"epsilon = %lf\n", &this->epsilon);
      results[i++] = fscanf(f,"dx = %lf\n", &this->dx);
-     results[i++] = fscanf(f,"time_scale = %lf\n", &this->time_scale);
      this->dt = this->time_scale*dx/co;
      results[i++] = fscanf(f,"t0 = %lf\n", &this->t0);
      results[i++] = fscanf(f,"spread = %lf\n", &this->spread);
@@ -101,7 +100,6 @@ void IO::read_input_file()
                printf("m2stop = 400\n");
                printf("epsilon = 4.0\n");
                printf("dx = 0.01");
-               printf("time_scale = 0.5");
                printf("t0 = 80.0\n");
                printf("spread = 40.0\n");
                printf("freq_in = 2.0e9\n");

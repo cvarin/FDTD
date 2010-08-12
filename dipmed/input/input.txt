@@ -1,13 +1,10 @@
-nsteps = 2000
-step = 10
+nsteps = 1000
+step = 5
 ncell = 400
 m2start = 150
 m2stop = 250
 epsilon = 4.0
-
 dx = 0.01
-time_scale = 0.5
-
 t0 = 80.0
-spread = 40.0
+spread = 20.0
 freq_in = 2.0e9

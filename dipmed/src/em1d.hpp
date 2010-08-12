@@ -12,6 +12,9 @@ class em1d : public IO
           double *cb;    // Stores medium profile
 
           int bytes_allocated;
+          
+          double ex_low ; // Temp variables for absorbing boundaries
+          double ex_high;
 
           /******** Member functions ******************************************/
           em1d(int _argc, char **_argv);
