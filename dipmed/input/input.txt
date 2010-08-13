@@ -1,6 +1,7 @@
-nsteps = 1000
+threads = 2
+nsteps = 5000
 step = 5
-ncell = 400
+ncell = 1000
 m2start = 150
 m2stop = 250
 epsilon = 4.0

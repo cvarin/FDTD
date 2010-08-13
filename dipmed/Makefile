@@ -19,7 +19,8 @@ DATA  = $(wildcard $(DATA_DIR)/*)
 
 ################### Commands ###################################################
 CPP   = g++
-FLAGS = -fPIC -O3 -Wall
+FLAGS = -fPIC -O3 -Wall -fopenmp
+LFLAGS = -fopenmp
 # FLAGS = -O3
 RM    = rm -fr
 
@@ -28,7 +29,7 @@ all: $(BIN)
 
 $(BIN): $(LINKS) $(HEADS)
 	@echo "LINKING: $(CPP) $(OBJS) -o $(BIN)"
-	@$(CPP) $(LINKS) $(INCLUDES) -o $(BIN)
+	@$(CPP) $(LINKS) $(INCLUDES) $(LFLAGS) -o $(BIN)
 
 $(BUILD_DIR)/%.o: %$(SRC_EXT) $(HEADS)
 	@echo "COMPILING: $(CPP) $(FLAGS) -c $< -o $@"

@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <omp.h>
 
 #include "constants.hpp"
 
@@ -28,6 +29,14 @@ IO::IO(const int _argc, const char **_argv)
      copy_input_file();
      screenout = nsteps/10;
      fileout = step;  
+     
+     /*************************************************************************/
+     omp_set_num_threads(threads);
+     #pragma omp parallel default(none)
+     {
+        if(omp_get_thread_num()==0)
+        printf("Number of threads = %d/%d\n",omp_get_num_threads(),omp_get_max_threads());
+     }
 }
           
 /****************** Member functions ******************************************/
@@ -68,10 +77,11 @@ void IO::read_input_file()
      
      /************* Read the file *********************************************/
      printf("Reading %s\n",input_file.c_str());
-     int nparams = 10;
+     int nparams = 11;
      int results[nparams];
      
      int i = 0;
+     results[i++] = fscanf(f,"threads = %i\n", &threads);
      results[i++] = fscanf(f,"nsteps = %i\n", &nsteps);
      if(nsteps <= 1) nsteps = 2;
      results[i++] = fscanf(f,"step = %i\n", &step);
@@ -93,6 +103,7 @@ void IO::read_input_file()
                printf("Input file is incomplete.\n");
                printf("\n");
                printf("Example:\n");
+               printf("threads = 2\n");
                printf("nsteps = 1000\n");
                printf("step = 10\n");
                printf("ncell = 400\n");
@@ -114,6 +125,7 @@ void IO::read_input_file()
      /************* Print what was read ***************************************/
      printf("\n");
      printf("Input parameters\n");
+     printf("threads = %d\n",threads);
      printf("nsteps = %d\n",nsteps);
      printf("step = %d\n",step);
      printf("ncell = %d\n",ncell);

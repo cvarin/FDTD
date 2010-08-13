@@ -5,7 +5,9 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-// 
+
+#include <omp.h>
+
 #include "constants.hpp"
 
 /****************** Constructor/Destructor ************************************/
@@ -59,14 +61,18 @@ em1d::~em1d()
 /****************** Member functions ******************************************/
 void em1d::advance_a_step(const int _n)
 {
+    /**************************************************************************/
     // Calculate the Ex field
+    #pragma omp parallel for
     for (int k=1; k < ncell; k++) ex[k] += cb[k]*time_scale*(hy[k-1] - hy[k]); 
     
+    /**************************************************************************/
     // Put a Gaussian pulse in the middle
     double carrier = sin(2.0*Pi*freq_in*dt*_n);
     double enveloppe = exp(-0.5*pow((t0-_n)/spread,2.0));
     ex[5] += 2.0*carrier*enveloppe;
     
+    /**************************************************************************/
     // Absorbing boundary conditions for Ex
     ex[0]  = ex_low;
     ex_low = ex[1];
@@ -74,9 +80,12 @@ void em1d::advance_a_step(const int _n)
     ex[ncell-1] = ex_high;
     ex_high = ex[ncell-2];
     
+    /**************************************************************************/
     // Calculate the Hy field
+    #pragma omp parallel for
     for(int k=0; k < ncell-1; k++) hy[k] += time_scale*(ex[k] - ex[k+1]); 
     
+    /**************************************************************************/
     // Outputs the progress of the calculation on screen
     if(_n%screenout==0) printf("Progress = %d/%d\n",_n,nsteps);
     

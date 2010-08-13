@@ -7,6 +7,7 @@ class IO
 {    
      public:
           /******** Members ***************************************************/
+          int threads;   // Numbers of threads to use for the calculation
           int nsteps;    // Number of time steps
           int step;      // step size
           int ncell;     // Number of cell
