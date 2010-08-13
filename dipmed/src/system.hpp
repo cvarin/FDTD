@@ -1,10 +1,21 @@
 #ifndef INC_system_hpp
 #define INC_system_hpp
 
-#include <ctime>
+#include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
+
+/******************************************************************************/
+inline int allocate_1D_array_of_doubles(double **parray, const int size, 
+                                         const char *tag)
+{
+    *parray = (double *)calloc(size,sizeof(double)); 
+    assert(*parray);
+    if(*parray==NULL) printf("Can't allocate %s\n",tag), abort();
+    else return size*sizeof(double);
+}
 
 /******************************************************************************/
 inline void allocate_2D(double ***m, int d1, int d2) 
@@ -64,6 +75,17 @@ inline void format_seconds(char *timestr, const int strsize, const int totsecs)
      hours-= days*hour_per_day;
      
      sprintf(timestr,"%d days, %.02d:%.02d:%.02d (%d s)\n",days,hours,mins,secs,totsecs);
+}
+
+/******************************************************************************/
+inline int free_array_of_doubles(double *parray, const int size)
+{
+    if(parray!=NULL)
+    {
+        free(parray);
+        return size*sizeof(double);
+    }
+    else return 0;
 }
 
 /******************************************************************************/

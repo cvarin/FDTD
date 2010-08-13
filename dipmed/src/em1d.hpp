@@ -7,9 +7,13 @@ class em1d : public IO
 {    
      public:
           /******** Members ***************************************************/
-          double *ex;    // e-field container
-          double *hy;    // h-field container
-          double *cb;    // Stores medium profile
+          static const int number_of_grids = 6;
+          double *ex;          // e-field
+          double *ex_previous; // e-field (at time step n - 1)
+          double *hy;          // h-field
+          double *cb;          // medium profile
+          double *P;           // polarization
+          double *P_previous;  // polarization (at time step n - 1)
 
           int bytes_allocated;
           
@@ -26,8 +30,9 @@ class em1d : public IO
           void apply_boundary_H();
           void print_allocated_memory_in_Kbytes();
           void print_allocated_memory_in_Mbytes();
-          void update_E();
-          void update_H();
+          void update_E(const double t_scale);
+          void update_H(const double t_scale);
+          void update_medium();
           void update_source_E(const int _n);
           void update_source_H(const int _n);
 };

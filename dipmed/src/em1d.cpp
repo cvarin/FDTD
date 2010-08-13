@@ -18,17 +18,14 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
   
     /**************************************************************************/
     // Initialize the E field and all cells to free space
-    ex = (double *)calloc(ncell,sizeof(double)); assert(ex);
-    hy = (double *)calloc(ncell,sizeof(double)); assert(hy);
-    cb = (double *)calloc(ncell,sizeof(double)); assert(cb);
-    
-    /**************************************************************************/
-    if(ex==NULL) printf("Can't allocate ex\n"),abort();
-    if(hy==NULL) printf("Can't allocate hy\n"),abort();
-    if(cb==NULL) printf("Can't allocate cb\n"),abort();
+    bytes_allocated += allocate_1D_array_of_doubles(&ex,ncell,"ex");
+    bytes_allocated += allocate_1D_array_of_doubles(&ex_previous,ncell,"ex_previous");
+    bytes_allocated += allocate_1D_array_of_doubles(&hy,ncell,"hy");
+    bytes_allocated += allocate_1D_array_of_doubles(&cb,ncell,"cb");
+    bytes_allocated += allocate_1D_array_of_doubles(&P_previous,ncell,"P_previous");
+    bytes_allocated += allocate_1D_array_of_doubles(&P,ncell,"P");
   
     /**************************************************************************/
-    bytes_allocated += 3*ncell*sizeof(double);
     print_allocated_memory_in_Kbytes();
     
     /**************************************************************************/
@@ -52,10 +49,12 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
 /******************************************************************************/
 em1d::~em1d()
 {
-    free(cb);
-    free(hy);
-    free(ex);
-    bytes_allocated -= 3*ncell*sizeof(double);
+    bytes_allocated -= free_array_of_doubles(P_previous,ncell);
+    bytes_allocated -= free_array_of_doubles(P,ncell);
+    bytes_allocated -= free_array_of_doubles(cb,ncell);
+    bytes_allocated -= free_array_of_doubles(hy,ncell);
+    bytes_allocated -= free_array_of_doubles(ex_previous,ncell);
+    bytes_allocated -= free_array_of_doubles(ex,ncell);
     print_allocated_memory_in_Kbytes();
 }
           
@@ -64,13 +63,13 @@ void em1d::advance_a_step(const int _n)
 {
     /**************************************************************************/
     // Update E-field
-    update_E();
+    update_E(time_scale);
     apply_boundary_E();
     update_source_E(_n);
     
     /**************************************************************************/
     // Update H-field
-    update_H();
+    update_H(time_scale);
     apply_boundary_H();
     update_source_H(_n);
     
@@ -115,17 +114,23 @@ void em1d::print_allocated_memory_in_Mbytes()
 }
 
 /******************************************************************************/
-void em1d::update_E()
+void em1d::update_E(const double t_scale)
 {
     #pragma omp parallel for
-    for(int k=1; k < ncell; k++) ex[k] += cb[k]*time_scale*(hy[k-1] - hy[k]); 
+    for(int k=1; k < ncell; k++) ex[k] += cb[k]*t_scale*(hy[k-1] - hy[k]); 
 }
 
 /******************************************************************************/
-void em1d::update_H()
+void em1d::update_H(const double t_scale)
 {
     #pragma omp parallel for
-    for(int k=0; k < ncell-1; k++) hy[k] += time_scale*(ex[k] - ex[k+1]); 
+    for(int k=0; k < ncell-1; k++) hy[k] += t_scale*(ex[k] - ex[k+1]); 
+}
+
+/******************************************************************************/
+void update_medium()
+{
+    
 }
 
 /******************************************************************************/
