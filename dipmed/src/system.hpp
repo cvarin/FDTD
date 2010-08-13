@@ -25,6 +25,13 @@ inline void delete_2D(double **m, int d1)
 }
 
 /******************************************************************************/
+inline void flush_output_buffers(void)
+{
+    fflush(stdout);
+    fflush(stderr);
+}
+
+/******************************************************************************/
 inline void format_seconds(char *timestr, const int strsize, const int totsecs)
 {
      const int minchar = 35;

@@ -9,6 +9,7 @@
 #include <omp.h>
 
 #include "constants.hpp"
+#include "system.hpp"
 
 /****************** Constructor/Destructor ************************************/
 em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
@@ -23,8 +24,8 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     
     /**************************************************************************/
     if(ex==NULL) printf("Can't allocate ex\n"),abort();
-    if(hy==NULL) perror("Can't allocate hy\n"),abort();
-    if(cb==NULL) perror("Can't allocate cb\n"),abort();
+    if(hy==NULL) printf("Can't allocate hy\n"),abort();
+    if(cb==NULL) printf("Can't allocate cb\n"),abort();
   
     /**************************************************************************/
     bytes_allocated += 3*ncell*sizeof(double);
@@ -62,28 +63,16 @@ em1d::~em1d()
 void em1d::advance_a_step(const int _n)
 {
     /**************************************************************************/
-    // Calculate the Ex field
-    #pragma omp parallel for
-    for (int k=1; k < ncell; k++) ex[k] += cb[k]*time_scale*(hy[k-1] - hy[k]); 
+    // Update E-field
+    update_E();
+    apply_boundary_E();
+    update_source_E(_n);
     
     /**************************************************************************/
-    // Put a Gaussian pulse in the middle
-    double carrier = sin(2.0*Pi*freq_in*dt*_n);
-    double enveloppe = exp(-0.5*pow((t0-_n)/spread,2.0));
-    ex[5] += 2.0*carrier*enveloppe;
-    
-    /**************************************************************************/
-    // Absorbing boundary conditions for Ex
-    ex[0]  = ex_low;
-    ex_low = ex[1];
-    
-    ex[ncell-1] = ex_high;
-    ex_high = ex[ncell-2];
-    
-    /**************************************************************************/
-    // Calculate the Hy field
-    #pragma omp parallel for
-    for(int k=0; k < ncell-1; k++) hy[k] += time_scale*(ex[k] - ex[k+1]); 
+    // Update H-field
+    update_H();
+    apply_boundary_H();
+    update_source_H(_n);
     
     /**************************************************************************/
     // Outputs the progress of the calculation on screen
@@ -94,9 +83,23 @@ void em1d::advance_a_step(const int _n)
     if(_n%fileout==0) write_field_to_file(_n,ex,hy);
     
     /********************************************************************/
-    // Flush output buffers
-    fflush(stdout);
-    fflush(stderr);
+    flush_output_buffers();
+}
+
+/******************************************************************************/
+void em1d::apply_boundary_E()
+{
+    ex[0]  = ex_low;
+    ex_low = ex[1];
+    
+    ex[ncell-1] = ex_high;
+    ex_high = ex[ncell-2];
+}
+
+/******************************************************************************/
+void em1d::apply_boundary_H()
+{
+
 }
 
 /******************************************************************************/
@@ -109,6 +112,34 @@ void em1d::print_allocated_memory_in_Kbytes()
 void em1d::print_allocated_memory_in_Mbytes()
 {
     printf("Memory allocated: %f MB\n",(double)bytes_allocated/1024/1024);
+}
+
+/******************************************************************************/
+void em1d::update_E()
+{
+    #pragma omp parallel for
+    for(int k=1; k < ncell; k++) ex[k] += cb[k]*time_scale*(hy[k-1] - hy[k]); 
+}
+
+/******************************************************************************/
+void em1d::update_H()
+{
+    #pragma omp parallel for
+    for(int k=0; k < ncell-1; k++) hy[k] += time_scale*(ex[k] - ex[k+1]); 
+}
+
+/******************************************************************************/
+void em1d::update_source_E(const int _n)
+{
+    double carrier = sin(2.0*Pi*freq_in*dt*_n);
+    double enveloppe = exp(-0.5*pow((t0-_n)/spread,2.0));
+    ex[source_plane] += 2.0*carrier*enveloppe;
+}
+
+/******************************************************************************/
+void em1d::update_source_H(const int _n)
+{
+  
 }
 
 /****************** End of file ***********************************************/

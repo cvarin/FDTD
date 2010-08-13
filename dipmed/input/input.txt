@@ -1,9 +1,9 @@
 threads = 2
-nsteps = 5000
+nsteps = 3000
 step = 5
-ncell = 1000
-m2start = 150
-m2stop = 250
+ncell = 600
+m2start = 200
+m2stop = 400
 epsilon = 4.0
 dx = 0.01
 t0 = 80.0
