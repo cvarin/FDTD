@@ -132,6 +132,12 @@ void em1d::print_allocated_memory_in_Mbytes()
 }
 
 /******************************************************************************/
+void em1d::static_response()
+{
+
+}
+
+/******************************************************************************/
 void em1d::update_E(const double t_scale)
 {
     #pragma omp parallel for

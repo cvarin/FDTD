@@ -33,6 +33,7 @@ class em1d : public IO
           void apply_boundary_H();
           void print_allocated_memory_in_Kbytes();
           void print_allocated_memory_in_Mbytes();
+          void static_response();
           void update_E(const double t_scale);
           void update_H(const double t_scale);
           void update_polarization();
