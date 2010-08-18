@@ -89,6 +89,8 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"m2start = %i\n", &m2start);
      results[i++] = fscanf(f,"m2stop = %i\n", &m2stop);
      results[i++] = fscanf(f,"epsilon = %lf\n", &epsilon);
+     results[i++] = fscanf(f,"number density = %lf\n", &number_density);
+     results[i++] = fscanf(f,"relaxation time = %lf\n", &relaxation_time);
      results[i++] = fscanf(f,"dx = %lf\n", &dx);
      dt = time_scale*dx/co;
      results[i++] = fscanf(f,"t0 = %lf\n", &t0);
@@ -110,6 +112,8 @@ void IO::read_input_file()
                printf("m2start = 200\n");
                printf("m2stop = 400\n");
                printf("epsilon = 4.0\n");
+               printf("number_density = 4.0e28\n");
+               printf("relaxation_time = 1.0e-12\n");
                printf("dx = 0.01");
                printf("t0 = 80.0\n");
                printf("spread = 40.0\n");
@@ -132,6 +136,8 @@ void IO::read_input_file()
      printf("m2start = %d\n",m2start);
      printf("m2stop = %d\n",m2stop);
      printf("epsilon = %f\n",epsilon);
+     printf("number density = %e\n",number_density);
+     printf("relaxation time = %e\n",relaxation_time);
      printf("dx = %f\n",dx);
      printf("dt = %e (time scale %f)\n",dt,time_scale);
      printf("t0 = %f\n",t0);

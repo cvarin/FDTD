@@ -15,6 +15,8 @@ class IO
           int m2start;    // Cell where the medium starts
           int m2stop;     // Cell where the medium stops
           double epsilon; // Medium relative index
+          double number_density; // Number of atoms/molecules per m^3
+          double relaxation_time; // In seconds.
           
           double dx;         // Cell size
           static const double time_scale = 1.0; // time scale = 1.0 is Courant condition

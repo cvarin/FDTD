@@ -22,19 +22,32 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     bytes_allocated += allocate_1D_array_of_doubles(&ex_previous,ncell,"ex_previous");
     bytes_allocated += allocate_1D_array_of_doubles(&hy,ncell,"hy");
     bytes_allocated += allocate_1D_array_of_doubles(&cb,ncell,"cb");
-    bytes_allocated += allocate_1D_array_of_doubles(&P_previous,ncell,"P_previous");
-    bytes_allocated += allocate_1D_array_of_doubles(&P,ncell,"P");
+    bytes_allocated += allocate_1D_array_of_doubles(&N,ncell,"N");
+    bytes_allocated += allocate_1D_array_of_doubles(&px_previous,ncell,"P_previous");
+    bytes_allocated += allocate_1D_array_of_doubles(&px,ncell,"P");
   
     /**************************************************************************/
     print_allocated_memory_in_Kbytes();
     
     /**************************************************************************/
     // Set free space everywhere
-    for(int k=0; k <= ncell-1; k++) cb[k] = 1.0; 
+    for(int k=0; k <= ncell-1; k++)
+    {
+        cb[k] = 1.0;
+        N[k]  = 0.0;
+    }
         
     /*************************************************************************/
     // Initialize the medium 2        
-    for(int k=m2start; k < m2stop; k++) cb[k] = 1.0/epsilon;
+    for(int k=m2start; k < m2stop; k++)
+    {
+        cb[k] = 1.0/epsilon;
+        N[k]  = number_density;
+    }
+    
+    /*************************************************************************/
+    // Set parameter for the polarization differential equation
+    gam = 2.0*relaxation_time/dt;
     
     /*************************************************************************/
     // Initialize the boundaries
@@ -49,8 +62,9 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
 /******************************************************************************/
 em1d::~em1d()
 {
-    bytes_allocated -= free_array_of_doubles(P_previous,ncell);
-    bytes_allocated -= free_array_of_doubles(P,ncell);
+    bytes_allocated -= free_array_of_doubles(px_previous,ncell);
+    bytes_allocated -= free_array_of_doubles(px,ncell);
+    bytes_allocated -= free_array_of_doubles(N,ncell);
     bytes_allocated -= free_array_of_doubles(cb,ncell);
     bytes_allocated -= free_array_of_doubles(hy,ncell);
     bytes_allocated -= free_array_of_doubles(ex_previous,ncell);
@@ -66,6 +80,10 @@ void em1d::advance_a_step(const int _n)
     update_E(time_scale);
     apply_boundary_E();
     update_source_E(_n);
+    
+    /**************************************************************************/
+    // update the material response
+    update_polarization();
     
     /**************************************************************************/
     // Update H-field
@@ -128,9 +146,16 @@ void em1d::update_H(const double t_scale)
 }
 
 /******************************************************************************/
-void update_medium()
+void em1d::update_polarization()
 {
-    
+    double pstat;
+    #pragma omp parallel for
+    for(int k=0; k < ncell-1; k++) 
+    {
+        px_previous[k] = px[k];
+        pstat = ex[k];
+        px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
+    }
 }
 
 /******************************************************************************/
