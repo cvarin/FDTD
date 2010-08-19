@@ -8,6 +8,7 @@ class em1d : public IO
      public:
           /******** Members ***************************************************/
           double *ex;          // E-field
+          double *Dx;          // D-field
           double *ex_previous; // E-field (at time step n - 1)
           double *hy;          // H-field
           double *epsi_rel;    // Relative Permittivity

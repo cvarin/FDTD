@@ -19,6 +19,7 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     /**************************************************************************/
     // Initialize the E field and all cells to free space
     bytes_allocated += allocate_1D_array_of_doubles(&ex,ncell,"ex");
+    bytes_allocated += allocate_1D_array_of_doubles(&Dx,ncell,"Dx");
     bytes_allocated += allocate_1D_array_of_doubles(&ex_previous,ncell,"ex_previous");
     bytes_allocated += allocate_1D_array_of_doubles(&hy,ncell,"hy");
     bytes_allocated += allocate_1D_array_of_doubles(&epsi_rel,ncell,"epsi_rel");
@@ -70,6 +71,7 @@ em1d::~em1d()
     bytes_allocated -= free_array_of_doubles(epsi_rel,ncell);
     bytes_allocated -= free_array_of_doubles(hy,ncell);
     bytes_allocated -= free_array_of_doubles(ex_previous,ncell);
+    bytes_allocated -= free_array_of_doubles(Dx,ncell);
     bytes_allocated -= free_array_of_doubles(ex,ncell);
     print_allocated_memory_in_Kbytes();
 }
@@ -78,15 +80,15 @@ em1d::~em1d()
 void em1d::advance_a_step(const int _n)
 { 
     /**************************************************************************/
+    // update the material response
+    update_polarization();
+  
+    /**************************************************************************/
     // Update E-field
 //     update_E(time_scale);
     update_E_with_P(time_scale);
     apply_boundary_E();
     update_source_E(_n);
- 
-    /**************************************************************************/
-    // update the material response
-    update_polarization();
     
     /**************************************************************************/
     // Update H-field
@@ -151,10 +153,12 @@ void em1d::update_E(const double t_scale)
 void em1d::update_E_with_P(const double t_scale)
 {
     #pragma omp parallel for
-    for(int k=1; k < ncell; k++) ex[k] += dt_dxeps0*(hy[k-1] - hy[k])
-                                           - 1.0/epsi_0*(px[k]-px_previous[k]);
-//                                            + epsi_0*static_response(k)*ex[k];
-//                                            
+    for(int k=1; k < ncell; k++)
+    {
+        Dx[k] += dt/dx*(hy[k-1] - hy[k]);
+//         ex[k] = Dx[k]/(epsi_rel[k]*epsi_0);
+        ex[k] = (Dx[k] - px[k])/epsi_0;
+    }
 }
 
 /******************************************************************************/
