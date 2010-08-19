@@ -76,14 +76,14 @@ em1d::~em1d()
           
 /****************** Member functions ******************************************/
 void em1d::advance_a_step(const int _n)
-{
+{ 
     /**************************************************************************/
     // Update E-field
-    update_E(time_scale);
-//     update_E_with_P(time_scale);
+//     update_E(time_scale);
+    update_E_with_P(time_scale);
     apply_boundary_E();
     update_source_E(_n);
-    
+ 
     /**************************************************************************/
     // update the material response
     update_polarization();
@@ -137,7 +137,7 @@ void em1d::print_allocated_memory_in_Mbytes()
 /******************************************************************************/
 double em1d::static_response(const int k)
 {
-    return epsi_rel[k] - 1;
+    return epsi_rel[k] - 1.0;
 }
 
 /******************************************************************************/
@@ -167,21 +167,18 @@ void em1d::update_H(const double t_scale)
 /******************************************************************************/
 void em1d::update_polarization()
 {
-//     double pstat;
     #pragma omp parallel for
     for(int k=0; k < ncell-1; k++) 
     {
         px_previous[k] = px[k];
         px[k] = static_response(k)*ex[k]*epsi_0;
-//         px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
     }
-    
-    
+//     double pstat;    
 //     #pragma omp parallel for
 //     for(int k=0; k < ncell-1; k++) 
 //     {
 //         px_previous[k] = px[k];
-//         pstat = ex[k];
+//         pstat = static_response(k)*ex[k]*epsi_0;
 //         px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
 //     }
 }
