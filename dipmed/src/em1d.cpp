@@ -21,7 +21,7 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     bytes_allocated += allocate_1D_array_of_doubles(&ex,ncell,"ex");
     bytes_allocated += allocate_1D_array_of_doubles(&ex_previous,ncell,"ex_previous");
     bytes_allocated += allocate_1D_array_of_doubles(&hy,ncell,"hy");
-    bytes_allocated += allocate_1D_array_of_doubles(&cb,ncell,"cb");
+    bytes_allocated += allocate_1D_array_of_doubles(&epsi_rel,ncell,"epsi_rel");
     bytes_allocated += allocate_1D_array_of_doubles(&N,ncell,"N");
     bytes_allocated += allocate_1D_array_of_doubles(&px_previous,ncell,"P_previous");
     bytes_allocated += allocate_1D_array_of_doubles(&px,ncell,"P");
@@ -33,7 +33,7 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     // Set free space everywhere
     for(int k=0; k <= ncell-1; k++)
     {
-        cb[k] = 1.0;
+        epsi_rel[k] = 1.0;
         N[k]  = 0.0;
     }
         
@@ -41,12 +41,14 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     // Initialize the medium 2        
     for(int k=m2start; k < m2stop; k++)
     {
-        cb[k] = 1.0/epsilon;
+        epsi_rel[k] = epsilon;
         N[k]  = number_density;
     }
     
     /*************************************************************************/
     // Set parameter for the polarization differential equation
+    dt_dxeps0 = dt/(dx*epsi_0);
+    dt_dxmu0 = dt/(dx*mu_0);
     gam = 2.0*relaxation_time/dt;
     
     /*************************************************************************/
@@ -65,7 +67,7 @@ em1d::~em1d()
     bytes_allocated -= free_array_of_doubles(px_previous,ncell);
     bytes_allocated -= free_array_of_doubles(px,ncell);
     bytes_allocated -= free_array_of_doubles(N,ncell);
-    bytes_allocated -= free_array_of_doubles(cb,ncell);
+    bytes_allocated -= free_array_of_doubles(epsi_rel,ncell);
     bytes_allocated -= free_array_of_doubles(hy,ncell);
     bytes_allocated -= free_array_of_doubles(ex_previous,ncell);
     bytes_allocated -= free_array_of_doubles(ex,ncell);
@@ -78,6 +80,7 @@ void em1d::advance_a_step(const int _n)
     /**************************************************************************/
     // Update E-field
     update_E(time_scale);
+//     update_E_with_P(time_scale);
     apply_boundary_E();
     update_source_E(_n);
     
@@ -132,36 +135,55 @@ void em1d::print_allocated_memory_in_Mbytes()
 }
 
 /******************************************************************************/
-void em1d::static_response()
+double em1d::static_response(const int k)
 {
-
+    return epsi_rel[k] - 1;
 }
 
 /******************************************************************************/
 void em1d::update_E(const double t_scale)
 {
     #pragma omp parallel for
-    for(int k=1; k < ncell; k++) ex[k] += cb[k]*t_scale*(hy[k-1] - hy[k]); 
+    for(int k=1; k < ncell; k++) ex[k] += dt_dxeps0/epsi_rel[k]*(hy[k-1] - hy[k]);
+}
+
+/******************************************************************************/
+void em1d::update_E_with_P(const double t_scale)
+{
+    #pragma omp parallel for
+    for(int k=1; k < ncell; k++) ex[k] += dt_dxeps0*(hy[k-1] - hy[k])
+                                           - 1.0/epsi_0*(px[k]-px_previous[k]);
+//                                            + epsi_0*static_response(k)*ex[k];
+//                                            
 }
 
 /******************************************************************************/
 void em1d::update_H(const double t_scale)
 {
     #pragma omp parallel for
-    for(int k=0; k < ncell-1; k++) hy[k] += t_scale*(ex[k] - ex[k+1]); 
+    for(int k=0; k < ncell-1; k++) hy[k] += dt_dxmu0*(ex[k] - ex[k+1]); 
 }
 
 /******************************************************************************/
 void em1d::update_polarization()
 {
-    double pstat;
+//     double pstat;
     #pragma omp parallel for
     for(int k=0; k < ncell-1; k++) 
     {
         px_previous[k] = px[k];
-        pstat = ex[k];
-        px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
+        px[k] = static_response(k)*ex[k]*epsi_0;
+//         px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
     }
+    
+    
+//     #pragma omp parallel for
+//     for(int k=0; k < ncell-1; k++) 
+//     {
+//         px_previous[k] = px[k];
+//         pstat = ex[k];
+//         px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
+//     }
 }
 
 /******************************************************************************/

@@ -5,6 +5,8 @@ import gobject
 from sys import argv
 from matplotlib.widgets import Slider
 
+eta0 = 376.730313461
+
 #########################################################################################
 # Get the data directory from the command line and fetch the data file names
 if size(argv) == 1: 
@@ -42,8 +44,8 @@ grid(True)
 xlabel('z')
 ylabel('Field')
 d = loadtxt(filename(0))
-curve1 = plot(d[:,0],d[:,1],label="Ex")
-curve2 = plot(d[:,0],d[:,2],label="Hy")
+curve1 = plot(d[:,0],d[:,1],label=r"$E_x$")
+curve2 = plot(d[:,0],d[:,2]*eta0,label=r"$\eta_0H_y$")
 legend()
 axvspan(f.m2start,f.m2stop,facecolor='0.5', alpha=0.5)
 axis([0, f.ncell, -1.5, 1.5])
@@ -69,7 +71,7 @@ def updatefig(*args):
   # Open file, read the content, and update data on the graph
   d = loadtxt(filename(n))
   curve1[0].set_ydata(d[:,1])
-  curve2[0].set_ydata(d[:,2])
+  curve2[0].set_ydata(d[:,2]*eta0)
   fig.canvas.draw()
 
   #######################################################################################
