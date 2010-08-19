@@ -9,7 +9,6 @@ class em1d : public IO
           /******** Members ***************************************************/
           double *ex;          // E-field
           double *Dx;          // D-field
-          double *ex_previous; // E-field (at time step n - 1)
           double *hy;          // H-field
           double *epsi_rel;    // Relative Permittivity
           double *N;           // Average number of atom/molecule per m^3
@@ -37,6 +36,7 @@ class em1d : public IO
           void print_allocated_memory_in_Mbytes();
           double static_response(const int k);
           void update_E(const double t_scale);
+          void update_E_with_D(const double t_scale);
           void update_E_with_P(const double t_scale);
           void update_H(const double t_scale);
           void update_polarization();

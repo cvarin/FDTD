@@ -20,7 +20,6 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     // Initialize the E field and all cells to free space
     bytes_allocated += allocate_1D_array_of_doubles(&ex,ncell,"ex");
     bytes_allocated += allocate_1D_array_of_doubles(&Dx,ncell,"Dx");
-    bytes_allocated += allocate_1D_array_of_doubles(&ex_previous,ncell,"ex_previous");
     bytes_allocated += allocate_1D_array_of_doubles(&hy,ncell,"hy");
     bytes_allocated += allocate_1D_array_of_doubles(&epsi_rel,ncell,"epsi_rel");
     bytes_allocated += allocate_1D_array_of_doubles(&N,ncell,"N");
@@ -70,7 +69,6 @@ em1d::~em1d()
     bytes_allocated -= free_array_of_doubles(N,ncell);
     bytes_allocated -= free_array_of_doubles(epsi_rel,ncell);
     bytes_allocated -= free_array_of_doubles(hy,ncell);
-    bytes_allocated -= free_array_of_doubles(ex_previous,ncell);
     bytes_allocated -= free_array_of_doubles(Dx,ncell);
     bytes_allocated -= free_array_of_doubles(ex,ncell);
     print_allocated_memory_in_Kbytes();
@@ -80,15 +78,16 @@ em1d::~em1d()
 void em1d::advance_a_step(const int _n)
 { 
     /**************************************************************************/
-    // update the material response
-    update_polarization();
-  
-    /**************************************************************************/
     // Update E-field
 //     update_E(time_scale);
+//     update_E_with_D(time_scale);
     update_E_with_P(time_scale);
     apply_boundary_E();
     update_source_E(_n);
+  
+    /**************************************************************************/
+    // update the material response
+    update_polarization();
     
     /**************************************************************************/
     // Update H-field
@@ -150,15 +149,23 @@ void em1d::update_E(const double t_scale)
 }
 
 /******************************************************************************/
-void em1d::update_E_with_P(const double t_scale)
+void em1d::update_E_with_D(const double t_scale)
 {
     #pragma omp parallel for
     for(int k=1; k < ncell; k++)
     {
         Dx[k] += dt/dx*(hy[k-1] - hy[k]);
-//         ex[k] = Dx[k]/(epsi_rel[k]*epsi_0);
-        ex[k] = (Dx[k] - px[k])/epsi_0;
+        ex[k] = (Dx[k] - px[k])/(epsi_rel[k]*epsi_0);
     }
+}
+
+/******************************************************************************/
+void em1d::update_E_with_P(const double t_scale)
+{
+      #pragma omp parallel for
+      for(int k=1; k < ncell; k++)
+        ex[k] += (dt_dxeps0*(hy[k-1] - hy[k]) 
+                   - 1.0/epsi_0*(px[k] - px_previous[k]))/epsi_rel[k];
 }
 
 /******************************************************************************/
@@ -171,26 +178,21 @@ void em1d::update_H(const double t_scale)
 /******************************************************************************/
 void em1d::update_polarization()
 {
+    double pstat;    
     #pragma omp parallel for
     for(int k=0; k < ncell-1; k++) 
     {
         px_previous[k] = px[k];
-        px[k] = static_response(k)*ex[k]*epsi_0;
+        pstat = static_response(k)*ex[k]*epsi_0;
+//         px[k] = pstat;
+        px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
     }
-//     double pstat;    
-//     #pragma omp parallel for
-//     for(int k=0; k < ncell-1; k++) 
-//     {
-//         px_previous[k] = px[k];
-//         pstat = static_response(k)*ex[k]*epsi_0;
-//         px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
-//     }
 }
 
 /******************************************************************************/
 void em1d::update_source_E(const int _n)
 {
-    double carrier = sin(2.0*Pi*freq_in*dt*_n);
+    double carrier = cos(2.0*Pi*freq_in*dt*_n);
     double enveloppe = exp(-0.5*pow((t0-_n)/spread,2.0));
     ex[source_plane] += 2.0*carrier*enveloppe;
 }
