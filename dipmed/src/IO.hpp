@@ -25,6 +25,8 @@ class IO
           double t0;         // Center of the gaussian pulse in time steps
           double spread;     // 1/e width of the gaussian pulse
           double freq_in;    // Carrier frequency
+          double I;          // Laser intensity in W/cm^2
+          double E0;         // Laser E-field amplitude in V/m
           
           std::string input_file;
           std::string output_dir;

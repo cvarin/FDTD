@@ -33,19 +33,24 @@ class read_input_file:
                     if not array[0].find("ncell"): self.ncell = int(array[2])
                     if not array[0].find("m2start"): self.m2start = int(array[2])
                     if not array[0].find("m2stop"): self.m2stop = int(array[2])
+                    if not array[0].find("I"): 
+                      self.I = float(array[2])
+                      self.E0 = sqrt(2.0*eta0*self.I*1.0e4)
           infile.close()
 
 f = read_input_file(argv[1] + "input.txt")
+normE = 1.0/f.E0
+normH = eta0*normE
 
 #########################################################################################
 # The figure is created with frame 0
 fig = figure(figsize=(16.0,8.0))
 grid(True)
 xlabel('z')
-ylabel('Field')
+ylabel('Field (%.2e V/m)'%f.E0)
 d = loadtxt(filename(0))
-curve1 = plot(d[:,0],d[:,1],label=r"$E_x$")
-curve2 = plot(d[:,0],d[:,2]*eta0,label=r"$\eta_0H_y$")
+curve1 = plot(d[:,0],d[:,1]*normE,label=r"$E_x$")
+curve2 = plot(d[:,0],d[:,2]*normH,label=r"$\eta_0H_y$")
 legend()
 axvspan(f.m2start,f.m2stop,facecolor='0.5', alpha=0.5)
 axis([0, f.ncell, -1.5, 1.5])
@@ -70,8 +75,8 @@ def updatefig(*args):
   #######################################################################################
   # Open file, read the content, and update data on the graph
   d = loadtxt(filename(n))
-  curve1[0].set_ydata(d[:,1])
-  curve2[0].set_ydata(d[:,2]*eta0)
+  curve1[0].set_ydata(d[:,1]*normE)
+  curve2[0].set_ydata(d[:,2]*normH)
   fig.canvas.draw()
 
   #######################################################################################
