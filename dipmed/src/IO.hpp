@@ -27,6 +27,7 @@ class IO
           double freq_in;    // Carrier frequency
           double I;          // Laser intensity in W/cm^2
           double E0;         // Laser E-field amplitude in V/m
+          double ceo_phase;  // Carrier-envelope offset phase (http://www.rp-photonics.com/carrier_envelope_offset.html)
           
           std::string input_file;
           std::string output_dir;

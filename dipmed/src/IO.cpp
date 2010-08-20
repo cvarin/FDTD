@@ -78,7 +78,7 @@ void IO::read_input_file()
      
      /************* Read the file *********************************************/
      printf("Reading %s\n",input_file.c_str());
-     int nparams = 12;
+     int nparams = 13;
      int results[nparams];
      
      int i = 0;
@@ -99,6 +99,7 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"freq_in = %lf\n", &freq_in);
      results[i++] = fscanf(f,"I = %lf\n", &I);
      E0 = sqrt(2.0*eta_0*I*1.0e4); // Intensity in W/cm^2 is converted to W/m^2
+     results[i++] = fscanf(f,"ceo_phase = %lf\n", &ceo_phase);
      assert(i-1-nparams);
      
      for(int i=nparams;i--;) 
@@ -122,6 +123,7 @@ void IO::read_input_file()
                printf("spread = 40.0\n");
                printf("freq_in = 2.0e9\n");
                printf("I = 1.0e3\n");
+               printf("ceo_phase = 0.0\n");
                printf("\n");
                abort();
           }
@@ -149,6 +151,7 @@ void IO::read_input_file()
      printf("freq_in = %f\n",freq_in);
      printf("I = %e\n",I);
      printf("E0 = %e\n",E0);
+     printf("ceo_phase = %f\n",ceo_phase);
      printf("\n");
 }
 

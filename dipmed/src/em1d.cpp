@@ -191,7 +191,7 @@ void em1d::update_polarization()
 /******************************************************************************/
 void em1d::update_source_E(const int _n)
 {
-    double carrier = cos(2.0*Pi*freq_in*dt*_n);
+    double carrier = cos(2.0*Pi*freq_in*dt*_n - ceo_phase);
     double enveloppe = exp(-0.5*pow((t0-_n)/spread,2.0));
     ex[source_plane] += 2.0*E0*carrier*enveloppe;
 }
