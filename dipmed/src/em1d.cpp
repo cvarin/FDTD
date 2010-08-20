@@ -12,7 +12,7 @@
 #include "system.hpp"
 
 /****************** Constructor/Destructor ************************************/
-em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
+em1d::em1d(const int _argc, const char **_argv):material(_argc,_argv)
 {
     bytes_allocated = 0;
   
@@ -22,7 +22,7 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     bytes_allocated += allocate_1D_array_of_doubles(&Dx,ncell,"Dx");
     bytes_allocated += allocate_1D_array_of_doubles(&hy,ncell,"hy");
     bytes_allocated += allocate_1D_array_of_doubles(&epsi_rel,ncell,"epsi_rel");
-    bytes_allocated += allocate_1D_array_of_doubles(&N,ncell,"N");
+    bytes_allocated += allocate_1D_array_of_doubles(&density_profile,ncell,"density_profile");
     bytes_allocated += allocate_1D_array_of_doubles(&px_previous,ncell,"P_previous");
     bytes_allocated += allocate_1D_array_of_doubles(&px,ncell,"P");
   
@@ -34,7 +34,7 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     for(int k=0; k <= ncell-1; k++)
     {
         epsi_rel[k] = 1.0;
-        N[k]  = 0.0;
+        density_profile[k]  = 0.0;
     }
         
     /*************************************************************************/
@@ -42,7 +42,7 @@ em1d::em1d(const int _argc, const char **_argv):IO(_argc,_argv)
     for(int k=m2start; k < m2stop; k++)
     {
         epsi_rel[k] = epsilon;
-        N[k]  = number_density;
+        density_profile[k] = 1.0;
     }
     
     /*************************************************************************/
@@ -66,7 +66,7 @@ em1d::~em1d()
 {
     bytes_allocated -= free_array_of_doubles(px_previous,ncell);
     bytes_allocated -= free_array_of_doubles(px,ncell);
-    bytes_allocated -= free_array_of_doubles(N,ncell);
+    bytes_allocated -= free_array_of_doubles(density_profile,ncell);
     bytes_allocated -= free_array_of_doubles(epsi_rel,ncell);
     bytes_allocated -= free_array_of_doubles(hy,ncell);
     bytes_allocated -= free_array_of_doubles(Dx,ncell);
@@ -136,10 +136,10 @@ void em1d::print_allocated_memory_in_Mbytes()
 }
 
 /******************************************************************************/
-double em1d::static_response(const int k)
-{
-    return epsi_rel[k] - 1.0;
-}
+// double em1d::static_response(const int k)
+// {
+//     return epsi_rel[k];
+// }
 
 /******************************************************************************/
 void em1d::update_E(const double t_scale)
@@ -183,7 +183,7 @@ void em1d::update_polarization()
     for(int k=0; k < ncell-1; k++) 
     {
         px_previous[k] = px[k];
-        pstat = static_response(k)*ex[k]*epsi_0;
+        pstat = density_profile[k]*static_response()*ex[k]*epsi_0;
         px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
     }
 }

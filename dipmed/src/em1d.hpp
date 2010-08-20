@@ -2,8 +2,9 @@
 #define INC_em1d_hpp
 
 #include "IO.hpp"
+#include "material.hpp"
 
-class em1d : public IO
+class em1d : public material
 {    
      public:
           /******** Members ***************************************************/
@@ -11,7 +12,7 @@ class em1d : public IO
           double *Dx;          // D-field
           double *hy;          // H-field
           double *epsi_rel;    // Relative Permittivity
-          double *N;           // Average number of atom/molecule per m^3
+          double *density_profile; // Goes from 0.0 (no material) to 1.0 (material)
           double *px;          // Polarization
           double *px_previous; // Polarization (at time step n - 1)
 
@@ -34,7 +35,7 @@ class em1d : public IO
           void apply_boundary_H();
           void print_allocated_memory_in_Kbytes();
           void print_allocated_memory_in_Mbytes();
-          double static_response(const int k);
+//           double static_response(const int k);
           void update_E(const double t_scale);
           void update_E_with_D(const double t_scale);
           void update_E_with_P(const double t_scale);
