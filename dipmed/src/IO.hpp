@@ -21,6 +21,7 @@ class IO
           
           double dx;         // Cell size
           static const double time_scale = 1.0; // time scale = 1.0 is Courant condition
+          // time_scale is fixed to 1 because of the rudimentary boundaries used.
           double dt;         // Time increment
           
           double t0;         // Center of the gaussian pulse in time steps

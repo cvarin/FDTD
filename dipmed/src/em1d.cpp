@@ -79,9 +79,9 @@ void em1d::advance_a_step(const int _n)
 { 
     /**************************************************************************/
     // Update E-field
-//     update_E(time_scale);
-//     update_E_with_D(time_scale);
-    update_E_with_P(time_scale);
+//     update_E();
+//     update_E_with_D();
+    update_E_with_P_and_epsi_rel();
     apply_boundary_E();
     update_source_E(_n);
   
@@ -91,7 +91,7 @@ void em1d::advance_a_step(const int _n)
     
     /**************************************************************************/
     // Update H-field
-    update_H(time_scale);
+    update_H();
     apply_boundary_H();
     update_source_H(_n);
     
@@ -136,14 +136,14 @@ void em1d::print_allocated_memory_in_Mbytes()
 }
 
 /******************************************************************************/
-void em1d::update_E(const double t_scale)
+void em1d::update_E()
 {
     #pragma omp parallel for
     for(int k=1; k < ncell; k++) ex[k] += dt_dxeps0/epsi_rel[k]*(hy[k-1] - hy[k]);
 }
 
 /******************************************************************************/
-void em1d::update_E_with_D(const double t_scale)
+void em1d::update_E_with_D()
 {
     #pragma omp parallel for
     for(int k=1; k < ncell; k++)
@@ -154,7 +154,7 @@ void em1d::update_E_with_D(const double t_scale)
 }
 
 /******************************************************************************/
-void em1d::update_E_with_P(const double t_scale)
+void em1d::update_E_with_P_and_epsi_rel()
 {
       #pragma omp parallel for
       for(int k=1; k < ncell; k++)
@@ -163,7 +163,7 @@ void em1d::update_E_with_P(const double t_scale)
 }
 
 /******************************************************************************/
-void em1d::update_H(const double t_scale)
+void em1d::update_H()
 {
     #pragma omp parallel for
     for(int k=0; k < ncell-1; k++) hy[k] += dt_dxmu0*(ex[k] - ex[k+1]); 

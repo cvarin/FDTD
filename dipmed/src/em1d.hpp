@@ -34,10 +34,10 @@ class em1d : public material
           void apply_boundary_H();
           void print_allocated_memory_in_Kbytes();
           void print_allocated_memory_in_Mbytes();
-          void update_E(const double t_scale);
-          void update_E_with_D(const double t_scale);
-          void update_E_with_P(const double t_scale);
-          void update_H(const double t_scale);
+          void update_E();
+          void update_E_with_D();
+          void update_E_with_P_and_epsi_rel();
+          void update_H();
           void update_source_E(const int _n);
           void update_source_H(const int _n);
 };

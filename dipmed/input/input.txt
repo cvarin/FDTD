@@ -1,11 +1,11 @@
-threads = 1
+threads = 2
 nsteps = 3000
 step = 5
 ncell = 600
 m2start = 150
 m2stop = 450
 epsilon = 4.0
-conductivity = 1.0e5
+conductivity = 5.0
 number density = 4.0e28
 relaxation time = 1.0e-6
 dx = 0.01
