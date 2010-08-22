@@ -11,10 +11,6 @@ class em1d : public material
           double *ex;          // E-field
           double *Dx;          // D-field
           double *hy;          // H-field
-          double *epsi_rel;    // Relative Permittivity
-          double *density_profile; // Goes from 0.0 (no material) to 1.0 (material)
-          double *px;          // Polarization
-          double *px_previous; // Polarization (at time step n - 1)
           
           double ex_low ; // Temp variables for absorbing boundaries
           double ex_high;

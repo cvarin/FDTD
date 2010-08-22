@@ -38,6 +38,9 @@ IO::IO(const int _argc, const char **_argv)
         if(omp_get_thread_num()==0)
         printf("Number of threads = %d/%d\n",omp_get_num_threads(),omp_get_max_threads());
      }
+     
+     /*************************************************************************/
+     bytes_allocated = 0;
 }
           
 /****************** Member functions ******************************************/

@@ -7,6 +7,11 @@ class material : public IO
 {    
      public:
           /******** Members ***************************************************/
+          double *epsi_rel;    // Relative Permittivity
+          double *density_profile; // Goes from 0.0 (no material) to 1.0 (material)
+          double *px;          // Polarization
+          double *px_previous; // Polarization (at time step n - 1)
+          
           double gam;   // parameter for the polarization differential equation
           
           /******** Member functions ******************************************/

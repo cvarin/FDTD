@@ -13,37 +13,15 @@
 
 /****************** Constructor/Destructor ************************************/
 em1d::em1d(const int _argc, const char **_argv):material(_argc,_argv)
-{
-    bytes_allocated = 0;
-  
+{ 
     /**************************************************************************/
     // Initialize the E field and all cells to free space
     bytes_allocated += allocate_1D_array_of_doubles(&ex,ncell,"ex");
     bytes_allocated += allocate_1D_array_of_doubles(&Dx,ncell,"Dx");
     bytes_allocated += allocate_1D_array_of_doubles(&hy,ncell,"hy");
-    bytes_allocated += allocate_1D_array_of_doubles(&epsi_rel,ncell,"epsi_rel");
-    bytes_allocated += allocate_1D_array_of_doubles(&density_profile,ncell,"density_profile");
-    bytes_allocated += allocate_1D_array_of_doubles(&px_previous,ncell,"P_previous");
-    bytes_allocated += allocate_1D_array_of_doubles(&px,ncell,"P");
   
     /**************************************************************************/
     print_allocated_memory_in_Kbytes();
-    
-    /**************************************************************************/
-    // Set free space everywhere
-    for(int k=0; k <= ncell-1; k++)
-    {
-        epsi_rel[k] = 1.0;
-        density_profile[k]  = 0.0;
-    }
-        
-    /*************************************************************************/
-    // Initialize the medium 2        
-    for(int k=m2start; k < m2stop; k++)
-    {
-        epsi_rel[k] = epsilon;
-        density_profile[k] = 1.0;
-    }
     
     /*************************************************************************/
     // Set parameter for the polarization differential equation
@@ -64,10 +42,6 @@ em1d::em1d(const int _argc, const char **_argv):material(_argc,_argv)
 /******************************************************************************/
 em1d::~em1d()
 {
-    bytes_allocated -= free_array_of_doubles(px_previous,ncell);
-    bytes_allocated -= free_array_of_doubles(px,ncell);
-    bytes_allocated -= free_array_of_doubles(density_profile,ncell);
-    bytes_allocated -= free_array_of_doubles(epsi_rel,ncell);
     bytes_allocated -= free_array_of_doubles(hy,ncell);
     bytes_allocated -= free_array_of_doubles(Dx,ncell);
     bytes_allocated -= free_array_of_doubles(ex,ncell);
