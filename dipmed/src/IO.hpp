@@ -15,6 +15,7 @@ class IO
           int m2start;    // Cell where the medium starts
           int m2stop;     // Cell where the medium stops
           double epsilon; // Medium relative index
+          double conductivity; // Medium conductivity
           double number_density; // Number of atoms/molecules per m^3
           double relaxation_time; // In seconds.
           

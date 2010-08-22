@@ -78,7 +78,7 @@ void IO::read_input_file()
      
      /************* Read the file *********************************************/
      printf("Reading %s\n",input_file.c_str());
-     int nparams = 13;
+     int nparams = 14;
      int results[nparams];
      
      int i = 0;
@@ -90,6 +90,7 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"m2start = %i\n", &m2start);
      results[i++] = fscanf(f,"m2stop = %i\n", &m2stop);
      results[i++] = fscanf(f,"epsilon = %lf\n", &epsilon);
+     results[i++] = fscanf(f,"conductivity = %lf\n", &conductivity);
      results[i++] = fscanf(f,"number density = %lf\n", &number_density);
      results[i++] = fscanf(f,"relaxation time = %lf\n", &relaxation_time);
      results[i++] = fscanf(f,"dx = %lf\n", &dx);
@@ -116,6 +117,7 @@ void IO::read_input_file()
                printf("m2start = 200\n");
                printf("m2stop = 400\n");
                printf("epsilon = 4.0\n");
+               printf("conductivity = 1.0e3\n");
                printf("number_density = 4.0e28\n");
                printf("relaxation_time = 1.0e-12\n");
                printf("dx = 0.01");
@@ -142,6 +144,7 @@ void IO::read_input_file()
      printf("m2start = %d\n",m2start);
      printf("m2stop = %d\n",m2stop);
      printf("epsilon = %f\n",epsilon);
+     printf("conductivity = %e\n",conductivity);
      printf("number density = %e\n",number_density);
      printf("relaxation time = %e\n",relaxation_time);
      printf("dx = %f\n",dx);

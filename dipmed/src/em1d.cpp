@@ -87,7 +87,7 @@ void em1d::advance_a_step(const int _n)
   
     /**************************************************************************/
     // update the material response
-    update_polarization();
+    update_polarization_debye_medium(px,px_previous,ex,density_profile,ncell);
     
     /**************************************************************************/
     // Update H-field
@@ -136,12 +136,6 @@ void em1d::print_allocated_memory_in_Mbytes()
 }
 
 /******************************************************************************/
-// double em1d::static_response(const int k)
-// {
-//     return epsi_rel[k];
-// }
-
-/******************************************************************************/
 void em1d::update_E(const double t_scale)
 {
     #pragma omp parallel for
@@ -173,19 +167,6 @@ void em1d::update_H(const double t_scale)
 {
     #pragma omp parallel for
     for(int k=0; k < ncell-1; k++) hy[k] += dt_dxmu0*(ex[k] - ex[k+1]); 
-}
-
-/******************************************************************************/
-void em1d::update_polarization()
-{
-    double pstat;    
-    #pragma omp parallel for
-    for(int k=0; k < ncell-1; k++) 
-    {
-        px_previous[k] = px[k];
-        pstat = density_profile[k]*static_response()*ex[k]*epsi_0;
-        px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
-    }
 }
 
 /******************************************************************************/

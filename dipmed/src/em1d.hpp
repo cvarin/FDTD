@@ -23,7 +23,6 @@ class em1d : public material
           
           static const int source_plane = 5;
 
-          double gam;   // parameter for the polarization differential equation
           double dt_dxeps0; // Parameter for the E-field update
           double dt_dxmu0; // Parameter for the H-field update
 
@@ -35,12 +34,10 @@ class em1d : public material
           void apply_boundary_H();
           void print_allocated_memory_in_Kbytes();
           void print_allocated_memory_in_Mbytes();
-//           double static_response(const int k);
           void update_E(const double t_scale);
           void update_E_with_D(const double t_scale);
           void update_E_with_P(const double t_scale);
           void update_H(const double t_scale);
-          void update_polarization();
           void update_source_E(const int _n);
           void update_source_H(const int _n);
 };
