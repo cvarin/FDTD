@@ -60,7 +60,8 @@ void em1d::advance_a_step(const int _n)
   
     /**************************************************************************/
     // update the material response
-    update_polarization_debye_medium(px,px_previous,ex,density_profile,ncell);
+//     update_polarization_debye_medium(px,px_previous,ex,density_profile,ncell);
+     update_polarization_debye_medium(ex,ncell);
     
     /**************************************************************************/
     // Update H-field
