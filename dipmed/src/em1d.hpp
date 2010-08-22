@@ -15,8 +15,6 @@ class em1d : public material
           double *density_profile; // Goes from 0.0 (no material) to 1.0 (material)
           double *px;          // Polarization
           double *px_previous; // Polarization (at time step n - 1)
-
-          int bytes_allocated;
           
           double ex_low ; // Temp variables for absorbing boundaries
           double ex_high;
@@ -32,8 +30,6 @@ class em1d : public material
           void advance_a_step(const int _n);
           void apply_boundary_E();
           void apply_boundary_H();
-          void print_allocated_memory_in_Kbytes();
-          void print_allocated_memory_in_Mbytes();
           void update_E();
           void update_E_with_D();
           void update_E_with_P_and_epsi_rel();

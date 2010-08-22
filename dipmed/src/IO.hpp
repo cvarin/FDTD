@@ -37,9 +37,13 @@ class IO
           int screenout;     // Period for screen output
           int fileout;       // Period for file output
           
+          int bytes_allocated;
+          
           /******** Member functions ******************************************/
           IO(const int _argc, const char **_argv);
           void copy_input_file();
+          void print_allocated_memory_in_Kbytes();
+          void print_allocated_memory_in_Mbytes();
           void read_input_file();
           void write_field_to_file(const int n, const double *ex, 
                                     const double *hy);

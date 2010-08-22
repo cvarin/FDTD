@@ -67,6 +67,18 @@ void IO::copy_input_file()
 }
 
 /******************************************************************************/
+void IO::print_allocated_memory_in_Kbytes()
+{
+    printf("Memory allocated: %f KB\n",(double)bytes_allocated/1024);
+}
+
+/******************************************************************************/
+void IO::print_allocated_memory_in_Mbytes()
+{
+    printf("Memory allocated: %f MB\n",(double)bytes_allocated/1024/1024);
+}
+
+/******************************************************************************/
 void IO::read_input_file()
 {
      FILE *f = fopen(input_file.c_str(),"r");

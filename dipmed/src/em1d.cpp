@@ -124,18 +124,6 @@ void em1d::apply_boundary_H()
 }
 
 /******************************************************************************/
-void em1d::print_allocated_memory_in_Kbytes()
-{
-    printf("Memory allocated: %f KB\n",(double)bytes_allocated/1024);
-}
-
-/******************************************************************************/
-void em1d::print_allocated_memory_in_Mbytes()
-{
-    printf("Memory allocated: %f MB\n",(double)bytes_allocated/1024/1024);
-}
-
-/******************************************************************************/
 void em1d::update_E()
 {
     #pragma omp parallel for
