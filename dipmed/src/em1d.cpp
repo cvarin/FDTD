@@ -45,7 +45,6 @@ em1d::~em1d()
     bytes_allocated -= free_array_of_doubles(hy,ncell);
     bytes_allocated -= free_array_of_doubles(Dx,ncell);
     bytes_allocated -= free_array_of_doubles(ex,ncell);
-    print_allocated_memory_in_Kbytes();
 }
           
 /****************** Member functions ******************************************/

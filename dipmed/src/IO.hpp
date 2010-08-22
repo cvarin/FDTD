@@ -41,6 +41,7 @@ class IO
           
           /******** Member functions ******************************************/
           IO(const int _argc, const char **_argv);
+          ~IO();
           void copy_input_file();
           void print_allocated_memory_in_Kbytes();
           void print_allocated_memory_in_Mbytes();
