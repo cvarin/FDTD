@@ -17,9 +17,9 @@ from scipy.integrate import odeint
 #########################################################################################
 # The equations of motion are integrated and the dynamics is plotted
 tmax = 100
-numpoints = 300
+numpoints = 1000
 
-b = 0.01         # Damping factor, effectively gamma/omega_0
+b = 0.15         # Damping factor, effectively gamma/omega_0
 x_0 = 0.0        # initials conditions
 v_0 = 0.0
 X0 = array([x_0,v_0]) 
@@ -45,15 +45,23 @@ def dX_dt(X,t=0):
 X, infodict = odeint(dX_dt,X0,t,full_output=True)
 infodict['message']
 
+#########################################################################################
+x_fd = zeros(numpoints)
+common = 1.0/(1 + 0.5*b*dt)
+a1 = (2.0 - dt**2)*common
+a2 = -(1.0 - 0.5*b*dt)*common
+a3 = dt**2*common
+for i in range(2,numpoints):
+     x_fd[i] = a1*x_fd[i-1] + a2*x_fd[i-2] + a3*F(t[i])
+
 ################### The result is plotted ###############################################
 x,v = X.T
 fs=16
 p.figure(figsize=(16.0,8.5))
-p.title(r"Time evolution of a damped pendulum",fontsize=fs)
+p.title(r"Time evolution of a damped oscillator",fontsize=fs)
 p.plot(t,x,'r-',label=r"Adaptive integrator")
+p.plot(t,x_fd,'b.',label=r"Finite differences")
 p.plot(t,F(t),'k',label="source")
-#p.plot(t,x/x.max(),'r-',label=r"Adaptive integrator")
-#p.plot(t,F(t)/F(t).max(),'k',label="source")
 p.xlabel(r"Time (in units of $\omega$)",fontsize=fs)
 p.ylabel(r"$x$",fontsize=1.5*fs)
 p.grid(True)
