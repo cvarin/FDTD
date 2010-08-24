@@ -77,6 +77,7 @@ cos_sqr_avg = (1j*sqrt(J)*(exp(J)/J-(sqrt(pi)*erf(1j*sqrt(J)))/(2.0*1j*sqrt(J)*J
 f_ana2 = (a1 + (a3 - a1)*cos_sqr_avg)*E
 
 #########################################################################################
+rcParams['font.size'] = 16
 figure(figsize=(16.0,8.5))
 plot(E,f_num5,label=r"Non-polar - isotropic response (p$_0$= 0, a$_\bot$= a$_\parallel$)")
 plot(E,f_num3,label=r"Non-polar - anisotropic response (p$_0$= 0, a$_\bot\neq$ a$_\parallel$)")
@@ -89,8 +90,8 @@ plot(x,f_ana2,'.',label="Analytical [Boyd, 3rd ed., Eqs. (4.4.10) and (4.4.11)]"
 #axhline(y=1.0,ls="--")
 #ylim(0,1.2)
 xlim(0,MAX)
-xlabel(r"$E$",size=18)
-ylabel(r"$<p>$",size=18)
+xlabel(r"$E$",size=22)
+ylabel(r"$<p>$",size=22)
 legend(loc="upper left")
 grid(True)
 
