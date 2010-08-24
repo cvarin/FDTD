@@ -1,0 +1,41 @@
+\documentclass[12pt,letterpaper]{article}
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{fullpage}
+
+\usepackage[pdftex]{hyperref}
+
+\date{\today}
+\author{Charles Varin}
+\title{Optical response of a dipolar medium and integration with the finite-differences time-domain method for solving the Maxwell equations}
+
+\begin{document}
+\maketitle 
+\tableofcontents
+\section{Introduction}\label{intro}
+In the presence of a medium with electric susceptibility (but no free charges), the evolution of the electric and magnetic field vectors $\mathbf{E}$ and $\mathbf{H}$ is given by the following Maxwell equation:
+\begin{subequations}\label{maxwell}
+  \begin{align}\label{maxwell1}
+   \frac{\partial\mathbf{E}}{\partial t} &=\frac{1}{\epsilon_0}\nabla\times\mathbf{H}-\frac{1}{\epsilon_0}\frac{\partial\mathbf{P}}{\partial t},\\
+   \frac{\partial\mathbf{H}}{\partial t} &=-\frac{1}{\mu_0}\nabla\times\mathbf{E},\label{maxwell2}
+  \end{align}
+\end{subequations}
+where $c = 1/\sqrt{\epsilon_0\mu_0}$. In the next sections, a model for the temporal evolution of the polarization $\mathbf{P}$ of a dipolar medium is presented. For general details regarding to the finite-differences time-domain (FDTD) method for solving Eqs. \ref{maxwell}, see \cite{sullivan2000,taflove2005}.
+
+\section{Static response of a dipolar medium}\label{static}
+A dipolar medium is composed of molecules that possess a permanent dipole moment and whose polarizability is anisotropic. In a static electric field, initially disordered molecules will tend to align along the field lines leading to an average polarization. Models for the static response associated with the permanent dipole moment and the anisotropic susceptibility ca be found in \cite{jackson1999,hook1991} and \cite{boyd2008}, respectively. We now put those two models together and see that the result is not the same as if they were treated as independent contributions. 
+
+
+% , assumed here to be larger in the direction of the dipole moment
+
+\section{Time evolution of the molecular polarizability}\label{time}
+
+\bibliographystyle{unsrt} 
+\bibliography{dipmed}
+\end{document}
