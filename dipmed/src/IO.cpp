@@ -99,7 +99,7 @@ void IO::read_input_file()
      
      /************* Read the file *********************************************/
      printf("Reading %s\n",input_file.c_str());
-     int nparams = 14;
+     int nparams = 16;
      int results[nparams];
      
      int i = 0;
@@ -114,6 +114,8 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"conductivity = %lf\n", &conductivity);
      results[i++] = fscanf(f,"number density = %lf\n", &number_density);
      results[i++] = fscanf(f,"relaxation time = %lf\n", &relaxation_time);
+     results[i++] = fscanf(f,"omega0 = %lf\n", &omega0);
+     results[i++] = fscanf(f,"lifetime = %lf\n", &lifetime);
      results[i++] = fscanf(f,"dx = %lf\n", &dx);
      dt = time_scale*dx/co;
      results[i++] = fscanf(f,"t0 = %lf\n", &t0);
@@ -141,6 +143,8 @@ void IO::read_input_file()
                printf("conductivity = 1.0e3\n");
                printf("number_density = 4.0e28\n");
                printf("relaxation_time = 1.0e-12\n");
+               printf("omega0 = 1.0e9\n");
+               printf("lifetime = 1.0e-8\n");
                printf("dx = 0.01");
                printf("t0 = 80.0\n");
                printf("spread = 40.0\n");
@@ -168,6 +172,8 @@ void IO::read_input_file()
      printf("conductivity = %e\n",conductivity);
      printf("number density = %e\n",number_density);
      printf("relaxation time = %e\n",relaxation_time);
+     printf("omega0 = %e\n",omega0);
+     printf("lifetime = %e\n",lifetime);
      printf("dx = %f\n",dx);
      printf("dt = %e (time scale %f)\n",dt,time_scale);
      printf("t0 = %f\n",t0);

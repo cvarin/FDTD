@@ -54,14 +54,15 @@ void em1d::advance_a_step(const int _n)
     // Update E-field
 //     update_E();
 //     update_E_with_D();
+//     update_E_with_P();
     update_E_with_P_and_epsi_rel();
     apply_boundary_E();
     update_source_E(_n);
   
     /**************************************************************************/
     // update the material response
-//     update_polarization_debye_medium(px,px_previous,ex,density_profile,ncell);
-     update_polarization_debye_medium(ex,ncell);
+//     update_polarization_debye_medium(ex,ncell);
+    update_polarization_lorentz_medium(ex,ncell);
     
     /**************************************************************************/
     // Update H-field
@@ -73,11 +74,11 @@ void em1d::advance_a_step(const int _n)
     // Outputs the progress of the calculation on screen
     if(_n%screenout==0) printf("Progress = %d/%d\n",_n,nsteps);
     
-    /********************************************************************/
+    /**************************************************************************/
     // Writing fields to file                
     if(_n%fileout==0) write_field_to_file(_n,ex,hy);
     
-    /********************************************************************/
+    /**************************************************************************/
     flush_output_buffers();
 }
 
@@ -113,6 +114,15 @@ void em1d::update_E_with_D()
         Dx[k] += dt/dx*(hy[k-1] - hy[k]);
         ex[k] = (Dx[k] - px[k])/(epsi_rel[k]*epsi_0);
     }
+}
+
+/******************************************************************************/
+void em1d::update_E_with_P()
+{
+      #pragma omp parallel for
+      for(int k=1; k < ncell; k++)
+        ex[k] += (dt_dxeps0*(hy[k-1] - hy[k]) 
+                   - 1.0/epsi_0*(px[k] - px_previous[k]));
 }
 
 /******************************************************************************/

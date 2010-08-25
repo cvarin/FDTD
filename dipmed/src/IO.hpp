@@ -18,6 +18,8 @@ class IO
           double conductivity; // Medium conductivity
           double number_density; // Number of atoms/molecules per m^3
           double relaxation_time; // In seconds.
+          double omega0;          // Electronic resonance angular frequency.
+          double lifetime;        // Electronic relaxation time.
           
           double dx;         // Cell size
           static const double time_scale = 1.0; // time scale = 1.0 is Courant condition

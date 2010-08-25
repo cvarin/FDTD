@@ -13,7 +13,16 @@ material::material(const int _argc, const char **_argv):IO(_argc,_argv)
      bytes_allocated += allocate_1D_array_of_doubles(&density_profile,ncell,"density_profile");
      bytes_allocated += allocate_1D_array_of_doubles(&px_previous,ncell,"P_previous");
      bytes_allocated += allocate_1D_array_of_doubles(&px,ncell,"P");
+     
+     /**************************************************************************/
+     // The the parameters for the differential equations (obtained by 
+     // putting finite differences in the differential equations).
      gam = 2.0*relaxation_time/dt;
+     double dT = omega0*dt;
+     double common = 1.0/(1 + 0.5*lifetime*dt);
+     a1 = (2.0 - dT*dT)*common;
+     a2 = -(1.0 - 0.5*lifetime*dt)*common;
+     a3 = dT*dT*common;
      
      /**************************************************************************/
      // Set free space everywhere
@@ -42,9 +51,15 @@ material::~material()
 }
           
 /****************** Member functions ******************************************/
-double material::static_response()
+double material::static_absorption()
 {
     return conductivity;
+}
+
+/******************************************************************************/
+double material::static_electronic_response()
+{
+    return epsilon - 1.0;
 }
 
 /******************************************************************************/
@@ -55,7 +70,7 @@ void material::update_polarization_debye_medium(const double *ex, const int ncel
     for(int k=0; k < ncell-1; k++)
     {
         px_previous[k] = px[k];
-        pstat = density_profile[k]*static_response()*ex[k]*epsi_0;
+        pstat = density_profile[k]*static_absorption()*ex[k]*epsi_0;
         px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
     }
 }
@@ -64,12 +79,16 @@ void material::update_polarization_debye_medium(const double *ex, const int ncel
 void material::update_polarization_lorentz_medium(const double *ex, const int ncell)
 {    
     double pstat;
-    #pragma omp parallel for shared(ex) private(pstat) 
+    double p_minus_1;
+    double p_minus_2;
+    #pragma omp parallel for shared(ex) private(pstat,p_minus_1,p_minus_2) 
     for(int k=0; k < ncell-1; k++)
     {
+        pstat = density_profile[k]*static_electronic_response()*ex[k]*epsi_0;
+        p_minus_2 = px_previous[k];
         px_previous[k] = px[k];
-        pstat = density_profile[k]*static_response()*ex[k]*epsi_0;
-        px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
+        p_minus_1 = px_previous[k];
+        px[k] = a1*p_minus_1 + a2*p_minus_2 + a3*pstat;
     }
 }
 

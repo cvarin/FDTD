@@ -12,12 +12,16 @@ class material : public IO
           double *px;          // Polarization
           double *px_previous; // Polarization (at time step n - 1)
           
-          double gam;   // parameter for the polarization differential equation
+          double gam;   // Parameter for the Debye differential equation
+          double a1;    // Parameters for the Lorentz differential equation
+          double a2;
+          double a3; 
           
           /******** Member functions ******************************************/
           material(const int _argc, const char **_argv);
           ~material();
-          double static_response();
+          double static_absorption();
+          double static_electronic_response();
           void update_polarization_debye_medium(const double *ex, const int ncell);
           void update_polarization_lorentz_medium(const double *ex, const int ncell);
 };
