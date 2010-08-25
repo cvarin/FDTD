@@ -53,6 +53,17 @@ a2 = -(1.0 - 0.5*b*dt)*common
 a3 = dt**2*common
 for i in range(2,numpoints):
      x_fd[i] = a1*x_fd[i-1] + a2*x_fd[i-2] + a3*F(t[i])
+     
+#########################################################################################
+x_fdtd = zeros(numpoints)
+x_new = 0.0
+x_old = 0.0
+for i in range(0,numpoints):
+  x_minus_2 = x_old
+  x_old = x_new
+  x_minus_1 = x_old
+  x_new = a1*x_minus_1 + a2*x_minus_2 + a3*F(t[i])
+  x_fdtd[i] = x_new
 
 ################### The result is plotted ###############################################
 x,v = X.T
@@ -61,6 +72,7 @@ p.figure(figsize=(16.0,8.5))
 p.title(r"Time evolution of a damped oscillator",fontsize=fs)
 p.plot(t,x,'r-',label=r"Adaptive integrator")
 p.plot(t,x_fd,'b.',label=r"Finite differences")
+p.plot(t,x_fdtd,'gx',label=r"Finite differences (alternative scheme)")
 p.plot(t,F(t),'k',label="source")
 p.xlabel(r"Time (in units of $\omega$)",fontsize=fs)
 p.ylabel(r"$x$",fontsize=1.5*fs)
