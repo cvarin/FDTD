@@ -28,7 +28,6 @@ class em1d : public material
           void apply_boundary_H();
           void update_E();
           void update_E_with_D();
-          void update_E_with_P();
           void update_E_with_P_and_epsi_rel();
           void update_H();
           void update_source_E(const int _n);
