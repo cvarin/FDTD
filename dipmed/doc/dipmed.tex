@@ -60,11 +60,11 @@ At equilibrium, $<\cos\theta>$ and $<\cos^2\theta>$ are given by:
 \end{subequations}
 where $U$ is a function of $\theta$. 
 
-Analytical solutions for Eqs.~\eqref{eq:total_pol} and \eqref{eq:statistics} for the case where the polarizability is zero ($\alpha_\bot = \alpha_\parallel=0$) can be found in \cite{hook1991} (Sec. 9.1.3) and \cite{jackson1999} (Sec. 4.6). The solution for $p_0 = 0$ can be found in \cite{boyd2008} (Sec. 4.4). The complete solution ($p_0\neq 0$, $\alpha_\bot\neq 0$, and $\alpha_\parallel\neq 0$) was found numerically and is compared with the analytical formulas in Fig. \ref{fig:stat_pol}.
+Analytical solutions for Eqs.~\eqref{eq:total_pol} and \eqref{eq:statistics} for the case where the polarizability is zero ($\alpha_\bot = \alpha_\parallel=0$) can be found in \cite{hook1991} (Sec. 9.1.3) and \cite{jackson1999} (Sec. 4.6). The solution for $p_0 = 0$ can be found in \cite{boyd2008} (Sec. 4.4). The complete solution ($p_0\neq 0$, $\alpha_\bot\neq 0$, and $\alpha_\parallel\neq 0$) was found numerically and is compared with the analytical formulas in Fig. \ref{fig:stat_pol}. It is thus observed that the material response is in general nonlinear, excepted for small field amplitudes ($E\rightarrow 0$).
 
-\begin{figure}
+\begin{figure}[ht]
     \includegraphics[width=17.2cm]{static_polarization.pdf}
-    \caption{Average molecular polarization at equilibrium as a function of the electric field.}
+    \caption{Average molecular polarization at equilibrium as a function of the electric field. For a polar material ($p_0\neq 0$), the response is nonlinear. Saturation occurs when the field is strong enough to align the molecules completely.}
     \label{fig:stat_pol}
 \end{figure} 
 
@@ -77,24 +77,57 @@ and each $<\cos\theta_i>$ and $<\cos^2\theta_i>$ can be calculated independently
  P_i=N<p_i>=N\left\lbrace p_0<\cos\theta_i>+\left[\alpha_\bot + (\alpha_\parallel - \alpha_\bot)<\cos^2\theta_i>\right]E_i\right\rbrace.
 \end{equation}
 
-\section{Weak-field polarizability}\label{weak_field}
-Before going into the time evolution of the molecular polarization, we will define the material response in the limit where the field is weak, i.e., when $E\rightarrow 0$. In other words, we will find the linear response so that $<p>_0=<\alpha>_0 E$. For that, we expand the exponentials in Eqs. \eqref{eq:statistics}:
-\begin{align}
+\section{Weak-field (linear) response}\label{weak_field}
+Before going into the time evolution of the molecular polarization, we will define the material response in the limit where the field is weak, i.e., when $E\rightarrow 0$. In other words, we will find the linear response so that $<p>_0=<\alpha>_0 E$. For that, we expand the exponential functions in Eqs. \eqref{eq:statistics}:
+\begin{align}\label{eq:exponential_first_order}
   \exp(-U/k_BT)\simeq 1-\frac{U}{k_BT} = 1+\frac{p_0E\cos\theta+\left[\alpha_\bot + (\alpha_\parallel - \alpha_\bot)\cos^2\theta\right]E^2}{k_BT}.
 \end{align}
 The evaluation of the average values then gives:
 \begin{subequations}\label{eq:statistics_weak_field}
  \begin{align}
   <\cos\theta>&=\frac{p_0 E}{3k_BT},\\
-  <\cos^2\theta>&=\frac{1}{3}.
+  <\cos^2\theta>&=\frac{1}{3},
  \end{align}
 \end{subequations}
 and we find
 \begin{equation}\label{eq:total_pol_weak_field}
  <p>_0=\left[\frac{p_0^2 }{3k_BT}+\left(\frac{1}{3}\alpha_\parallel + \frac{2}{3}\alpha_\bot\right)\right] E,
 \end{equation}
-in agreement with \cite{jackson1999,hook1991,boyd2008}. This can be converted to a linear refractive index ($n_0$), or linear relative electric permittivity ($\epsilon_r$).
+in agreement with \cite{jackson1999,hook1991,boyd2008}. This can be converted to a linear refractive index ($n_0$), or linear relative electric permittivity ($\epsilon_r$) \cite{boyd2008}.
 
+\section{Nonlinear response}\label{non_linear}
+As seen in Fig. \ref{fig:stat_pol}, the response of a dipolar material is nonlinear. A general molecular polarization can thus be written $<p>=<\alpha>_0E + <p>_{NL}$, where $NL$ stands for \textit{nonlinear}. The mathematical form of $<p>_{NL}$ is not necessarily a simple analytical expression. But it is easily obtained by calculating the full polarization numerically and subtracting the linear response, i.e., 
+\begin{align}\label{eq:non_linear_pol}
+ <p>_{NL} &= <p> - <p>_0,
+\end{align}
+Then, the electric displacement is written:
+\begin{align}\label{eq:electric_displacement}
+ D &= \epsilon_r\epsilon_0 E + N<p>_{NL}.
+\end{align}
+The form of Eq. \eqref{eq:electric_displacement} is desired to perform stable numerical solutions of the Maxwell equations with the FDTD method \cite{sullivan2000,taflove2005}.
+
+As an example, we expanded Eq. \eqref{eq:exponential_first_order} up to second order in $E$ and obtained, from a calculation similar than that of Sec. \ref{weak_field},
+\begin{subequations}\label{eq:statistics_second_order_cos}
+ \begin{align}
+  <\cos\theta>&=\frac{p_0E/(3k_BT)}{1+\left(\alpha_\parallel/3+2\alpha_\bot/3\right){E}^{2}/k_BT+{p_0}^{2}{E}^{2}/6(k_BT)^{2}},\\
+  &\simeq \frac{p_0E}{3k_BT}\left[1-\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\frac{E^{2}}{k_BT}-\frac{{p_0}^{2}{E}^{2}}{6(k_BT)^{2}}\right],\\
+  &\simeq \frac{p_0E}{3k_BT} + O(E^3),	
+ \end{align}
+\end{subequations}
+\begin{subequations}\label{eq:statistics_second_order_cos_sqr}
+ \begin{align}
+  <\cos^2\theta>&=\frac{1/3 + \left(6\alpha_\parallel +4\alpha_\bot\right)E^2/30k_BT+p_0^2E^2/10(k_BT)^{2}}{1+\left(\alpha_\parallel/3+2\alpha_\bot/3\right){E}^{2}/k_BT+{p_0}^{2}{E}^{2}/6(k_BT)^{2}},\\
+&\simeq \frac{1}{3} - \left[\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\frac{1}{3k_BT}+\frac{{p_0}^{2}}{18(k_BT)^{2}}\right]E^2 + O(E^4),
+ \end{align}
+\end{subequations}
+and
+\begin{align}\label{eq:total_pol_second_order}
+ <p>&\simeq\left[\frac{p_0^2}{3k_BT}+\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\right]E - (\alpha_\parallel - \alpha_\bot)\left[\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\frac{1}{3k_BT}+\frac{{p_0}^{2}}{18(k_BT)^{2}}\right]E^3\nonumber\\ 
+ &\qquad + ...
+\end{align}
+The equation has the form $<p>=<\alpha>_0E + <\alpha>_{NL}E$, where $<\alpha>_{NL}$ depends on $E^2$, i.e., on the laser intensity. The intensity dependent polarizability is responsible for the optical Kerr effect and other nonlinear optical phenomena \cite{boyd2008}.
+
+% the molecular polarizability up to the second order in $E$: $<p>=<\alpha>_0E + <\alpha>_1E^2$
 
 \section{Time evolution of the molecular polarizability}\label{time}
 
