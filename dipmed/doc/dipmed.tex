@@ -110,30 +110,26 @@ As an example, we expanded Eq. \eqref{eq:exponential_first_order} up to second o
   \exp(-U/k_BT)\simeq 1+\frac{p_0E}{k_BT}\cos\theta+ \frac{p_0^2E^2}{2\,k_B^2T^2}\cos^2\theta + \frac{\alpha_\bot E^2}{2k_BT} +
 \frac{\left(\alpha_\parallel - \alpha_\bot\right) E^2}{2k_BT}\cos^2\theta+ O(E^3),
 \end{align}
-Then, when integrating term by term, is obtained:
-
-% From a calculation similar than that of Sec. \ref{weak_field}, we obtained:
-\begin{subequations}\label{eq:statistics_second_order_cos}
+Then, integrating term by term and expanding the denominators [$1/(1+a)\simeq (1-a)$], the following results are obtained:
+\begin{subequations}\label{eq:statistics_second_order}
  \begin{align}
-  <\cos\theta>&=\frac{p_0E/(3k_BT)}{1+\left(\alpha_\parallel/3+2\alpha_\bot/3\right){E}^{2}/k_BT+{p_0}^{2}{E}^{2}/6(k_BT)^{2}},\\
-  &\simeq \frac{p_0E}{3k_BT}\left[1-\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\frac{E^{2}}{k_BT}-\frac{{p_0}^{2}{E}^{2}}{6(k_BT)^{2}}\right],\\
-  &\simeq \frac{p_0E}{3k_BT} + O(E^3),	
+  <\cos\theta>&\simeq \frac{p_0E}{3k_BT} + O(E^3),\\
+  <\cos^2\theta>&\simeq\frac{1}{3}+\frac{2}{45}\left[\frac{\left(\alpha_\parallel-\alpha_\bot\right)}{k_BT} +\frac{p_0^2}{k_B^2T^2}\right]E^2 + O(E^4).
  \end{align}
 \end{subequations}
-\begin{subequations}\label{eq:statistics_second_order_cos_sqr}
- \begin{align}
-  <\cos^2\theta>&=\frac{1/3 + \left(6\alpha_\parallel +4\alpha_\bot\right)E^2/30k_BT+p_0^2E^2/10(k_BT)^{2}}{1+\left(\alpha_\parallel/3+2\alpha_\bot/3\right){E}^{2}/k_BT+{p_0}^{2}{E}^{2}/6(k_BT)^{2}},\\
-&\simeq \frac{1}{3} - \left[\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\frac{1}{3k_BT}+\frac{{p_0}^{2}}{18(k_BT)^{2}}\right]E^2 + O(E^4),
- \end{align}
-\end{subequations}
-and
-\begin{align}\label{eq:total_pol_second_order}
- <p>&\simeq\left[\frac{p_0^2}{3k_BT}+\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\right]E - (\alpha_\parallel - \alpha_\bot)\left[\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right)\frac{1}{3k_BT}+\frac{{p_0}^{2}}{18(k_BT)^{2}}\right]E^3\nonumber\\ 
- &\qquad + ...
+When Eqs. \eqref{eq:total_pol} and \eqref{eq:statistics_second_order} are combined, an average molecular polarization of the form 
+\begin{equation}\label{eq:pol_nonlinear}
+<p>=<\alpha>_0E + <\alpha>_{NL}E
+\end{equation}
+is obtained, where the linear and nonlinear polarizabilities $<\alpha>_0$ and $<\alpha>_{NL}$ are: 
+\begin{subequations}\label{eq:alpha_linear_nonlinear}
+\begin{align}\label{eq:alpha_linear}
+  <\alpha>_0 &= \frac{p_0^2}{3k_BT}+\left(\frac{1}{3}\alpha_\parallel+\frac{2}{3}\alpha_\bot\right),\\
+  <\alpha>_{NL} &= \frac{2\delta\alpha}{45}\left[\frac{\delta\alpha}{k_BT}+\frac{p_0^2}{(k_BT)^2}\right]E^2,
 \end{align}
-The equation has the form $<p>=<\alpha>_0E + <\alpha>_{NL}E$, where $<\alpha>_{NL}$ depends on $E^2$, i.e., on the laser intensity. The intensity dependent polarizability is responsible for the optical Kerr effect and other nonlinear optical phenomena \cite{boyd2008}.
-
-% the molecular polarizability up to the second order in $E$: $<p>=<\alpha>_0E + <\alpha>_1E^2$
+\end{subequations}
+with $\delta\alpha = \alpha_\parallel - \alpha_\bot$.
+The intensity dependent polarizability $<\alpha>_{NL}$ is responsible for the optical Kerr effect and other nonlinear optical phenomena \cite{boyd2008}.
 
 \section{Time evolution of the molecular polarizability}\label{time}
 
