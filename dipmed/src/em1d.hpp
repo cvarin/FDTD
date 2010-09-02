@@ -26,12 +26,13 @@ class em1d : public material
           void advance_a_step(const int _n);
           void apply_boundary_E();
           void apply_boundary_H();
+          double gaussian_pulse(const int _n, const int offset);
           void update_E();
           void update_E_with_D();
           void update_E_with_P_and_epsi_rel();
           void update_H();
-          void update_source_E(const int _n);
-          void update_source_H(const int _n);
+          void update_source_for_E(const int _n);
+          void update_source_for_H(const int _n);
 };
 
 #endif // INC_em1d_hpp

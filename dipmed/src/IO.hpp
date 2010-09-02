@@ -22,7 +22,7 @@ class IO
           double lifetime;        // Electronic relaxation time.
           
           double dx;         // Cell size
-          static const double time_scale = 1.0; // time scale = 1.0 is Courant condition
+          static const double time_scale = 0.5; // time scale = 1.0 is Courant condition
           // time_scale is fixed to 1 because of the rudimentary boundaries used.
           double dt;         // Time increment
           

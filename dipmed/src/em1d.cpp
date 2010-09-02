@@ -56,7 +56,7 @@ void em1d::advance_a_step(const int _n)
 //     update_E_with_D();
     update_E_with_P_and_epsi_rel();
     apply_boundary_E();
-    update_source_E(_n);
+    update_source_for_E(_n);
   
     /**************************************************************************/
     // update the material response
@@ -67,7 +67,7 @@ void em1d::advance_a_step(const int _n)
     // Update H-field
     update_H();
     apply_boundary_H();
-    update_source_H(_n);
+    update_source_for_H(_n);
     
     /**************************************************************************/
     // Outputs the progress of the calculation on screen
@@ -95,6 +95,14 @@ void em1d::apply_boundary_E()
 void em1d::apply_boundary_H()
 {
 
+}
+
+/******************************************************************************/
+double em1d::gaussian_pulse(const int _n, const int offset)
+{
+     double carrier = cos(2.0*Pi*freq_in*dt*(_n + offset*0.5) - ceo_phase);
+     double enveloppe = exp(-0.5*pow((t0/time_scale- _n - offset*0.5)*time_scale/spread,2.0));
+     return E0*carrier*enveloppe;
 }
 
 /******************************************************************************/
@@ -132,17 +140,15 @@ void em1d::update_H()
 }
 
 /******************************************************************************/
-void em1d::update_source_E(const int _n)
-{
-    double carrier = cos(2.0*Pi*freq_in*dt*_n - ceo_phase);
-    double enveloppe = exp(-0.5*pow((t0-_n)/spread,2.0));
-    ex[source_plane] += 2.0*E0*carrier*enveloppe;
+void em1d::update_source_for_E(const int _n)
+{   
+     ex[source_plane + 95] += dt_dxeps0*gaussian_pulse(_n,1)/eta_0;
 }
 
 /******************************************************************************/
-void em1d::update_source_H(const int _n)
+void em1d::update_source_for_H(const int _n)
 {
-  
+     hy[source_plane + 95 - 1] += dt_dxmu0*gaussian_pulse(_n,0);
 }
 
 /****************** End of file ***********************************************/
