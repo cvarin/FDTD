@@ -1,4 +1,4 @@
-Fd3d_4.2.c. 3D FDTD, plane wave on a dielectric sphere. */
+/*Fd3d_4.2.c. 3D FDTD, plane wave on a dielectric sphere. */
 # include <math.h>
 # include <stdlib.h>
 # include <stdio.h>
@@ -24,7 +24,8 @@ main ()
     int ib,jb,kb;
     float xn,xxn,xnum,xd,curl_e;
     float t0,spread,pulse;
-    FILE *fp, *fopen();
+    FILE *fp;
+//     *fopen();
     float ez_inc[JE],hx_inc[JE];
     float ez_low_m1,ez_low_m2,ez_high_m1,ez_high_m2;
 

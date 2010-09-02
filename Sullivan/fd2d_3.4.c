@@ -22,7 +22,8 @@ main ()
     float fi1[IE],fi2[IE],fi3[JE];
     float fj1[JE],fj2[JE],fj3[JE];
     float ihx[IE][JE],ihy[IE][JE];
-    FILE *fp, *fopen();
+    FILE *fp;
+//     *fopen();
     float ez_inc[JE],hx_inc[JE];
     float ez_inc_low_m1,ez_inc_low_m2;
     float ez_inc_high_m1,ez_inc_high_m2;
