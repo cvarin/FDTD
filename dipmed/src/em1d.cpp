@@ -27,6 +27,7 @@ em1d::em1d(const int _argc, const char **_argv):material(_argc,_argv)
     // Set parameter for the polarization differential equation
     dt_dxeps0 = dt/(dx*epsi_0);
     dt_dxmu0 = dt/(dx*mu_0);
+    dx_co = dx/co;
     gam = 2.0*relaxation_time/dt;
     
     /*************************************************************************/
@@ -100,9 +101,11 @@ void em1d::apply_boundary_H()
 /******************************************************************************/
 double em1d::gaussian_pulse(const int _n, const int offset)
 {
-     double carrier = cos(2.0*Pi*freq_in*dt*(_n + offset*0.5) - ceo_phase);
-     double enveloppe = exp(-0.5*pow((t0/time_scale- _n - offset*0.5)*time_scale/spread,2.0));
-     return E0*carrier*enveloppe;
+    const double t = (_n - offset*0.5*(1.0-1.0/time_scale))*dt;
+    const double T = spread*dx_co;
+    const double carrier = cos(omega_laser*t - ceo_phase);
+    const double enveloppe = exp(-0.5*pow((t0*dx_co - t)/T,2.0));
+    return E0*carrier*enveloppe;
 }
 
 /******************************************************************************/
@@ -142,13 +145,13 @@ void em1d::update_H()
 /******************************************************************************/
 void em1d::update_source_for_E(const int _n)
 {   
-     ex[source_plane + 95] += dt_dxeps0*gaussian_pulse(_n,1)/eta_0;
+     ex[source_plane] += dt_dxeps0*gaussian_pulse(_n,1)/eta_0;
 }
 
 /******************************************************************************/
 void em1d::update_source_for_H(const int _n)
 {
-     hy[source_plane + 95 - 1] += dt_dxmu0*gaussian_pulse(_n,0);
+     hy[source_plane - 1] += dt_dxmu0*gaussian_pulse(_n,0);
 }
 
 /****************** End of file ***********************************************/

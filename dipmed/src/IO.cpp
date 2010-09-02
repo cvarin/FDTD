@@ -121,6 +121,7 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"t0 = %lf\n", &t0);
      results[i++] = fscanf(f,"spread = %lf\n", &spread);
      results[i++] = fscanf(f,"freq_in = %lf\n", &freq_in);
+     omega_laser = 2.0*Pi*freq_in;
      results[i++] = fscanf(f,"I = %lf\n", &I);
      E0 = sqrt(2.0*eta_0*I*1.0e4); // Intensity in W/cm^2 is converted to W/m^2
      results[i++] = fscanf(f,"ceo_phase = %lf\n", &ceo_phase);
@@ -179,6 +180,7 @@ void IO::read_input_file()
      printf("t0 = %f\n",t0);
      printf("spread = %f\n",spread);
      printf("freq_in = %f\n",freq_in);
+     printf("omega_laser = %f\n",omega_laser);
      printf("I = %e\n",I);
      printf("E0 = %e\n",E0);
      printf("ceo_phase = %f\n",ceo_phase);

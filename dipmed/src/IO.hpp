@@ -22,13 +22,14 @@ class IO
           double lifetime;        // Electronic relaxation time.
           
           double dx;         // Cell size
-          static const double time_scale = 0.5; // time scale = 1.0 is Courant condition
+          static const double time_scale = 1.0; // time scale = 1.0 is Courant condition
           // time_scale is fixed to 1 because of the rudimentary boundaries used.
           double dt;         // Time increment
           
           double t0;         // Center of the gaussian pulse in time steps
           double spread;     // 1/e width of the gaussian pulse
-          double freq_in;    // Carrier frequency
+          double freq_in;    // Carrier frequency in s^-1
+          double omega_laser;// Carrier angular frequency rad/s
           double I;          // Laser intensity in W/cm^2
           double E0;         // Laser E-field amplitude in V/m
           double ceo_phase;  // Carrier-envelope offset phase (http://www.rp-photonics.com/carrier_envelope_offset.html)
