@@ -102,9 +102,9 @@ void em1d::apply_boundary_H()
 double em1d::gaussian_pulse(const int _n, const int offset)
 {
     const double t = (_n - offset*0.5*(1.0-1.0/time_scale))*dt;
-    const double T = spread*dx_co;
+    const double T = (t - t0*dx_co)/(spread*dx_co);
     const double carrier = cos(omega_laser*t - ceo_phase);
-    const double enveloppe = exp(-0.5*pow((t0*dx_co - t)/T,2.0));
+    const double enveloppe = exp(-T*T);
     return E0*carrier*enveloppe;
 }
 
