@@ -65,8 +65,8 @@ void em1d::advance_a_step(const int _n)
   
     /**************************************************************************/
     // update the material response
-//     update_polarization_debye_medium(ex,ncell);
-    update_polarization_lorentz_medium(Ex,ncell);
+    update_polarization_debye_medium(Ex,ncell);
+//     update_polarization_lorentz_medium(Ex,ncell);
     
     /**************************************************************************/
     // Update H-field
@@ -126,7 +126,7 @@ void em1d::update_E_with_D()
     for(int k=1; k < ncell; k++)
     {
         Dx[k] += dt/dx*(Hy[k-1] - Hy[k]);
-        Ex[k] = (Dx[k] - px[k])/(epsi_rel[k]*epsi_0);
+        Ex[k] = (Dx[k] - Px[k])/(epsi_rel[k]*epsi_0);
     }
 }
 
@@ -136,7 +136,7 @@ void em1d::update_E_with_P_and_epsi_rel()
       #pragma omp parallel for default(none)
       for(int k=1; k < ncell; k++)
         Ex[k] += (dt_dxeps0*(Hy[k-1] - Hy[k]) 
-                   - 1.0/epsi_0*(px[k] - px_previous[k]))/epsi_rel[k];
+                   - 1.0/epsi_0*(Px[k] - Px_previous[k]))/epsi_rel[k];
 }
 
 /******************************************************************************/

@@ -2,6 +2,7 @@
 #include "material.hpp"
 
 #include <omp.h>
+#include <string.h>
 
 #include "constants.hpp"
 #include "system.hpp"
@@ -11,8 +12,8 @@ material::material(const int _argc, const char **_argv):IO(_argc,_argv)
 {
      bytes_allocated += allocate_1D_array_of_doubles(&epsi_rel,ncell,"epsi_rel");
      bytes_allocated += allocate_1D_array_of_doubles(&density_profile,ncell,"density_profile");
-     bytes_allocated += allocate_1D_array_of_doubles(&px_previous,ncell,"P_previous");
-     bytes_allocated += allocate_1D_array_of_doubles(&px,ncell,"P");
+     bytes_allocated += allocate_1D_array_of_doubles(&Px,ncell,"P");
+     bytes_allocated += allocate_1D_array_of_doubles(&Px_previous,ncell,"P_previous");
      
      /**************************************************************************/
      // The the parameters for the differential equations (obtained by 
@@ -44,8 +45,8 @@ material::material(const int _argc, const char **_argv):IO(_argc,_argv)
 /******************************************************************************/
 material::~material()
 {
-     bytes_allocated -= free_array_of_doubles(px_previous,ncell);
-     bytes_allocated -= free_array_of_doubles(px,ncell);
+     bytes_allocated -= free_array_of_doubles(Px_previous,ncell);
+     bytes_allocated -= free_array_of_doubles(Px,ncell);
      bytes_allocated -= free_array_of_doubles(density_profile,ncell);
      bytes_allocated -= free_array_of_doubles(epsi_rel,ncell);
 }
@@ -65,13 +66,13 @@ double material::static_electronic_response()
 /******************************************************************************/
 void material::update_polarization_debye_medium(const double *ex, const int ncell)
 {    
-    double pstat;
-    #pragma omp parallel for default(none) shared(ex) private(pstat) 
+    double Pstat;
+    memcpy(Px_previous,Px,ncell*sizeof(double));
+    #pragma omp parallel for default(none) shared(ex) private(Pstat) 
     for(int k=0; k < ncell-1; k++)
     {
-        px_previous[k] = px[k];
-        pstat = density_profile[k]*static_absorption()*ex[k]*epsi_0;
-        px[k] = pstat/(1+gam) - (1-gam)/(1+gam)*px[k];
+        Pstat = density_profile[k]*static_absorption()*ex[k]*epsi_0;
+        Px[k] = Pstat/(1+gam) - (1-gam)/(1+gam)*Px[k];
     }
 }
 
@@ -85,13 +86,11 @@ void material::update_polarization_lorentz_medium(const double *ex, const int nc
     for(int k=0; k < ncell-1; k++)
     {
         pstat = density_profile[k]*static_electronic_response()*ex[k]*epsi_0;
-        p_minus_2 = px_previous[k];
-        px_previous[k] = px[k];
-        p_minus_1 = px_previous[k];
-        px[k] = a1*p_minus_1 + a2*p_minus_2 + a3*pstat;
+        p_minus_2 = Px_previous[k];
+        Px_previous[k] = Px[k];
+        p_minus_1 = Px_previous[k];
+        Px[k] = a1*p_minus_1 + a2*p_minus_2 + a3*pstat;
     }
 }
-
-/******************************************************************************/
 
 /****************** End of file ***********************************************/

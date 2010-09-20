@@ -9,8 +9,8 @@ class material : public IO
           /******** Members ***************************************************/
           double *epsi_rel;    // Relative Permittivity
           double *density_profile; // Goes from 0.0 (no material) to 1.0 (material)
-          double *px;          // Polarization
-          double *px_previous; // Polarization (at time step n - 1)
+          double *Px;          // Polarization
+          double *Px_previous; // Polarization (at time step n - 1)
           
           double gam;   // Parameter for the Debye differential equation
           double a1;    // Parameters for the Lorentz differential equation
