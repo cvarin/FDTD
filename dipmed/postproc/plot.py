@@ -29,7 +29,7 @@ class read_input_file:
                if len(line) is not 1:
                     array = line.split()
                     if not array[0].find("nsteps"): self.nsteps = int(array[2])
-                    if not array[0].find("step"): self.step = int(array[2])
+                    if not array[0].find("fileout"): self.step = int(array[2])
                     if not array[0].find("ncell"): self.ncell = int(array[2])
                     if not array[0].find("m2start"): self.m2start = int(array[2])
                     if not array[0].find("m2stop"): self.m2stop = int(array[2])

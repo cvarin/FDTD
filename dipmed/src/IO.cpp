@@ -29,7 +29,7 @@ IO::IO(const int _argc, const char **_argv)
      read_input_file();
      copy_input_file();
      screenout = nsteps/10;
-     fileout = step;  
+//      fileout = step;  
      
      /*************************************************************************/
      omp_set_num_threads(threads);
@@ -106,7 +106,7 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"threads = %i\n", &threads);
      results[i++] = fscanf(f,"nsteps = %i\n", &nsteps);
      if(nsteps <= 1) nsteps = 2;
-     results[i++] = fscanf(f,"step = %i\n", &step);
+     results[i++] = fscanf(f,"fileout = %i\n", &fileout);
      results[i++] = fscanf(f,"ncell = %i\n", &ncell);
      results[i++] = fscanf(f,"m2start = %i\n", &m2start);
      results[i++] = fscanf(f,"m2stop = %i\n", &m2stop);
@@ -136,7 +136,7 @@ void IO::read_input_file()
                printf("Example:\n");
                printf("threads = 2\n");
                printf("nsteps = 1000\n");
-               printf("step = 10\n");
+               printf("fileout = 10\n");
                printf("ncell = 400\n");
                printf("m2start = 200\n");
                printf("m2stop = 400\n");
@@ -165,7 +165,7 @@ void IO::read_input_file()
      printf("Input parameters\n");
      printf("threads = %d\n",threads);
      printf("nsteps = %d\n",nsteps);
-     printf("step = %d\n",step);
+     printf("fileout = %d\n",fileout);
      printf("ncell = %d\n",ncell);
      printf("m2start = %d\n",m2start);
      printf("m2stop = %d\n",m2stop);

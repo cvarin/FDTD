@@ -9,7 +9,6 @@ class IO
           /******** Members ***************************************************/
           int threads;   // Numbers of threads to use for the calculation
           int nsteps;    // Number of time steps
-          int step;      // step size
           int ncell;     // Number of cell
           double dx;     // Cell size
           static const double time_scale = 1.0; // time scale = 1.0 is Courant condition

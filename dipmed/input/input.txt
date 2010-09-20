@@ -1,6 +1,6 @@
 threads = 2
 nsteps = 3000
-step = 5
+fileout = 5
 ncell = 600
 m2start = 150
 m2stop = 450
