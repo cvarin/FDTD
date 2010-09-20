@@ -108,6 +108,8 @@ void IO::read_input_file()
      if(nsteps <= 1) nsteps = 2;
      results[i++] = fscanf(f,"fileout = %i\n", &fileout);
      results[i++] = fscanf(f,"ncell = %i\n", &ncell);
+     results[i++] = fscanf(f,"dx = %lf\n", &dx);
+     dt = time_scale*dx/co;
      results[i++] = fscanf(f,"m2start = %i\n", &m2start);
      results[i++] = fscanf(f,"m2stop = %i\n", &m2stop);
      results[i++] = fscanf(f,"epsilon = %lf\n", &epsilon);
@@ -116,8 +118,6 @@ void IO::read_input_file()
      results[i++] = fscanf(f,"relaxation time = %lf\n", &relaxation_time);
      results[i++] = fscanf(f,"omega0 = %lf\n", &omega0);
      results[i++] = fscanf(f,"lifetime = %lf\n", &lifetime);
-     results[i++] = fscanf(f,"dx = %lf\n", &dx);
-     dt = time_scale*dx/co;
      results[i++] = fscanf(f,"t0 = %lf\n", &t0);
      results[i++] = fscanf(f,"spread = %lf\n", &spread);
      results[i++] = fscanf(f,"freq_in = %lf\n", &freq_in);
@@ -136,6 +136,7 @@ void IO::read_input_file()
                printf("Example:\n");
                printf("threads = 2\n");
                printf("nsteps = 1000\n");
+               printf("dx = 0.01");
                printf("fileout = 10\n");
                printf("ncell = 400\n");
                printf("m2start = 200\n");
@@ -146,7 +147,6 @@ void IO::read_input_file()
                printf("relaxation_time = 1.0e-12\n");
                printf("omega0 = 1.0e9\n");
                printf("lifetime = 1.0e-8\n");
-               printf("dx = 0.01");
                printf("t0 = 80.0\n");
                printf("spread = 40.0\n");
                printf("freq_in = 2.0e9\n");
@@ -165,6 +165,8 @@ void IO::read_input_file()
      printf("Input parameters\n");
      printf("threads = %d\n",threads);
      printf("nsteps = %d\n",nsteps);
+     printf("dx = %f\n",dx);
+     printf("dt = %e (time scale %f)\n",dt,time_scale);
      printf("fileout = %d\n",fileout);
      printf("ncell = %d\n",ncell);
      printf("m2start = %d\n",m2start);
@@ -175,8 +177,6 @@ void IO::read_input_file()
      printf("relaxation time = %e\n",relaxation_time);
      printf("omega0 = %e\n",omega0);
      printf("lifetime = %e\n",lifetime);
-     printf("dx = %f\n",dx);
-     printf("dt = %e (time scale %f)\n",dt,time_scale);
      printf("t0 = %f\n",t0);
      printf("spread = %f\n",spread);
      printf("freq_in = %f\n",freq_in);
