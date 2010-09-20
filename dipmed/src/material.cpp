@@ -64,32 +64,15 @@ double material::static_electronic_response()
 }
 
 /******************************************************************************/
-void material::update_polarization_debye_medium(const double *ex, const int ncell)
+void material::update_polarization(const double *Ex, const int ncell)
 {    
     double Pstat;
     memcpy(Px_previous,Px,ncell*sizeof(double));
-    #pragma omp parallel for default(none) shared(ex) private(Pstat) 
+    #pragma omp parallel for default(none) shared(Ex) private(Pstat) 
     for(int k=0; k < ncell-1; k++)
     {
-        Pstat = density_profile[k]*static_absorption()*ex[k]*epsi_0;
+        Pstat = density_profile[k]*static_absorption()*Ex[k]*epsi_0;
         Px[k] = Pstat/(1+gam) - (1-gam)/(1+gam)*Px[k];
-    }
-}
-
-/******************************************************************************/
-void material::update_polarization_lorentz_medium(const double *ex, const int ncell)
-{    
-    double pstat;
-    double p_minus_1;
-    double p_minus_2;
-    #pragma omp parallel for default(none) shared(ex) private(pstat,p_minus_1,p_minus_2) 
-    for(int k=0; k < ncell-1; k++)
-    {
-        pstat = density_profile[k]*static_electronic_response()*ex[k]*epsi_0;
-        p_minus_2 = Px_previous[k];
-        Px_previous[k] = Px[k];
-        p_minus_1 = Px_previous[k];
-        Px[k] = a1*p_minus_1 + a2*p_minus_2 + a3*pstat;
     }
 }
 

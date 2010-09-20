@@ -22,8 +22,7 @@ class material : public IO
           ~material();
           double static_absorption();
           double static_electronic_response();
-          void update_polarization_debye_medium(const double *ex, const int ncell);
-          void update_polarization_lorentz_medium(const double *ex, const int ncell);
+          void update_polarization(const double *Ex, const int ncell);
 };
 
 #endif // INC_material_hpp

@@ -1,5 +1,5 @@
 ################################################################################
-BIN  = dipmed1D.exe
+BIN  = dipmed.exe
 BUILD_DIR = ./build
 DATA_DIR  = ./output
 SRC_DIR   = ./src

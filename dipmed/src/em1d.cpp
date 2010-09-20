@@ -17,7 +17,6 @@ em1d::em1d(const int _argc, const char **_argv):material(_argc,_argv)
     /**************************************************************************/
     // Initialize the E field and all cells to free space
     bytes_allocated += allocate_1D_array_of_doubles(&Ex,ncell,"Ex");
-    bytes_allocated += allocate_1D_array_of_doubles(&Dx,ncell,"Dx");
     bytes_allocated += allocate_1D_array_of_doubles(&Hy,ncell,"Hy");
   
     /**************************************************************************/
@@ -44,7 +43,6 @@ em1d::em1d(const int _argc, const char **_argv):material(_argc,_argv)
 em1d::~em1d()
 {
     bytes_allocated -= free_array_of_doubles(Hy,ncell);
-    bytes_allocated -= free_array_of_doubles(Dx,ncell);
     bytes_allocated -= free_array_of_doubles(Ex,ncell);
 }
           
@@ -53,20 +51,13 @@ void em1d::advance_a_step(const int _n)
 { 
     /**************************************************************************/
     // Update E-field
-//     update_E();
-
-//     update_E_with_D();
-//     apply_boundary_E();
-//     update_source_for_D(_n);
-    
-    update_E_with_P_and_epsi_rel();
+    update_E();
     apply_boundary_E();
     update_source_for_E(_n);
   
     /**************************************************************************/
     // update the material response
-    update_polarization_debye_medium(Ex,ncell);
-//     update_polarization_lorentz_medium(Ex,ncell);
+    update_polarization(Ex,ncell);
     
     /**************************************************************************/
     // Update H-field
@@ -115,24 +106,6 @@ double em1d::gaussian_pulse(const int _n, const int offset)
 /******************************************************************************/
 void em1d::update_E()
 {
-    #pragma omp parallel for default(none)
-    for(int k=1; k < ncell; k++) Ex[k] += dt_dxeps0/epsi_rel[k]*(Hy[k-1] - Hy[k]);
-}
-
-/******************************************************************************/
-void em1d::update_E_with_D()
-{
-    #pragma omp parallel for default(none)
-    for(int k=1; k < ncell; k++)
-    {
-        Dx[k] += dt/dx*(Hy[k-1] - Hy[k]);
-        Ex[k] = (Dx[k] - Px[k])/(epsi_rel[k]*epsi_0);
-    }
-}
-
-/******************************************************************************/
-void em1d::update_E_with_P_and_epsi_rel()
-{
       #pragma omp parallel for default(none)
       for(int k=1; k < ncell; k++)
         Ex[k] += (dt_dxeps0*(Hy[k-1] - Hy[k]) 
@@ -144,12 +117,6 @@ void em1d::update_H()
 {
     #pragma omp parallel for default(none)
     for(int k=0; k < ncell-1; k++) Hy[k] += dt_dxmu0*(Ex[k] - Ex[k+1]); 
-}
-
-/******************************************************************************/
-void em1d::update_source_for_D(const int _n)
-{   
-     Dx[source_plane] += epsi_0*dt_dxeps0*gaussian_pulse(_n,1)/eta_0;
 }
 
 /******************************************************************************/
