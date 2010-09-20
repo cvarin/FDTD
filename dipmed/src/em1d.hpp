@@ -8,9 +8,9 @@ class em1d : public material
 {    
      public:
           /******** Members ***************************************************/
-          double *ex;          // E-field
+          double *Ex;          // E-field
           double *Dx;          // D-field
-          double *hy;          // H-field
+          double *Hy;          // H-field
           
           double ex_low ; // Temp variables for absorbing boundaries
           double ex_high;
@@ -32,6 +32,7 @@ class em1d : public material
           void update_E_with_D();
           void update_E_with_P_and_epsi_rel();
           void update_H();
+          void update_source_for_D(const int _n);
           void update_source_for_E(const int _n);
           void update_source_for_H(const int _n);
 };

@@ -11,6 +11,10 @@ class IO
           int nsteps;    // Number of time steps
           int step;      // step size
           int ncell;     // Number of cell
+          double dx;     // Cell size
+          static const double time_scale = 1.0; // time scale = 1.0 is Courant condition
+          // time_scale is fixed to 1 because of the rudimentary boundaries used.
+          double dt;         // Time increment
           
           int m2start;    // Cell where the medium starts
           int m2stop;     // Cell where the medium stops
@@ -20,11 +24,6 @@ class IO
           double relaxation_time; // In seconds.
           double omega0;          // Electronic resonance angular frequency.
           double lifetime;        // Electronic relaxation time.
-          
-          double dx;         // Cell size
-          static const double time_scale = 1.0; // time scale = 1.0 is Courant condition
-          // time_scale is fixed to 1 because of the rudimentary boundaries used.
-          double dt;         // Time increment
           
           double t0;         // Center of the gaussian pulse in time steps
           double spread;     // 1/e width of the gaussian pulse

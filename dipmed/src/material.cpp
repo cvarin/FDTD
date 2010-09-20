@@ -66,7 +66,7 @@ double material::static_electronic_response()
 void material::update_polarization_debye_medium(const double *ex, const int ncell)
 {    
     double pstat;
-    #pragma omp parallel for shared(ex) private(pstat) 
+    #pragma omp parallel for default(none) shared(ex) private(pstat) 
     for(int k=0; k < ncell-1; k++)
     {
         px_previous[k] = px[k];
@@ -81,7 +81,7 @@ void material::update_polarization_lorentz_medium(const double *ex, const int nc
     double pstat;
     double p_minus_1;
     double p_minus_2;
-    #pragma omp parallel for shared(ex) private(pstat,p_minus_1,p_minus_2) 
+    #pragma omp parallel for default(none) shared(ex) private(pstat,p_minus_1,p_minus_2) 
     for(int k=0; k < ncell-1; k++)
     {
         pstat = density_profile[k]*static_electronic_response()*ex[k]*epsi_0;
