@@ -2,23 +2,25 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-main ()
+int main ()
 {
      const int IE = 140;
      const int JE = 140;
      
      const int npml = 8;
      
-     float ga[IE][JE],dz[IE][JE],ez[IE][JE],hx[IE][JE],hy[IE][JE];
-     int l,n,i,j,ic,jc,nsteps;
-     float ddx,dt,T,epsz,pi,epsilon,sigma,eaf;
-     float xn,xxn,xnum,xd,curl_e;
-     float t0,spread,pulse;
-     float gi2[IE],gi3[IE];
-     float gj2[JE],gj3[IE];
-     float fi1[IE],fi2[IE],fi3[JE];
-     float fj1[JE],fj2[JE],fj3[JE];
-     float ihx[IE][JE],ihy[IE][JE];
+     double ga[IE][JE],dz[IE][JE],ez[IE][JE],hx[IE][JE],hy[IE][JE];
+     int l;
+     int n,i,j,ic,jc,nsteps;
+     double ddx,dt,T,epsz,pi;
+     int epsilon,sigma,eaf;
+     double xn,xxn,xnum,xd,curl_e;
+     double t0,spread,pulse;
+     double gi2[IE],gi3[IE];
+     double gj2[JE],gj3[IE];
+     double fi1[IE],fi2[IE],fi3[JE];
+     double fj1[JE],fj2[JE],fj3[JE];
+     double ihx[IE][JE],ihy[IE][JE];
      FILE *fp;
 
      ic = IE/2-20;
@@ -208,7 +210,7 @@ main ()
      }
 
      /* Write the E field out to a file "Ez" */
-     fp = fopen( "Ez","w");
+     fp = fopen( "output/Ez.dat","w");
      for ( j=0; j < JE; j++ ) 
      {
           for ( i=0; i < IE; i++ ) 
@@ -223,6 +225,8 @@ main ()
      printf("T = %6.0f \n ",T);
 
      }
+     
+     return 0;
 }
 
 /****************** End of file ***********************************************/
