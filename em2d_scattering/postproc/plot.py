@@ -8,7 +8,6 @@ d = loadtxt("./output/Ez.dat")
 
 interp = 'bilinear';
 #interp = 'nearest';
-pcolor(d)
 imshow(d, origin='lower', interpolation=interp)
 colorbar()
 show()
