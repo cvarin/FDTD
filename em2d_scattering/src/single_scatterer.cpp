@@ -3,50 +3,54 @@
 # include <stdio.h>
 
 /******************************************************************************/
-int main ()
+int main(int argc, char *argv[])
 {
+     /************* Simulation parameters *************************************/
      const int IE = 140;
      const int JE = 140;
      const int npml = 8;
      
-     double ga[IE][JE],dz[IE][JE],ez[IE][JE],hx[IE][JE],hy[IE][JE];
-     int n,i,j,ic,jc,nsteps;
-     double ddx,dt,T,epsz,pi;
-     double xn,xxn,xnum,xd,curl_e;
-     double t0,spread,pulse;
+     const int ic = IE/2-20;
+     const int jc = JE/2-20;
+//      const double ddx = .01; /* Cell size */
+//      const double dt = ddx/6e8; /* Time steps */
+
+     const double t0 = 40.0;
+     const double spread = 12.0;
+     
+     /************* Variables *************************************************/
+     double Dz[IE][JE];
+     double Ez[IE][JE];
+     double Hx[IE][JE];
+     double Hy[IE][JE];
+     double ga[IE][JE];
      double gi2[IE],gi3[IE];
      double gj2[JE],gj3[IE];
      double fi1[IE],fi2[IE],fi3[JE];
      double fj1[JE],fj2[JE],fj3[JE];
      double ihx[IE][JE],ihy[IE][JE];
-     FILE *fp;
 
-     ic = IE/2-20;
-     jc = JE/2-20;
-     ddx = .01; /* Cell size */
-     dt =ddx/6e8; /* Time steps */
-     epsz = 8.8e-12;
-     pi=3.14159;
-
-     /* Initialize the arrays */
-     for ( j=0; j < JE; j++ ) 
+     /************* Initialize the arrays *************************************/
+     for(int j=0; j < JE; j++ ) 
      {
 //           printf( "%2d ",j);
-          for ( i=0; i < IE; i++ ) 
+          for(int i=0; i < IE; i++ ) 
           {
-               dz[i][j]= 0.0 ;
-               hx[i][j]= 0.0 ;
-               hy[i][j]= 0.0 ;
-               ihx[i][j]= 0.0 ;
-               ihy[i][j]= 0.0 ;
-               ga[i][j]= 1.0 ;
+               Ez[i][j] = 0.0;
+               Dz[i][j] = 0.0;
+               Hx[i][j] = 0.0;
+               Hy[i][j] = 0.0;
+               ihx[i][j] = 0.0;
+               ihy[i][j] = 0.0;
+               ga[i][j] = 1.0;
 //                printf( "%5.2f ",ga[i][j]);
           }
 //           printf( " \n");
      }
 
-     /* Calculate the PML parameters */
-     for (i=0;i< IE; i++) 
+     /*************************************************************************/
+     /************* Calculate the PML parameters ******************************/
+     for(int i=0;i< IE; i++) 
      {
           gi2[i] = 1.0;
           gi3[i] = 1.0;
@@ -54,7 +58,9 @@ int main ()
           fi2[i] = 1.0;
           fi3[i] = 1.0;
      }
-     for (j=0;j< IE; j++) 
+     
+     /*************************************************************************/
+     for(int j=0;j< JE; j++) 
      {
           gj2[j] = 1.0;
           gj3[j] = 1.0;
@@ -63,15 +69,13 @@ int main ()
           fj3[j] = 1.0;
      }
 
-//      printf( "Number of PML cells --> ");
-//      scanf("%d", &npml);
-
-     for (i=0;i<= npml; i++) 
+     /*************************************************************************/
+     for(int i=0;i<= npml; i++) 
      {
-          xnum = npml - i;
-          xd = npml;
-          xxn = xnum/xd;
-          xn = 0.25*pow(xxn,3.0);
+          double xnum = npml - i;
+          double xd = npml;
+          double xxn = xnum/xd;
+          double xn = 0.25*pow(xxn,3.0);
 //           printf(" %d %7.4f %7.4f \n",i,xxn,xn);
           gi2[i] = 1.0/(1.0+xn);
           gi2[IE-1-i] = 1.0/(1.0+xn);
@@ -87,12 +91,13 @@ int main ()
           fi3[IE-2-i] = (1.0 - xn)/(1.0 + xn);
      }
 
-     for (j=0;j<= npml; j++) 
+     /*************************************************************************/
+     for(int j=0;j<= npml; j++) 
      {
-          xnum = npml - j;
-          xd = npml;
-          xxn = xnum/xd;
-          xn = 0.25*pow(xxn,3.0);
+          double xnum = npml - j;
+          double xd = npml;
+          double xxn = xnum/xd;
+          double xn = 0.25*pow(xxn,3.0);
 //           printf(" %d %7.4f %7.4f \n",i,xxn,xn);
           gj2[j] = 1.0/(1.0+xn);
           gj2[JE-1-j] = 1.0/(1.0+xn);
@@ -126,115 +131,107 @@ int main ()
 //           fj1[j],fj2[j],fj3[j]);
 //      }
 
-     t0 = 40.0;
-     spread = 12.0;
-     T = 0;
-     nsteps = 1;
-
-     while(nsteps > 0) 
+     /*************************************************************************/
+     int T = 0;
+     int nsteps = 1;
+     
+     /************* Ask for the number of steps to calculate ******************/
+     int result = 0;
+     while(1)
      {
-          int result = 0;
-          while(1)
+          printf( "nsteps --> ");
+          result = scanf("%d", &nsteps);
+          if(result == 1) break;
+          else
           {
-               printf( "nsteps --> ");
-               result = scanf("%d", &nsteps);
-               if(result == 1) break;
-               else
+               printf("nsteps should be an integer.\n");
+               abort();
+          }
+     }
+
+     /************* Loop over all time steps **********************************/
+     for(int n=1; n <=nsteps ; n++) 
+     {
+          T += 1;
+
+          /******** Calculate the Dz field ************************************/
+          for(int j=1; j < IE; j++ ) 
+          {
+               for(int i=1; i < IE; i++ ) 
                {
-                    printf("nsteps should be an integer.\n");
-                    abort();
+                    Dz[i][j] = gi3[i]*gj3[j]*Dz[i][j]
+                    + gi2[i]*gj2[j]*.5*(Hy[i][j] - Hy[i-1][j]
+                    - Hx[i][j] + Hx[i][j-1]) ;
                }
           }
-//           printf("%d \n", nsteps);
 
-          for ( n=1; n <=nsteps ; n++) 
+          /******** Source ****************************************************/
+          /* pulse = sin(2*pi*1500*1e6*dt*T); */
+          double pulse = exp(-.5*pow( (T-t0)/spread,2.));
+          Dz[ic][jc] = pulse;
+//                Dz[ic + 50][jc + 50] = pulse;
+
+          /******** Calculate the Ez field ************************************/
+          for(int j=1; j < JE-1; j++ )
           {
-               T = T + 1;
+               for(int i=1; i < IE-1; i++ )
+                    Ez[i][j] = ga[i][j]*Dz[i][j];
+          }
+     //      printf("%3f %6.2f \n ",T,ez[ic][jc]);
+     
+          /******** Set the PEC at the simulation boundaries ******************/
+          for(int j=0; j < JE-1; j++)
+          {
+               Ez[0][j] = 0.0;
+               Ez[IE-1][j] = 0.0;
+          }
+          for(int i=0; i < IE-1; i++)
+          {
+               Ez[i][0] = 0.0;
+               Ez[i][JE-1] = 0.0;
+          }
 
-               /* ---- Start of the Main FDTD loop ---- */
+          /******** Calculate the Hx field ************************************/
+          for(int j=0; j < JE-1; j++ ) 
+          {
+               for(int i=0; i < IE; i++ ) 
+               {
+                    double curl_e = Ez[i][j] - Ez[i][j+1] ;
+                    ihx[i][j] = ihx[i][j] + fi1[i]*curl_e ;
+                    Hx[i][j] = fj3[j]*Hx[i][j]
+                    + fj2[j]*.5*(curl_e + ihx[i][j]);
+               }
+          }
 
-               /* Calculate the Dz field */
-               for ( j=1; j < IE; j++ ) {
-               for ( i=1; i < IE; i++ ) {
-               dz[i][j] = gi3[i]*gj3[j]*dz[i][j]
-               + gi2[i]*gj2[j]*.5*( hy[i][j] - hy[i-1][j]
-               - hx[i][j] + hx[i][j-1]) ;
+          /******** Calculate the Hy field ************************************/
+          for(int j=0; j <= JE-1; j++ ) 
+          {
+               for(int i=0; i < IE-1; i++ ) 
+               {
+                    double curl_e = Ez[i+1][j] - Ez[i][j];
+                    ihy[i][j] = ihy[i][j] + fj1[j]*curl_e ;
+                    Hy[i][j] = fi3[i]*Hy[i][j]
+                    + fi2[i]*.5*(curl_e + ihy[i][j]);
+               }
           }
      }
 
-     /* Sinusoidal Source */
-
-     /* pulse = sin(2*pi*1500*1e6*dt*T);; */
-     pulse = exp(-.5*pow( (T-t0)/spread,2.));
-     dz[ic][jc] = pulse;
-
-     /* Calculate the Ez field */
-     /* Leave the Ez edges to 0, as part of the PML */
-     for ( j=1; j < JE-1; j++ ) 
+     /************* Write the E field out to a file ***************************/
+     char filename[200];
+     sprintf(filename,"output/Ez_%06d.dat",T);
+     FILE *fp = fopen(filename,"w");
+     for(int j=0; j < JE; j++ ) 
      {
-          for ( i=1; i < IE-1; i++ ) 
+          for(int i=0; i < IE; i++ ) 
           {
-               ez[i][j] = ga[i][j]*dz[i][j] ;
+               fprintf( fp,"%6.3f ",Ez[i][j]);
           }
+          fprintf(fp," \n");
      }
-
-//      printf("%3f %6.2f \n ",T,ez[ic][jc]);
-
-     /* Calculate the Hx field */
-     for ( j=0; j < JE-1; j++ ) 
-     {
-          for ( i=0; i < IE; i++ ) 
-          {
-               curl_e = ez[i][j] - ez[i][j+1] ;
-               ihx[i][j] = ihx[i][j] + fi1[i]*curl_e ;
-               hx[i][j] = fj3[j]*hx[i][j]
-               + fj2[j]*.5*(curl_e + ihx[i][j]);
-          }
-     }
-
-     /* Calculate the Hy field */
-     for ( j=0; j <= JE-1; j++ ) 
-     {
-          for ( i=0; i < IE-1; i++ ) 
-          {
-               curl_e = ez[i+1][j] - ez[i][j];
-               ihy[i][j] = ihy[i][j] + fj1[j]*curl_e ;
-               hy[i][j] = fi3[i]*hy[i][j]
-               + fi2[i]*.5*(curl_e + ihy[i][j]);
-          }
-     }
-
-     }
-     /* ---- End of the main FDTD loop ---- */
-
-//      for ( j=1; j < JE; j++ ) 
-//      {
-//           printf( "%2d ",j);
-//           for ( i=1; i <= IE; i++ ) 
-//           {
-//                printf( "%4.1f",ez[i][j]);
-//           }
-//           printf( " \n");
-//      }
-
-     /* Write the E field out to a file "Ez" */
-     fp = fopen("output/Ez.dat","w");
-     for ( j=0; j < JE; j++ ) 
-     {
-          for ( i=0; i < IE; i++ ) 
-          {
-               fprintf( fp,"%6.3f ",ez[i][j]);
-          }
-          fprintf( fp," \n");
-     }
-
      fclose(fp);
 
-     printf("T = %6.0f\n ",T);
-
-     }
-     
-     return 0;
+     /************* Print message *********************************************/
+     printf("T = %d\n ",T);
 }
 
 /****************** End of file ***********************************************/
