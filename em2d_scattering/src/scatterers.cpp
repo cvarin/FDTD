@@ -1,10 +1,14 @@
-# include <math.h>
-# include <stdlib.h>
-# include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "em2d.hpp"
 
 /******************************************************************************/
 int main(int argc, char *argv[])
-{
+{     
+     em2d e(2,2);
+     
      /************* Simulation parameters *************************************/
      const int IE = 140;
      const int JE = 140;
@@ -23,12 +27,9 @@ int main(int argc, char *argv[])
      double Ez[IE][JE];
      double Hx[IE][JE];
      double Hy[IE][JE];
+     double ihx[IE][JE];
+     double ihy[IE][JE];
      double ga[IE][JE];
-     double gi2[IE],gi3[IE];
-     double gj2[JE],gj3[IE];
-     double fi1[IE],fi2[IE],fi3[JE];
-     double fj1[JE],fj2[JE],fj3[JE];
-     double ihx[IE][JE],ihy[IE][JE];
 
      /************* Initialize the arrays *************************************/
      for(int j=0; j < JE; j++ ) 
@@ -50,6 +51,18 @@ int main(int argc, char *argv[])
 
      /*************************************************************************/
      /************* Calculate the PML parameters ******************************/
+     double gi2[IE];
+     double gi3[IE];
+     double gj2[JE];
+     double gj3[IE];
+     double fi1[IE];
+     double fi2[IE];
+     double fi3[JE];
+     double fj1[JE];
+     double fj2[JE];
+     double fj3[JE];
+     
+     /*************************************************************************/
      for(int i=0;i< IE; i++) 
      {
           gi2[i] = 1.0;
@@ -59,7 +72,6 @@ int main(int argc, char *argv[])
           fi3[i] = 1.0;
      }
      
-     /*************************************************************************/
      for(int j=0;j< JE; j++) 
      {
           gj2[j] = 1.0;

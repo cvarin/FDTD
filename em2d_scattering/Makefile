@@ -1,5 +1,5 @@
 ################################################################################
-BIN  = single_scatterer.exe
+BIN  = scatterers.exe
 BUILD_DIR = ./build
 DATA_DIR  = ./output
 SRC_DIR   = ./src
