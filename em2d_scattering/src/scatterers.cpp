@@ -2,20 +2,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "em2d.hpp"
-
 /******************************************************************************/
 int main(int argc, char *argv[])
-{     
-     em2d e(2,2);
-     
+{          
      /************* Simulation parameters *************************************/
      const int IE = 140;
      const int JE = 140;
      const int npml = 8;
-     
-     const int ic = IE/2-20;
-     const int jc = JE/2-20;
+     const int outper = 10;
+          
+     const int ic = (int) (IE/2 - 10);
+     const int jc = (int) (JE/2 - 10);
 //      const double ddx = .01; /* Cell size */
 //      const double dt = ddx/6e8; /* Time steps */
 
@@ -33,8 +30,6 @@ int main(int argc, char *argv[])
 
      /************* Initialize the arrays *************************************/
      for(int j=0; j < JE; j++ ) 
-     {
-//           printf( "%2d ",j);
           for(int i=0; i < IE; i++ ) 
           {
                Ez[i][j] = 0.0;
@@ -44,25 +39,16 @@ int main(int argc, char *argv[])
                ihx[i][j] = 0.0;
                ihy[i][j] = 0.0;
                ga[i][j] = 1.0;
-//                printf( "%5.2f ",ga[i][j]);
           }
-//           printf( " \n");
-     }
 
      /*************************************************************************/
-     /************* Calculate the PML parameters ******************************/
+     /************* Calculate the PML parameters ******************************/     
+     /*************************************************************************/
      double gi2[IE];
      double gi3[IE];
-     double gj2[JE];
-     double gj3[IE];
      double fi1[IE];
      double fi2[IE];
-     double fi3[JE];
-     double fj1[JE];
-     double fj2[JE];
-     double fj3[JE];
-     
-     /*************************************************************************/
+     double fi3[IE];
      for(int i=0;i< IE; i++) 
      {
           gi2[i] = 1.0;
@@ -72,15 +58,6 @@ int main(int argc, char *argv[])
           fi3[i] = 1.0;
      }
      
-     for(int j=0;j< JE; j++) 
-     {
-          gj2[j] = 1.0;
-          gj3[j] = 1.0;
-          fj1[j] = 0.0;
-          fj2[j] = 1.0;
-          fj3[j] = 1.0;
-     }
-
      /*************************************************************************/
      for(int i=0;i<= npml; i++) 
      {
@@ -101,6 +78,21 @@ int main(int argc, char *argv[])
           fi2[IE-2-i] = 1.0/(1.0+xn);
           fi3[i] = (1.0 - xn)/(1.0 + xn);
           fi3[IE-2-i] = (1.0 - xn)/(1.0 + xn);
+     }
+     
+     /*************************************************************************/
+     double gj2[JE];
+     double gj3[JE];
+     double fj1[JE];
+     double fj2[JE];
+     double fj3[JE];
+     for(int j=0;j< JE; j++) 
+     {
+          gj2[j] = 1.0;
+          gj3[j] = 1.0;
+          fj1[j] = 0.0;
+          fj2[j] = 1.0;
+          fj3[j] = 1.0;
      }
 
      /*************************************************************************/
@@ -181,7 +173,7 @@ int main(int argc, char *argv[])
           /* pulse = sin(2*pi*1500*1e6*dt*T); */
           double pulse = exp(-.5*pow( (T-t0)/spread,2.));
           Dz[ic][jc] = pulse;
-//                Dz[ic + 50][jc + 50] = pulse;
+//           Dz[ic + 50][jc + 50] = pulse;
 
           /******** Calculate the Ez field ************************************/
           for(int j=1; j < JE-1; j++ )
@@ -226,21 +218,38 @@ int main(int argc, char *argv[])
                     + fi2[i]*.5*(curl_e + ihy[i][j]);
                }
           }
+          
+          /******** Write Ez to file ******************************************/
+          if(n%outper==0)
+          {
+               char filename[200];
+               sprintf(filename,"output/Ez_%06d.dat",T);
+               FILE *fp = fopen(filename,"w");
+               for(int j=0; j < JE; j++ ) 
+               {
+                    for(int i=0; i < IE; i++ ) 
+                    {
+                         fprintf( fp,"%6.3f ",Ez[i][j]);
+                    }
+                    fprintf(fp," \n");
+               }
+               fclose(fp);
+          }
      }
 
      /************* Write the E field out to a file ***************************/
-     char filename[200];
-     sprintf(filename,"output/Ez_%06d.dat",T);
-     FILE *fp = fopen(filename,"w");
-     for(int j=0; j < JE; j++ ) 
-     {
-          for(int i=0; i < IE; i++ ) 
-          {
-               fprintf( fp,"%6.3f ",Ez[i][j]);
-          }
-          fprintf(fp," \n");
-     }
-     fclose(fp);
+//      char filename[200];
+//      sprintf(filename,"output/Ez_%06d.dat",T);
+//      FILE *fp = fopen(filename,"w");
+//      for(int j=0; j < JE; j++ ) 
+//      {
+//           for(int i=0; i < IE; i++ ) 
+//           {
+//                fprintf( fp,"%6.3f ",Ez[i][j]);
+//           }
+//           fprintf(fp," \n");
+//      }
+//      fclose(fp);
 
      /************* Print message *********************************************/
      printf("T = %d\n ",T);
