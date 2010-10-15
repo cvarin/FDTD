@@ -2,9 +2,46 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "system.hpp"
+
+/******************************************************************************/
+void Write_Ez(const double **Ez, const int IE, const int JE, const int n)
+{
+     char filename[200];
+     sprintf(filename,"output/Ez_%06d.dat",n);
+     FILE *fp = fopen(filename,"w");
+     for(int j=0; j < JE; j++ ) 
+     {
+          for(int i=0; i < IE; i++ ) 
+          {
+               fprintf(fp,"%6.3f ",Ez[i][j]);
+          }
+          fprintf(fp," \n");
+     }
+     fclose(fp);
+}
+
 /******************************************************************************/
 int main(int argc, char *argv[])
-{          
+{    
+     /************* Get the number of steps to calculate **********************/
+     int result = 0;
+     int nsteps = 1;
+     if(argc > 1) result = sscanf(argv[1],"%d", &nsteps);
+     else
+     {
+          printf("nsteps --> ");
+          result = scanf("%d", &nsteps);
+     }
+     
+     /*************************************************************************/
+     if(result != 1) 
+     {
+          printf("nsteps should be an integer.\n");
+          abort();
+     }
+     else printf("nsteps = %d\n",nsteps);
+     
      /************* Simulation parameters *************************************/
      const int IE = 140;
      const int JE = 140;
@@ -22,8 +59,10 @@ int main(int argc, char *argv[])
      /*************************************************************************/
      /************* Field arrays **********************************************/
      /*************************************************************************/
+     double **Ez;
+     allocate_2D(&Ez,IE,JE);
+     
      double Dz[IE][JE];
-     double Ez[IE][JE];
      double Hx[IE][JE];
      double Hy[IE][JE];
      double ihx[IE][JE];
@@ -42,6 +81,8 @@ int main(int argc, char *argv[])
                ihy[i][j] = 0.0;
                ga[i][j] = 1.0;
           }
+          
+     Write_Ez((const double **)Ez,IE,JE,0);
 
      /*************************************************************************/
      /************* Calculate the PML parameters ******************************/     
@@ -158,26 +199,9 @@ int main(int argc, char *argv[])
      const int ib = IE - ia - 1;
      const int ja = ntfsf;
      const int jb = JE - ja - 1;
-     
-     /*************************************************************************/
-     int T = 0;
-     int nsteps = 1;
-     
-     /************* Ask for the number of steps to calculate ******************/
-     int result = 0;
-     while(1)
-     {
-          printf( "nsteps --> ");
-          result = scanf("%d", &nsteps);
-          if(result == 1) break;
-          else
-          {
-               printf("nsteps should be an integer.\n");
-               abort();
-          }
-     }
 
      /************* Loop over all time steps **********************************/
+     int T = 0;
      for(int n=1; n <=nsteps ; n++) 
      {
           T += 1;
@@ -282,39 +306,14 @@ int main(int argc, char *argv[])
           }
           
           /******** Write Ez to file ******************************************/
-          if(n%outper==0)
-          {
-               char filename[200];
-               sprintf(filename,"output/Ez_%06d.dat",T);
-               FILE *fp = fopen(filename,"w");
-               for(int j=0; j < JE; j++ ) 
-               {
-                    for(int i=0; i < IE; i++ ) 
-                    {
-                         fprintf( fp,"%6.3f ",Ez[i][j]);
-                    }
-                    fprintf(fp," \n");
-               }
-               fclose(fp);
-          }
+          if(n%outper==0) Write_Ez((const double **)Ez,IE,JE,n);
      }
-
-     /************* Write the E field out to a file ***************************/
-//      char filename[200];
-//      sprintf(filename,"output/Ez_%06d.dat",T);
-//      FILE *fp = fopen(filename,"w");
-//      for(int j=0; j < JE; j++ ) 
-//      {
-//           for(int i=0; i < IE; i++ ) 
-//           {
-//                fprintf( fp,"%6.3f ",Ez[i][j]);
-//           }
-//           fprintf(fp," \n");
-//      }
-//      fclose(fp);
-
+     
      /************* Print message *********************************************/
-     printf("T = %d\n ",T);
+     printf("Done\n ");
+     
+     /************* Free memory ***********************************************/
+     delete_2D(Ez,IE);
 }
 
 /****************** End of file ***********************************************/
