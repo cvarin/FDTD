@@ -20,7 +20,7 @@ d = load_file(n)
 fig = figure()
 interp = 'bilinear';
 title("T = %d" %n)
-im = imshow(d, origin='lower', interpolation=interp, vmin = 0, vmax = 0.2)
+im = imshow(d, origin='lower', interpolation=interp, vmin = -1.0, vmax = 1.0)
 colorbar()
 
 ######### Figure update ###################################

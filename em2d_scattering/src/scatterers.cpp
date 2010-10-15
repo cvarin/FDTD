@@ -19,7 +19,9 @@ int main(int argc, char *argv[])
      const double t0 = 40.0;
      const double spread = 12.0;
      
-     /************* Variables *************************************************/
+     /*************************************************************************/
+     /************* Field arrays **********************************************/
+     /*************************************************************************/
      double Dz[IE][JE];
      double Ez[IE][JE];
      double Hx[IE][JE];
@@ -136,6 +138,28 @@ int main(int argc, char *argv[])
 //      }
 
      /*************************************************************************/
+     /************* Arrays for the incident wave source ***********************/     
+     /*************************************************************************/
+     double Ez_inc[JE];
+     double Hx_inc[JE];
+     for(int j=0; j < JE; j++)
+     {
+          Ez_inc[j] = 0.0;
+          Hx_inc[j] = 0.0;
+     }
+     
+     double Ez_inc_low_m1 = 0.0;
+     double Ez_inc_low_m2 = 0.0;
+     double Ez_inc_high_m1 = 0.0;
+     double Ez_inc_high_m2 = 0.0;
+     
+     const int ntfsf = npml + 1;
+     const int ia = ntfsf;
+     const int ib = IE - ia - 1;
+     const int ja = ntfsf;
+     const int jb = JE - ja - 1;
+     
+     /*************************************************************************/
      int T = 0;
      int nsteps = 1;
      
@@ -158,6 +182,18 @@ int main(int argc, char *argv[])
      {
           T += 1;
 
+          /******** Update Ez_inc *********************************************/
+          for(int j=1; j < JE; j++)
+               Ez_inc[j] += 0.5*(Hx_inc[j-1] - Hx_inc[j]);
+          
+          Ez_inc[0]     = Ez_inc_low_m2;
+          Ez_inc_low_m2 = Ez_inc_low_m1;
+          Ez_inc_low_m1 = Ez_inc[1];
+          
+          Ez_inc[JE - 1] = Ez_inc_high_m2;
+          Ez_inc_high_m2 = Ez_inc_high_m1;
+          Ez_inc_high_m1 = Ez_inc[JE - 2];
+          
           /******** Calculate the Dz field ************************************/
           for(int j=1; j < IE; j++ ) 
           {
@@ -170,18 +206,26 @@ int main(int argc, char *argv[])
           }
 
           /******** Source ****************************************************/
-          /* pulse = sin(2*pi*1500*1e6*dt*T); */
-          double pulse = exp(-.5*pow( (T-t0)/spread,2.));
-          Dz[ic][jc] = pulse;
+          double pulse = sin(2.0*3.14159*1.5e9*T);
+//           double pulse = exp(-0.5*pow( (T-t0)/spread,2.0));
+//           Dz[ic][jc] = 5.0*pulse;
+//           Dz[ia+20][jc] = 5.0*pulse;
 //           Dz[ic + 50][jc + 50] = pulse;
 
+          /******** Ez TFSF ***************************************************/
+          Ez_inc[3] = pulse;
+          for(int i = ia; i<= ib; i++)
+          {
+               Dz[i][ja] = Dz[i][ja] + 0.5*Hx_inc[ja - 1];
+               Dz[i][jb] = Dz[i][jb] - 0.5*Hx_inc[jb];
+          }
+          
           /******** Calculate the Ez field ************************************/
           for(int j=1; j < JE-1; j++ )
           {
                for(int i=1; i < IE-1; i++ )
                     Ez[i][j] = ga[i][j]*Dz[i][j];
           }
-     //      printf("%3f %6.2f \n ",T,ez[ic][jc]);
      
           /******** Set the PEC at the simulation boundaries ******************/
           for(int j=0; j < JE-1; j++)
@@ -195,16 +239,27 @@ int main(int argc, char *argv[])
                Ez[i][JE-1] = 0.0;
           }
 
+          /******** Update Hx source ******************************************/
+          for(int j = 0; j < JE-1; j++)
+               Hx_inc[j] += 0.5*(Ez_inc[j] - Ez_inc[j + 1]);
+
           /******** Calculate the Hx field ************************************/
-          for(int j=0; j < JE-1; j++ ) 
+          for(int j=0; j < JE-1; j++) 
           {
-               for(int i=0; i < IE; i++ ) 
+               for(int i=0; i < IE; i++) 
                {
                     double curl_e = Ez[i][j] - Ez[i][j+1] ;
                     ihx[i][j] = ihx[i][j] + fi1[i]*curl_e ;
                     Hx[i][j] = fj3[j]*Hx[i][j]
                     + fj2[j]*.5*(curl_e + ihx[i][j]);
                }
+          }
+
+          /******** Incident Hx values ****************************************/
+          for(int i = ia; i <= ib; i++)
+          {
+               Hx[i][ja-1] += 0.5*Ez_inc[ja];
+               Hx[i][jb]   -= 0.5*Ez_inc[jb];
           }
 
           /******** Calculate the Hy field ************************************/
@@ -217,6 +272,13 @@ int main(int argc, char *argv[])
                     Hy[i][j] = fi3[i]*Hy[i][j]
                     + fi2[i]*.5*(curl_e + ihy[i][j]);
                }
+          }
+          
+          /******** Incident Hy values ****************************************/
+          for(int j = ja; j <= jb; j++)
+          {
+               Hy[ia - 1][j] -= 0.5*Ez_inc[j];
+               Hy[ib][j]     += 0.5*Ez_inc[j];
           }
           
           /******** Write Ez to file ******************************************/
