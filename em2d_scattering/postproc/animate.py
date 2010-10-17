@@ -17,7 +17,7 @@ def load_file(n):
 n = step
 d = load_file(n)
 
-fig = figure()
+fig = figure(figsize=(8.5,8.5))
 interp = 'bilinear';
 title("T = %d" %n)
 im = imshow(d, origin='lower', interpolation=interp, vmin = -1.0, vmax = 1.0)

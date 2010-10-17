@@ -47,14 +47,21 @@ int main(int argc, char *argv[])
      const int JE = 140;
      const int npml = 8;
      const int outper = 10;
-          
-     const int ic = (int) (IE/2 - 10);
-     const int jc = (int) (JE/2 - 10);
-//      const double ddx = .01; /* Cell size */
-//      const double dt = ddx/6e8; /* Time steps */
+
+     const int shift[2] = {0,0};
+     const int ic = (int) (IE/2 - shift[0]);
+     const int jc = (int) (JE/2 - shift[1]);
+     const double dx = .01; /* Cell size */
+     const double dt = dx/6e8; /* Time steps */
+
+     const double epsz = 8.8e-12;
 
      const double t0 = 40.0;
      const double spread = 12.0;
+     
+     const double radius = 2.0;
+     const double epsilon = 30.0;
+     const double sigma = 0.3;
      
      /*************************************************************************/
      /************* Field arrays **********************************************/
@@ -63,11 +70,13 @@ int main(int argc, char *argv[])
      allocate_2D(&Ez,IE,JE);
      
      double Dz[IE][JE];
+     double Iz[IE][JE];
      double Hx[IE][JE];
      double Hy[IE][JE];
      double ihx[IE][JE];
      double ihy[IE][JE];
      double ga[IE][JE];
+     double gb[IE][JE];
 
      /************* Initialize the arrays *************************************/
      for(int j=0; j < JE; j++ ) 
@@ -75,15 +84,17 @@ int main(int argc, char *argv[])
           {
                Ez[i][j] = 0.0;
                Dz[i][j] = 0.0;
+               Iz[i][j] = 0.0;
                Hx[i][j] = 0.0;
                Hy[i][j] = 0.0;
                ihx[i][j] = 0.0;
                ihy[i][j] = 0.0;
                ga[i][j] = 1.0;
+               gb[i][j] = 0.0;
           }
           
      Write_Ez((const double **)Ez,IE,JE,0);
-
+     
      /*************************************************************************/
      /************* Calculate the PML parameters ******************************/     
      /*************************************************************************/
@@ -199,6 +210,20 @@ int main(int argc, char *argv[])
      const int ib = IE - ia - 1;
      const int ja = ntfsf;
      const int jb = JE - ja - 1;
+     
+     /************* A dielectric cylinder *************************************/
+     for(int j = ja; j < jb; j++)
+          for(int i = ia; i < ib; i++)
+          {
+               double xdist = (ic - i);
+               double ydist = (jc - j);
+               double dist  = sqrt(xdist*xdist + ydist*ydist);
+               if(dist <= radius)
+               {
+                    ga[i][j] = 1.0/(epsilon + (sigma*dt/epsz));
+                    gb[i][j] = sigma*dt/epsz;
+               }
+          }
 
      /************* Loop over all time steps **********************************/
      int T = 0;
@@ -245,11 +270,20 @@ int main(int argc, char *argv[])
           }
           
           /******** Calculate the Ez field ************************************/
-          for(int j=1; j < JE-1; j++ )
+          for(int j=1; j < JE-1; j++) 
           {
-               for(int i=1; i < IE-1; i++ )
-                    Ez[i][j] = ga[i][j]*Dz[i][j];
+               for(int i=1; i < IE-1; i++) 
+               {
+                    Ez[i][j] = ga[i][j]*(Dz[i][j] - Iz[i][j]) ;
+                    Iz[i][j] = Iz[i][j] + gb[i][j]*Ez[i][j] ;
+               }
           }
+          
+//           for(int j=1; j < JE-1; j++ )
+//           {
+//                for(int i=1; i < IE-1; i++ )
+//                     Ez[i][j] = ga[i][j]*Dz[i][j];
+//           }
      
           /******** Set the PEC at the simulation boundaries ******************/
           for(int j=0; j < JE-1; j++)
