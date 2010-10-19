@@ -8,6 +8,9 @@ import gobject
 frame = int(argv[1])
 step = int(argv[2])
 
+profile = "./output/Ga_%06d.dat" %0
+p = loadtxt(profile)
+
 ###########################################################
 def load_file(n):
      filename = "./output/Ez_%06d.dat" %n
@@ -17,10 +20,18 @@ def load_file(n):
 n = step
 d = load_file(n)
 
+minmax = 2.0
+
 fig = figure(figsize=(8.5,8.5))
 interp = 'bilinear';
 title("T = %d" %n)
-im = imshow(d, origin='lower', interpolation=interp, vmin = -1.0, vmax = 1.0)
+#subplot(2,1,1)
+im = imshow(d, origin='lower', interpolation=interp, vmin = -minmax, vmax = minmax)
+xlabel("x")
+ylabel("y")
+#subplot(2,1,2)
+#curve = plot(d[170,:])
+#axis([0, 340, -1.0, 1.0])
 colorbar()
 
 ######### Figure update ###################################
@@ -32,6 +43,7 @@ def updatefig(*args):
      d = load_file(n)
      im.set_array(d)
      fig.canvas.draw()
+     #curve[0].set_ydata(d[170,:])
      n += step
      if(n <= frame): return True
      else:

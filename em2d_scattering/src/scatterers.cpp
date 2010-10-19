@@ -4,17 +4,50 @@
 
 #include "system.hpp"
 
+#define epsz 8.8e-12
+
 /******************************************************************************/
-void Write_Ez(const double **Ez, const int IE, const int JE, const int n)
+void add_a_dielectric_cylinder(double **ga, double **gb, const double epsilon,
+                                const double sigma, const double radius, 
+                                 const int ic, const int jc, const int ia, 
+                                  const int ib, const int ja, const int jb, 
+                                   const double dt)
+{
+     for(int j = ja; j < jb; j++)
+          for(int i = ia; i < ib; i++)
+          {
+               double xdist = (ic - i);
+               double ydist = (jc - j);
+               double dist  = sqrt(xdist*xdist + ydist*ydist);
+               if(dist <= radius)
+               {
+                    ga[i][j] = 1.0/(epsilon + (sigma*dt/epsz));
+                    gb[i][j] = sigma*dt/epsz;
+               }
+          }
+}
+
+/******************************************************************************/
+void add_a_dielectric_cell(double **ga, double **gb, const double epsilon,
+                            const double sigma, const int ic, const int jc,
+                              const double dt)
+{
+     ga[ic][jc] = 1.0/(epsilon + (sigma*dt/epsz));
+     gb[ic][jc] = sigma*dt/epsz;
+}
+
+/******************************************************************************/
+void Write(const double **array, const int IE, const int JE, const int n, 
+            const char *tag)
 {
      char filename[200];
-     sprintf(filename,"output/Ez_%06d.dat",n);
+     sprintf(filename,"output/%s_%06d.dat",tag,n);
      FILE *fp = fopen(filename,"w");
      for(int j=0; j < JE; j++ ) 
      {
           for(int i=0; i < IE; i++ ) 
           {
-               fprintf(fp,"%6.3f ",Ez[i][j]);
+               fprintf(fp,"%6.3f ",array[i][j]);
           }
           fprintf(fp," \n");
      }
@@ -24,6 +57,8 @@ void Write_Ez(const double **Ez, const int IE, const int JE, const int n)
 /******************************************************************************/
 int main(int argc, char *argv[])
 {    
+     const time_t start = time(NULL);
+     
      /************* Get the number of steps to calculate **********************/
      int result = 0;
      int nsteps = 1;
@@ -43,31 +78,38 @@ int main(int argc, char *argv[])
      else printf("nsteps = %d\n",nsteps);
      
      /************* Simulation parameters *************************************/
-     const int IE = 140;
-     const int JE = 140;
+     const int IE = 340;
+     const int JE = 340;
      const int npml = 8;
      const int outper = 10;
 
      const int shift[2] = {0,0};
      const int ic = (int) (IE/2 - shift[0]);
      const int jc = (int) (JE/2 - shift[1]);
+     
+     const int ntfsf = npml + 1;
+//      const int ntfsf = 100;
+     const int ia = ntfsf;
+     const int ib = IE - ia - 1;
+     const int ja = ntfsf;
+     const int jb = JE - ja - 1;
+     
      const double dx = .01; /* Cell size */
      const double dt = dx/6e8; /* Time steps */
 
-     const double epsz = 8.8e-12;
-
-     const double t0 = 40.0;
-     const double spread = 12.0;
+//      const double t0 = 40.0;
+//      const double spread = 12.0;
      
-     const double radius = 2.0;
+     const double radius = 0.5;
      const double epsilon = 30.0;
-     const double sigma = 0.3;
+     const double sigma = 0.0;
      
      /*************************************************************************/
      /************* Field arrays **********************************************/
      /*************************************************************************/
-     double **Ez;
-     allocate_2D(&Ez,IE,JE);
+     double **Ez; allocate_2D(&Ez,IE,JE);
+     double **ga; allocate_2D(&ga,IE,JE);
+     double **gb; allocate_2D(&gb,IE,JE);
      
      double Dz[IE][JE];
      double Iz[IE][JE];
@@ -75,8 +117,6 @@ int main(int argc, char *argv[])
      double Hy[IE][JE];
      double ihx[IE][JE];
      double ihy[IE][JE];
-     double ga[IE][JE];
-     double gb[IE][JE];
 
      /************* Initialize the arrays *************************************/
      for(int j=0; j < JE; j++ ) 
@@ -93,7 +133,7 @@ int main(int argc, char *argv[])
                gb[i][j] = 0.0;
           }
           
-     Write_Ez((const double **)Ez,IE,JE,0);
+     Write((const double **)Ez,IE,JE,0,"Ez");
      
      /*************************************************************************/
      /************* Calculate the PML parameters ******************************/     
@@ -205,26 +245,50 @@ int main(int argc, char *argv[])
      double Ez_inc_high_m1 = 0.0;
      double Ez_inc_high_m2 = 0.0;
      
-     const int ntfsf = npml + 1;
-     const int ia = ntfsf;
-     const int ib = IE - ia - 1;
-     const int ja = ntfsf;
-     const int jb = JE - ja - 1;
-     
-     /************* A dielectric cylinder *************************************/
-     for(int j = ja; j < jb; j++)
-          for(int i = ia; i < ib; i++)
+     /************* Random scatterers *****************************************/
+//      int xmax = 340;
+//      int ymax = 20;
+//      int N = 3000;
+//      for(int n = N; n--;)
+//      {
+//           int x = (double)rand()/RAND_MAX*xmax + ic - xmax/2;
+//           int y = (double)rand()/RAND_MAX*ymax + jc - ymax/2 - 50;
+//           add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
+//      }
+//      
+//      xmax = 20;
+//      ymax = 20;
+//      N = xmax*ymax;
+//      for(int n = N; n--;)
+//      {
+//           int x = (double)rand()/RAND_MAX*xmax + ic - xmax/2;
+//           int y = (double)rand()/RAND_MAX*ymax + jc - ymax/2 - 60;
+//           add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
+//      }
+          
+     /************* Uniform scatterers ****************************************/
+     int xmax = 360;
+     int ymax = 20;
+     for(int j = ymax; j--;)
+          for(int i = xmax; i--;)
           {
-               double xdist = (ic - i);
-               double ydist = (jc - j);
-               double dist  = sqrt(xdist*xdist + ydist*ydist);
-               if(dist <= radius)
-               {
-                    ga[i][j] = 1.0/(epsilon + (sigma*dt/epsz));
-                    gb[i][j] = sigma*dt/epsz;
-               }
+               int x = i + ic - xmax/2;
+               int y = j + jc - ymax/2 - 50;
+               add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
           }
-
+     
+     xmax = 20;
+     ymax = 20;
+     for(int j = ymax; j--;)
+          for(int i = xmax; i--;)
+          {
+               int x = i + ic - xmax/2;
+               int y = j + jc - ymax/2 - 60;
+               add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
+          }
+     
+     Write((const double **)ga,IE,JE,0,"Ga");
+     
      /************* Loop over all time steps **********************************/
      int T = 0;
      for(int n=1; n <=nsteps ; n++) 
@@ -278,13 +342,7 @@ int main(int argc, char *argv[])
                     Iz[i][j] = Iz[i][j] + gb[i][j]*Ez[i][j] ;
                }
           }
-          
-//           for(int j=1; j < JE-1; j++ )
-//           {
-//                for(int i=1; i < IE-1; i++ )
-//                     Ez[i][j] = ga[i][j]*Dz[i][j];
-//           }
-     
+
           /******** Set the PEC at the simulation boundaries ******************/
           for(int j=0; j < JE-1; j++)
           {
@@ -340,7 +398,7 @@ int main(int argc, char *argv[])
           }
           
           /******** Write Ez to file ******************************************/
-          if(n%outper==0) Write_Ez((const double **)Ez,IE,JE,n);
+          if(n%outper==0) Write((const double **)Ez,IE,JE,n,"Ez");
      }
      
      /************* Print message *********************************************/
@@ -348,6 +406,11 @@ int main(int argc, char *argv[])
      
      /************* Free memory ***********************************************/
      delete_2D(Ez,IE);
+     delete_2D(ga,IE);
+     delete_2D(gb,IE);
+     
+     /*************************************************************************/
+     ShowRunTime(start,time(NULL));
 }
 
 /****************** End of file ***********************************************/
