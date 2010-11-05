@@ -107,6 +107,7 @@ int main(int argc, char *argv[])
      /*************************************************************************/
      /************* Field arrays **********************************************/
      /*************************************************************************/
+     printf("Array allocation ");fflush(stdout);
      double **Ez; allocate_2D(&Ez,IE,JE);
      double **ga; allocate_2D(&ga,IE,JE);
      double **gb; allocate_2D(&gb,IE,JE);
@@ -134,10 +135,12 @@ int main(int argc, char *argv[])
           }
           
      Write((const double **)Ez,IE,JE,0,"Ez");
+     printf(" => done\n"); fflush(stdout);
      
      /*************************************************************************/
      /************* Calculate the PML parameters ******************************/     
      /*************************************************************************/
+     printf("Preparing the pml ");fflush(stdout);
      double gi2[IE];
      double gi3[IE];
      double fi1[IE];
@@ -229,6 +232,8 @@ int main(int argc, char *argv[])
 //           fj1[j],fj2[j],fj3[j]);
 //      }
 
+     printf("=> done\n");fflush(stdout);
+
      /*************************************************************************/
      /************* Arrays for the incident wave source ***********************/     
      /*************************************************************************/
@@ -246,6 +251,7 @@ int main(int argc, char *argv[])
      double Ez_inc_high_m2 = 0.0;
      
      /************* Random scatterers *****************************************/
+     printf("Preparing medium ");fflush(stdout);
 //      int xmax = 340;
 //      int ymax = 20;
 //      int N = 3000;
@@ -288,12 +294,16 @@ int main(int argc, char *argv[])
           }
      
      Write((const double **)ga,IE,JE,0,"Ga");
+     printf(" => done and profile written to file.\n");fflush(stdout);
      
      /************* Loop over all time steps **********************************/
+     printf("Main loop \n");fflush(stdout);
      int T = 0;
      for(int n=1; n <=nsteps ; n++) 
      {
           T += 1;
+          if(T%10==0) printf("*"),fflush(stdout);
+          if(T%(int)(nsteps/10)==0) printf(" %d \n",T),fflush(stdout);
 
           /******** Update Ez_inc *********************************************/
           for(int j=1; j < JE; j++)
