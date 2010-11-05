@@ -19,14 +19,15 @@ DATA  = $(wildcard $(DATA_DIR)/*)
 
 ################### Commands ###################################################
 CPP   = g++
-FLAGS = -fPIC -O3 -Wall -fopenmp
-LFLAGS = -fopenmp
-# FLAGS = -O3
+# FLAGS = -fPIC -O3 -Wall
+FLAGS = -O0 -g -ggdb -DYDEBUG -Wall
+# FLAGS  += -fopenmp
+# LFLAGS = -fopenmp
 RM    = rm -fr
 
 ################### Compiling and linking ######################################
 all: $(BIN)
-
+	
 $(BIN): $(LINKS) $(HEADS)
 	@echo "LINKING: $(CPP) $(OBJS) -o $(BIN)"
 	@$(CPP) $(LINKS) $(INCLUDES) $(LFLAGS) -o $(BIN)
