@@ -78,8 +78,8 @@ int main(int argc, char *argv[])
      else printf("nsteps = %d\n",nsteps);
      
      /************* Simulation parameters *************************************/
-     const int IE = 340;
-     const int JE = 340;
+     const int IE = 500;
+     const int JE = 500;
      const int npml = 8;
      const int outper = 10;
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 //      const double spread = 12.0;
      
      const double radius = 0.5;
-     const double epsilon = 30.0;
+     const double epsilon = 5.0;
      const double sigma = 0.0;
      
      /*************************************************************************/
@@ -110,14 +110,13 @@ int main(int argc, char *argv[])
      printf("Array allocation ");fflush(stdout);
      double **Ez; allocate_2D(&Ez,IE,JE);
      double **ga; allocate_2D(&ga,IE,JE);
-     double **gb; allocate_2D(&gb,IE,JE);
-     
-     double Dz[IE][JE];
-     double Iz[IE][JE];
-     double Hx[IE][JE];
-     double Hy[IE][JE];
-     double ihx[IE][JE];
-     double ihy[IE][JE];
+     double **gb; allocate_2D(&gb,IE,JE);     
+     double **Dz; allocate_2D(&Dz,IE,JE);
+     double **Iz; allocate_2D(&Iz,IE,JE);
+     double **Hx; allocate_2D(&Hx,IE,JE);
+     double **Hy;  allocate_2D(&Hy,IE,JE);
+     double **ihx; allocate_2D(&ihx,IE,JE);
+     double **ihy; allocate_2D(&ihy,IE,JE);
 
      /************* Initialize the arrays *************************************/
      for(int j=0; j < JE; j++ ) 
@@ -273,25 +272,27 @@ int main(int argc, char *argv[])
 //      }
           
      /************* Uniform scatterers ****************************************/
-     int xmax = 360;
-     int ymax = 20;
+     int xmax = 180;
+     int ymax = 180;
      for(int j = ymax; j--;)
           for(int i = xmax; i--;)
           {
                int x = i + ic - xmax/2;
                int y = j + jc - ymax/2 - 50;
-               add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
+               add_a_dielectric_cell(ga,gb,epsilon,sigma,x,y,dt);
+               
+//                add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
           }
      
-     xmax = 20;
-     ymax = 20;
-     for(int j = ymax; j--;)
-          for(int i = xmax; i--;)
-          {
-               int x = i + ic - xmax/2;
-               int y = j + jc - ymax/2 - 60;
-               add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
-          }
+//      xmax = 20;
+//      ymax = 20;
+//      for(int j = ymax; j--;)
+//           for(int i = xmax; i--;)
+//           {
+//                int x = i + ic - xmax/2;
+//                int y = j + jc - ymax/2 - 60;
+//                add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
+//           }
      
      Write((const double **)ga,IE,JE,0,"Ga");
      printf(" => done and profile written to file.\n");fflush(stdout);
