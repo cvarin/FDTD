@@ -27,6 +27,11 @@ interp = 'bilinear';
 title("T = %d" %n)
 #subplot(2,1,1)
 im = imshow(d, origin='lower', interpolation=interp, vmin = -minmax, vmax = minmax)
+grid(True)
+
+#rect = Rectangle((0, 110), 340, 20, facecolor="#aaaaaa", alpha=0.3)
+#gca().add_patch(rect)
+
 xlabel("x")
 ylabel("y")
 #subplot(2,1,2)

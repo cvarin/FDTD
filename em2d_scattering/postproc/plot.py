@@ -10,6 +10,8 @@ d = loadtxt(filename)
 
 profile = "./output/Ga_%06d.dat" %0
 p = loadtxt(profile)
+rect = Rectangle((0, 110), 340, 20, facecolor="#aaaaaa", alpha=0.4)
+gca().add_patch(rect)
 
 #interp = 'bilinear';
 interp = 'nearest';
