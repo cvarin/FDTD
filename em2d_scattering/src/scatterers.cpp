@@ -78,8 +78,8 @@ int main(int argc, char *argv[])
      else printf("nsteps = %d\n",nsteps);
      
      /************* Simulation parameters *************************************/
-     const int IE = 500;
-     const int JE = 500;
+     const int IE = 1000;
+     const int JE = 1000;
      const int npml = 8;
      const int outper = 10;
 
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 //      const double t0 = 40.0;
 //      const double spread = 12.0;
      
-     const double radius = 0.5;
+//      const double radius = 0.5;
      const double epsilon = 5.0;
      const double sigma = 0.0;
      
@@ -280,8 +280,6 @@ int main(int argc, char *argv[])
                int x = i + ic - xmax/2;
                int y = j + jc - ymax/2 - 50;
                add_a_dielectric_cell(ga,gb,epsilon,sigma,x,y,dt);
-               
-//                add_a_dielectric_cylinder(ga,gb,epsilon,sigma,radius,x,y,ia,ib,ja,jb,dt);
           }
      
 //      xmax = 20;
