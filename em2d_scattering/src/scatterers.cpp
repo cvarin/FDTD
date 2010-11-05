@@ -419,6 +419,12 @@ int main(int argc, char *argv[])
      delete_2D(Ez,IE);
      delete_2D(ga,IE);
      delete_2D(gb,IE);
+     delete_2D(Dz,IE);
+     delete_2D(Iz,IE);
+     delete_2D(Hx,IE);
+     delete_2D(Hy,IE);
+     delete_2D(ihx,IE);
+     delete_2D(ihy,IE);
      
      /*************************************************************************/
      ShowRunTime(start,time(NULL));
