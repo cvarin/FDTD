@@ -1,5 +1,0 @@
-1. Structure 1D avec Ex,Ey,Ez
-2. Vecteurs 1D indépendants Ex[], Ey[], Ez[]
-3. Vecteurs 3D indépendants Ex[][][], Ey[][][], Ez[][][]
-
-Chrono avec et sans openmp.
