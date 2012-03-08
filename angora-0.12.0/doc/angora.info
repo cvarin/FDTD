@@ -1,0 +1,3016 @@
+This is /home/capoglu/bp1/devl/fdtd/doc/angora.info, produced by
+makeinfo version 4.13 from /home/capoglu/bp1/devl/fdtd/doc/angora.texi.
+
+INFO-DIR-SECTION Electromagnetic Simulation
+START-INFO-DIR-ENTRY
+* Angora: (angora).           A finite-difference time-domain (FDTD) electromagnetic simulation software.
+END-INFO-DIR-ENTRY
+
+   Copyright (C) 2012 I.lker R. C,apog(lu
+
+   Portions of the `libconfig' manual were copied verbatim. The
+`libconfig' library is distributed under the GNU Lesser Public License,
+which can be found at
+`http://www.hyperrealm.com/libconfig/libconfig_manual.html#License'.
+
+
+File: angora.info,  Node: Top,  Next: Downloading,  Up: (dir)
+
+Angora: A finite-difference time-domain simulation package
+**********************************************************
+
+This is the user's guide for Angora, a software package that computes
+numerical solutions to electromagnetic radiation and scattering
+problems. It is based on the finite-difference time-domain (FDTD)
+method, which one of the most popular approaches for solving Maxwell's
+equations of electrodynamics.
+
+* Menu:
+
+* Downloading::    How to download Angora.
+* Compilation and Installation::    How to compile and install Angora.
+* Execution::    How to execute Angora.
+* Configuration Format::    The text format for specifying simulation variables.
+* Configuration Variables::    How to configure Angora for a simulation.
+* References::    Bibliographic references cited in this manual.
+* Indices::    Concept and variable indices.
+
+
+File: angora.info,  Node: Downloading,  Next: Compilation and Installation,  Prev: Top,  Up: Top
+
+1 Downloading
+*************
+
+Angora is currently only available in source-code format for the
+*GNU/Linux operating system*. If you would like to port Angora to
+another operating system, please contact us at
+<capoglu@angorafdtd.org>. Contributions are always welcome.
+
+   The latest version of Angora can be found at `http://angorafdtd.org'.
+
+
+File: angora.info,  Node: Compilation and Installation,  Next: Execution,  Prev: Downloading,  Up: Top
+
+2 Compilation and Installation
+******************************
+
+Angora is dependent on the following libraries: blitz++
+(http://www.oonumerics.org/blitz/), libconfig
+(http://www.hyperrealm.com/libconfig/), hdf5
+(http://www.hdfgroup.org/HDF5/), and boost (http://www.boost.org/).
+These libraries should be installed on your system before Angora can be
+compiled. If possible, use the package manager for your specific
+GNU/Linux distribution (such as Synaptic in Ubuntu) to install the
+libraries directly from the package repository. Most major
+distributions provide these libraries in their package repositories. If
+you do not have root access to your system, you can install these
+libraries in your home directory. The installation instructions for the
+libraries usually provide detailed information on how to do this. For
+local installation, the usual trick is to set the installation path by
+specifying the `prefix' variable in the `Makefile's. This is done
+either by using the `--prefix=LOCAL-PATH' option when calling the
+package's `configure' script, or customizing `make' at the final stage
+with the `prefix=LOCAL-PATH' command option.
+
+   Once the dependency libraries are installed, the Angora package is
+ready for compilation. Extract the package
+`angora-PACKAGE-VERSION.tar.gz' using `tar', and enter the created
+directory:
+
+     johndoe@mysystem:~$ tar xvf angora-PACKAGE-VERSION.tar.gz
+     johndoe@mysystem:~$ cd angora-PACKAGE-VERSION
+
+   Run the `configure' script in this directory to create the
+`Makefile's required to build the package:
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ ./configure
+
+   If any of the dependency libraries was installed in a local
+directory, then add the option
+`--with-LIBRARY-NAME=LOCAL-PATH-TO-LIBRARY' to the above command line.
+For example, if the `blitz++' library was installed in
+`/home/johndoe/blitz-0.9', then the option to add is
+`--with-blitz=/home/johndoe/blitz-0.9'. Type `./configure --help' in
+the directory `angora-PACKAGE-VERSION' for information on specifying
+the paths to the other dependency libraries.
+
+   After the `configure' script finishes execution, compile and install
+Angora using the `make' command:
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ make
+
+   If your system has multiple cores, you can speed up the compilation
+by executing `make' in parallel. For example, you can use all 4 cores
+of your system by typing, instead of the above line,
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ make -j 4
+
+   This might take a couple of minutes, depending on your system. After
+`make' finishes, the executable `angora' will be located in the
+directory `angora-PACKAGE-VERSION'. If you wish to _install_ the
+package globally so that it can be run from anywhere, type
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ sudo make install
+
+   Obviously, this requires super-user privileges on your system. By
+default, the package is installed in `/usr/local'; so the binary will
+reside in `/usr/local/bin'. If you don't have super-user privileges,
+you can install Angora in a local directory `full-path-to-inst-dir' by
+typing
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ make prefix=FULL-PATH-TO-INST-DIR install
+
+   The location `full-path-to-inst-dir' should be an absolute path.
+After this, the binary `angora' will be located in the directory
+`full-path-to-inst-dir/bin/'.
+
+* Menu:
+
+* Enabling MPI Support::    Compiling Angora with MPI support.
+* Building the Documentation::    Building the Angora documentation.
+
+
+File: angora.info,  Node: Enabling MPI Support,  Next: Building the Documentation,  Up: Compilation and Installation
+
+2.1 Enabling MPI Support
+========================
+
+Parallel execution on multiple processors or cores is supported by
+Angora, provided that the MPI (Message Passing Interface) libraries are
+installed on your system (e.g., OpenMPI (http://www.open-mpi.org/) or
+MPICH2 (http://www.mcs.anl.gov/research/projects/mpich2/) or other).
+This feature has to be enabled at compile time, and is _disabled_ by
+default. You can enable MPI parallel execution in Angora by adding the
+option `--with-mpi' to the `configure' command line:
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ ./configure --with-mpi
+
+   For more information on launching Angora simulations on multiple
+processors or cores using MPI, *note Parallel Execution::.
+
+
+File: angora.info,  Node: Building the Documentation,  Prev: Enabling MPI Support,  Up: Compilation and Installation
+
+2.2 Building the Documentation
+==============================
+
+The GNU `info' documentation for Angora is automatically built and
+installed by `make'. If you have the texi2html
+(http://www.mathematik.uni-kl.de/~obachman/Texi2html/) and latex2html
+(http://www.latex2html.org/) utilities installed, you can create an
+HTML version of the Angora documentation by typing
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ make html
+
+   If you have the `texi2dvi' command available (provided as part of
+the GNU Texinfo (http://www.gnu.org/software/texinfo/) package), you
+can also build a PDF version of the Angora documentation by typing
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ make pdf
+
+   Once built, both the HTML and PDF versions of the documentation will
+be located in the subdirectory `doc/'.
+
+
+File: angora.info,  Node: Execution,  Next: Configuration Format,  Prev: Compilation and Installation,  Up: Top
+
+3 Execution
+***********
+
+Angora operates by reading a text file, called the "configuration
+file", that specifies the details of the simulation. Every aspect of
+the simulation is configured by a related "configuration variable" (or
+"variable" in short) in the configuration file; which comprises either
+a single line or a number of lines. In general, an Angora simulation is
+run by putting the name of the configuration file pertaining to the
+simulation as a command line option when calling the `angora'
+executable:
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ ./angora PATH-TO-CONFIG-FILE
+
+   If the Angora executable is run without any command-line options, it
+looks for the configuration file named `angora.cfg' in the same
+directory from which the executable is run. *Note Configuration
+Variables::, for details on configuration files.
+
+* Menu:
+
+* Parallel Execution::    Parallel execution using MPI libraries.
+
+
+File: angora.info,  Node: Parallel Execution,  Up: Execution
+
+3.1 Parallel Execution
+======================
+
+If Angora is compiled with MPI support, then the standard MPI launcher
+(`mpirun') can be used to execute the Angora binary `angora' in
+parallel:
+
+     johndoe@mysystem:~/angora-PACKAGE-VERSION$ mpirun -n NUM-OF-PROCESSORS ./angora PATH-TO-CONFIG-FILE
+
+   For example, to run the simulation configured by `mysimulation.cfg'
+using Angora version `0.9' on 8 processors, one should type
+
+     johndoe@mysystem:~/angora-0.9$ mpirun -n 8 ./angora mysimulation.cfg
+
+   MPI support should be enabled in compile time in order to run
+simulations in parallel. For details, *note Enabling MPI Support::.
+
+
+File: angora.info,  Node: Configuration Format,  Next: Configuration Variables,  Prev: Execution,  Up: Top
+
+4 Configuration Format
+**********************
+
+Angora uses the libconfig (http://www.hyperrealm.com/libconfig/)
+library to read configuration variables regarding the simulation from a
+text file. The text file, called the "configuration file", has to
+conform to the libconfig grammar; which is explained in greater detail
+at `http://www.hyperrealm.com/libconfig/libconfig_manual.html'. Here,
+we will provide the minimum information necessary to write
+configuration files for Angora simulations.
+
+* Menu:
+
+* Variable Assignment::    Assignment format for simulation variables.
+* Variable Types::    Types of values that can be assigned to simulation variables.
+
+
+File: angora.info,  Node: Variable Assignment,  Next: Variable Types,  Up: Configuration Format
+
+4.1 Variable Assignment
+=======================
+
+A variable in a configuration file is set using the following
+assignment:
+
+     NAME=VALUE;
+
+   or:
+
+     NAME:VALUE;
+
+   The trailing semicolon is required. Whitespace is not significant.
+Here, NAME is the name of the variable, and VALUE is its value; which
+may be a scalar value, an array, a group, or a list. *Note Variable
+Types::, for information on these value types.
+
+   The order in which variables are specified in the configuration file
+is insignificant, except within the `SimulationSpace' variable (*note
+Simulation Space::). The sub-variables of the `SimulationSpace'
+variable are processed in the order of appearance in the configuration
+file. This is necessary because the user needs to be able to control
+the order in which objects are placed in the grid, and predict the
+regions within an object that will be overwritten by another object.
+
+
+File: angora.info,  Node: Variable Types,  Prev: Variable Assignment,  Up: Configuration Format
+
+4.2 Variable Types
+==================
+
+Angora simulation variables can be assigned C++-type "scalar" values,
+as well as more complex values of type "group", "array", and "list".
+The latter types are defined by the libconfig library. Some of the text
+in this section is copied verbatim from the libconfig manual
+(http://www.hyperrealm.com/libconfig/libconfig_manual.html). The
+`libconfig' library, along with its documentation, is distributed under
+the GNU Lesser Public License
+(http://www.hyperrealm.com/libconfig/libconfig_manual.html#License).
+
+* Menu:
+
+* Integer Values::
+* Floating-Point Values::
+* Boolean Values::
+* String Values::
+* Groups::
+* Arrays::
+* Lists::
+* Comments::
+* Include Directives::
+
+
+File: angora.info,  Node: Integer Values,  Next: Floating-Point Values,  Up: Variable Types
+
+4.2.1 Integer Values
+--------------------
+
+Integers can be represented in one of two ways: as a series of one or
+more decimal digits (`0' - `9'), with an optional leading sign
+character (`+' or `-'); or as a hexadecimal value consisting of the
+characters `0x' followed by a series of one or more hexadecimal digits
+(`0' - `9', `A' - `F', `a' - `f').
+
+   Examples:
+
+     n_sx = 3;
+     offset = -4;
+     address = 0xFFFF;
+
+
+File: angora.info,  Node: Floating-Point Values,  Next: Boolean Values,  Prev: Integer Values,  Up: Variable Types
+
+4.2.2 Floating-Point Values
+---------------------------
+
+Floating point values consist of a series of one or more digits, one
+decimal point, an optional leading sign character (`+' or `-'), and an
+optional exponent. An exponent consists of the letter `E' or `e', an
+optional sign character, and a series of one or more digits.
+
+   Except in special circumstances, floating-point values in Angora are
+read and processed in `double' precision, which corresponds to roughly
+15 decimal digits.
+
+   Examples:
+
+     f = 1.0;
+     origin = -3e-6;
+     prefactor = 5E10;
+
+
+File: angora.info,  Node: Boolean Values,  Next: String Values,  Prev: Floating-Point Values,  Up: Variable Types
+
+4.2.3 Boolean Values
+--------------------
+
+Boolean values may have one of the following values: `true', `false',
+or any mixed-case variation thereof.
+
+   Examples:
+
+     include_first_value = true;
+     include_last_value = FaLsE;
+
+
+File: angora.info,  Node: String Values,  Next: Groups,  Prev: Boolean Values,  Up: Variable Types
+
+4.2.4 String Values
+-------------------
+
+String values consist of arbitrary text delimited by double quotes.
+Literal double quotes can be escaped by preceding them with a
+backslash: `\"'. The escape sequences `\\', `\f', `\n', `\r', and `\t'
+are also recognized, and have the usual meaning.
+
+   In addition, the `\x' escape sequence is supported; this sequence
+must be followed by exactly two hexadecimal digits, which represent an
+8-bit ASCII value. For example, `\xFF' represents the character with
+ASCII code 0xFF.
+
+   No other escape sequences are currently supported.
+
+   Adjacent strings are automatically concatenated, as in C/C++ source
+code. This is useful for formatting very long strings as sequences of
+shorter strings. For example, the following constructs are equivalent:
+
+   * `"The quick brown fox jumped over the lazy dog."'
+
+   * `"The quick brown fox"'
+     `" jumped over the lazy dog."'
+
+   * `"The quick" /* comment */ " brown fox " // another comment'
+     `"jumped over the lazy dog."'
+
+
+
+File: angora.info,  Node: Groups,  Next: Arrays,  Prev: String Values,  Up: Variable Types
+
+4.2.5 Groups
+------------
+
+A group has the form:
+
+     {
+        NAME=VALUE;
+        OTHER_NAME=OTHER_VALUE;
+        ...
+     }
+
+   Notice the curly brackets `{}' around the variable assignments.
+Groups can contain any number of variable assignments (see *note
+Variable Assignment::), but each variable must have a unique name
+within the group.
+
+   Example:
+
+     SphereProperties:
+     {
+         position_x = 0;
+         position_y = 0;
+         position_z = 0;
+         visible = true;
+     };
+
+
+File: angora.info,  Node: Arrays,  Next: Lists,  Prev: Groups,  Up: Variable Types
+
+4.2.6 Arrays
+------------
+
+An array has the form:
+
+     [ VALUE, VALUE, ... ]
+
+   Notice the square brackets `[]' delimiting the comma-separated
+values. An array may have zero or more elements, but the elements must
+all be *scalar* values of the *same type*.
+
+   Examples:
+
+     disabled_runs = [0,1,3];
+     output_variables = ["Ex","Ey"];
+
+
+File: angora.info,  Node: Lists,  Next: Comments,  Prev: Arrays,  Up: Variable Types
+
+4.2.7 Lists
+-----------
+
+A list has the form:
+
+     ( VALUE, VALUE, ... )
+
+   Notice the parantheses `()' delimiting the comma-separated values. A
+list may have zero or more elements, each of which can be a scalar
+value, an array, a group, or another list. The values in a list can be
+of _different types_; however, in Angora, the list type is exclusively
+used to contain a collection of _group_ values. In Angora, the list
+type  semantically represents a collection of objects, each with a
+collection of properties set within their respective group value. Here
+is an example:
+
+     Materials:
+     (
+         {
+             material_tag = "mat1";
+             rel_permittivity = 2.0;
+         },
+         {
+             material_tag = "mat2";
+             rel_permittivity = 2.5;
+         }
+     );
+
+   Here, the list structure named `Materials' contains two groups (each
+delimited by curly brackets `{}') separated by a comma. This defines
+two materials with different sets of properties.
+
+
+File: angora.info,  Node: Comments,  Next: Include Directives,  Prev: Lists,  Up: Variable Types
+
+4.2.8 Comments
+--------------
+
+Three types of comments are allowed within a configuration:
+
+   * Script-style comments. All text beginning with a `#' character to
+     the end of the line is ignored.
+
+   * C-style comments. All text, including line breaks, between a
+     starting `/*' sequence and an ending `*/' sequence is ignored.
+
+   * C++-style comments. All text beginning with a `//' sequence to the
+     end of the line is ignored.
+
+
+   As expected, comment delimiters appearing within quoted strings are
+treated as literal text.
+
+     # Here's a comment
+     MyGroup:
+     (/* This is
+         also a comment */
+         {
+             this_property = "myvalue";
+             // Another comment
+         }
+     );
+
+
+File: angora.info,  Node: Include Directives,  Prev: Comments,  Up: Variable Types
+
+4.2.9 Include Directives
+------------------------
+
+A configuration file may "include" the contents of another file using
+an include directive. This directive has the effect of inlining the
+contents of the named file at the point of inclusion.
+
+   An include directive must appear on its own line in the input. It has
+the form:
+
+     @include "FILENAME"
+
+   Any backslashes or double quotes in the file name must be escaped as
+`\\' and `\"', respectively.
+
+   For example, consider the following two configuration files:
+
+     # file: limits.cfg
+     back_x = -5e-6;
+     front_x = 6e-6;
+     left_y = -5e-6;
+     right_y = 6e-6;
+     lower_z = -3e-6;
+     upper_z = 4e-6;
+
+     # file: mysim.cfg
+     RectangularBoxes:
+     (
+         {
+             shape_tag = "mybox";
+             @include "limits.cfg"
+         }
+     );
+
+   Include files may be nested to a maximum of 10 levels; exceeding this
+limit results in a runtime error.
+
+
+File: angora.info,  Node: Configuration Variables,  Next: References,  Prev: Configuration Format,  Up: Top
+
+5 Configuration Variables
+*************************
+
+The variable assignments (or "settings" in libconfig terminology) in a
+configuration file reside either at the uppermost level (called the
+"Global" level) or within a group structure (*note Groups::). In the
+following, configuration variables will be characterized as either
+being a "Global variable", or a "Sub-variable of PARENTVARIABLE"; where
+PARENTVARIABLE is the next parent variable upward in the hierarchy that
+has a name. The variable PARENTVARIABLE can either be a _group_ or a
+_list_ (see *note Groups:: and *note Lists::). Quite often, the
+immediate parent of a variable assignment is an unnamed group;
+therefore the PARENTVARIABLE of that assignment is the list that
+contains this unnamed group. For example, the PARENTVARIABLE of the
+variable `material_tag' in the example in *note Lists:: is `Materials',
+since its immediate parent is an unnamed group, but the list structure
+containing the unnamed group has a name (which is `Materials'). On the
+other hand, the variable `Materials' is a "Global variable"; since it
+is assigned at the uppermost level in a configuration file, outside any
+enclosing structure.
+
+   The configuration variable names are case sensitive; meaning that
+`Materials' and `materials' are not the same.
+
+* Menu:
+
+* Grid Properties::    Basic properties of the FDTD grid.
+* Shapes::    Defining abstract geometrical shapes.
+* Materials::    Defining material types.
+* Simulation Space::    Specifying the material composition of the simulation space.
+* Waveforms::    Defining time waveforms.
+* Point Sources::    Defining point (Hertzian) sources.
+* Near-Field-to-Far-Field Transform::    Calculation of the radiated (far-zone) field.
+* Optical Imaging::    Calculation of optical images.
+* Incident Wave Conditions::    Injection of incident beams into the grid.
+* Recording::    Movie/line/field-value recording.
+* Paths::    Specifying the input and output directories.
+* Logging::    Enabling and configuring log output.
+* Multiple Simulation Runs::    Configuring the number of consecutive simulations.
+* Miscellaneous::    Miscellaneous features.
+
+
+File: angora.info,  Node: Grid Properties,  Next: Shapes,  Up: Configuration Variables
+
+5.1 Grid Properties
+===================
+
+Angora currently only supports a rectangular, Cartesian FDTD grid with
+equal grid spacing in the x, y, and z directions. Mesh refinement is
+not yet supported; therefore the grid spacing is uniform across the
+grid.
+
+* Menu:
+
+* Courant Factor::    The ratio between the temporal and spatial step sizes.
+* Spatial Step Size::    The spatial step size in the FDTD grid.
+* Grid Dimensions::    The number of FDTD cells in the x, y, and z directions.
+* Perfectly-Matched Layer (PML)::    Absorbing layers for grid termination.
+* Number of Time Steps::    Number of time steps in the simulation.
+* Coordinate Origin::    Origin of the coordinate system.
+* Dynamic Range::    The maximum field value and the useful dB dynamic range in the simulation.
+
+
+File: angora.info,  Node: Courant Factor,  Next: Spatial Step Size,  Up: Grid Properties
+
+5.1.1 Courant Factor
+--------------------
+
+ -- Global variable: floating-point courant
+     Angora adopts a slightly modified form for the Courant factor,
+     defined as
+
+     c*D_t/(sqrt(3)*D_x)
+
+     where c=299792458 m/s is the speed of light in vacuum, and D_t and
+     D_x are the _temporal_ and _spatial_ step sizes (see *note Spatial
+     Step Size::). The Courant factor should be less than `1.0' for
+     stability. A common value for `courant' is `0.98'.
+
+
+File: angora.info,  Node: Spatial Step Size,  Next: Grid Dimensions,  Prev: Courant Factor,  Up: Grid Properties
+
+5.1.2 Spatial Step Size
+-----------------------
+
+ -- Global variable: floating-point dx (units: m)
+     The spatial step size in the FDTD grid is specified by the `dx'
+     variable. Currently only cubic FDTD cells are supported; therefore
+     the spatial step sizes in the x, y, and z direction are all
+     determined by `dx'.
+
+
+File: angora.info,  Node: Grid Dimensions,  Next: Perfectly-Matched Layer (PML),  Prev: Spatial Step Size,  Up: Grid Properties
+
+5.1.3 Grid Dimensions
+---------------------
+
+ -- Global variable: integer NCELLS_X
+
+ -- Global variable: integer NCELLS_Y
+
+ -- Global variable: integer NCELLS_Z
+     These variables determine the number of FDTD cells (or voxels) in
+     the Cartesian FDTD grid in the x, y, and z directions. If no
+     perfectly-matched layers are specified (see *note
+     Perfectly-Matched Layer (PML)::), the total number of FDTD cells
+     in the three-dimensional FDTD grid is equal to (NCELLS_X) x
+     (NCELLS_Y) x (NCELLS_Z).
+
+
+File: angora.info,  Node: Perfectly-Matched Layer (PML),  Next: Number of Time Steps,  Prev: Grid Dimensions,  Up: Grid Properties
+
+5.1.4 Perfectly-Matched Layer (PML)
+-----------------------------------
+
+ -- Global variable: integer NPML
+     This variable sets the thickness (in grid cells) of the
+     perfectly-matched layers (PMLs) around the grid. This sets the
+     thickness of the PML in  in all directions. Further customization
+     of the PML thickness is not yet supported.
+
+     Typical PML thicknesses are `5' to `10'. If you do not want to
+     place a PML layer around the grid, just assign `NPML=0'. Without a
+     PML layer, the boundary of the FDTD grid acts as a perfect
+     electric conductor (PEC). Other boundary conditions (perfect
+     magnetic conductor, periodic, etc.) will also be supported in the
+     future.
+
+     With a PML definition, the total number of FDTD cells in the
+     three-dimensional FDTD grid becomes (NCELLS_X+2*NPML) x
+     (NCELLS_Y+2*NPML) x (NCELLS_Z+2*NPML). The computational burden
+     per FDTD cell associated with the PML layer is roughly twice that
+     of the main grid.
+
+     Angora implements the convolution PML (CPML) formulation of the
+     complex-frequency shifted (CFS) PML (see *note Roden00::; *note
+     Kuzuoglu96::.)
+
+ -- Global variable: integer CPML_feature_size (default:
+          `max(NCELLS_X,NCELLS_Y,NCELLS_Z)')
+     This variable specifies the maximum size (in grid cells) of the
+     scattering or radiating structure in the FDTD grid. This
+     information is used to determine the frequency-shifting parameter
+     _alpha_ in the CFS-PML formulation. Following Berenger's
+     derivation (see *note Berenger02::), this parameter is defined as
+
+     alpha = c*eps/w
+
+     where c is the velocity of propagation in the medium, _eps_ is the
+     absolute permittivity (in F/m) in the medium, and _w_ is the
+     maximum size of the structure.
+
+     The above relationship follows essentially from the low-frequency
+     behavior of the CFS-PML. At low frequencies where the evanescent
+     field around the structure dominates, the CFS-PML reduces to a
+     real stretch of coordinates without any absorption. This helps the
+     termination of evanescent fields, which are poorly handled by
+     ordinary PMLs.
+
+
+File: angora.info,  Node: Number of Time Steps,  Next: Coordinate Origin,  Prev: Perfectly-Matched Layer (PML),  Up: Grid Properties
+
+5.1.5 Number of Time Steps
+--------------------------
+
+ -- Global variable: integer NSTEPS
+     This variable determines the number of time steps in the FDTD
+     simulation.
+
+
+File: angora.info,  Node: Coordinate Origin,  Next: Dynamic Range,  Prev: Number of Time Steps,  Up: Grid Properties
+
+5.1.6 Coordinate Origin
+-----------------------
+
+ -- Global variable: integer OriginX (default: (NCELLS_X+2*NPML)/2+1)
+
+ -- Global variable: integer OriginY (default: (NCELLS_X+2*NPML)/2+1)
+
+ -- Global variable: integer OriginZ (default: (NCELLS_X+2*NPML)/2+1)
+     These variables set the origin of the coordinate system in the
+     simulation. All other coordinates in a configuration file are
+     taken as relative to this origin. The integer values correspond to
+     Cartesian coordinates of the origin (in grid cells) from the
+     back-left-lower corner of the grid.  See printed manual for a
+     graphical illustration.
+
+
+File: angora.info,  Node: Dynamic Range,  Prev: Coordinate Origin,  Up: Grid Properties
+
+5.1.7 Dynamic Range
+-------------------
+
+The following two variables are only relevant in movie recording (see
+*note Movie Recording::), wherein the floating-point field values on
+the movie frames are sometimes discretized to fit into 1 byte.
+
+ -- Global variable: floating-point max_field_value (default: `1.0')
+     This value specifies the maximum field value used in the
+     discretization for 1-byte movie recording (*note Movie
+     Recording::).
+
+ -- Global variable: floating-point dB_accuracy (default: automatic)
+     This value specifies the dynamic range (in dB) to be used in the
+     discretization for 1-byte movie recording (*note Movie
+     Recording::). For example,
+
+          dB_accuracy = -60;
+
+     tells Angora to discretize the field values in a dynamic range
+     between the maximum field value (specified by `max_field_value'
+     above) and 60dB below that value. If `dB_accuracy' is not
+     specified, Angora tries to set this value automatically, based on
+     its best guess on the useful accuracy range in the simulation.
+     This value can also be read from the output of the movie recorder
+     (*note Movie Recording::).
+
+
+File: angora.info,  Node: Shapes,  Next: Materials,  Prev: Grid Properties,  Up: Configuration Variables
+
+5.2 Shapes
+==========
+
+ -- Global variable: group Shapes
+     In Angora, a geometrical shape and the material filling that shape
+     are two distinct and independent elements of the definition of an
+     object. The first of these elements is defined in the `Shapes'
+     variable, which is a group (*note Groups::).
+
+          Shapes:
+          {
+              RectangularBoxes:
+              (
+                      ...
+                      ...
+              );
+              Spheres:
+              (
+                      ...
+                      ...
+              );
+          };
+
+     In this example, two sub-variables `RectangularBoxes' and
+     `Spheres' of the `Shapes' group are shown. These are both list
+     variables (*note Lists::).
+
+   Currently, rectangular boxes and spheres are the only basic shape
+classes defined in Angora. Unions, intersections, and geometrical
+transformations of shapes, as well as more basic shape classes will be
+added to Angora in the future. Please send any comments, suggestions,
+and requests to <help@angorafdtd.org>.
+
+* Menu:
+
+* Rectangular Boxes::
+* Spheres::
+
+
+File: angora.info,  Node: Rectangular Boxes,  Next: Spheres,  Up: Shapes
+
+5.2.1 Rectangular Boxes
+-----------------------
+
+ -- Sub-variable of Shapes: group RectangularBoxes
+     Rectangular boxes are defined using the `RectangularBoxes'
+     variable, which is a list structure under the `Shapes' group.
+
+          Shapes:
+          {
+              RectangularBoxes:
+              (
+                  {
+                      shape_tag = "mybox";
+                      back_x = -5e-6;
+                      front_x = 6e-6;
+                      left_y = -5e-6;
+                      right_y = 6e-6;
+                      lower_z = -3e-6;
+                      upper_z = 4e-6;
+                  },
+                  {
+                      shape_tag = "another_box";
+                      ...
+                      ...
+                  }
+              );
+          };
+
+     In this example, two rectangular box shapes are defined in two
+     respective unnamed groups; only the first being shown in complete
+     detail.
+
+      -- Sub-variable of RectangularBoxes: string shape_tag
+          This string variable assigns a _name_ to the particular
+          shape, so it can be referred to later in the configuration
+          file.
+
+      -- Sub-variable of RectangularBoxes: floating-point back_x
+               (units: m)
+
+      -- Sub-variable of RectangularBoxes: floating-point front_x
+               (units: m)
+
+      -- Sub-variable of RectangularBoxes: floating-point left_y
+               (units: m)
+
+      -- Sub-variable of RectangularBoxes: floating-point right_y
+               (units: m)
+
+      -- Sub-variable of RectangularBoxes: floating-point lower_z
+               (units: m)
+
+      -- Sub-variable of RectangularBoxes: floating-point upper_z
+               (units: m)
+          These variables determine the minimum and maximum Cartesian
+          coordinates of the box in the x, y, and z directions relative
+          to the grid origin (*note Coordinate Origin::).
+
+
+
+File: angora.info,  Node: Spheres,  Prev: Rectangular Boxes,  Up: Shapes
+
+5.2.2 Spheres
+-------------
+
+ -- Sub-variable of Shapes: group Spheres
+     Spheres are defined using the `Spheres' variable, which is a list
+     structure under the `Shapes' group.
+
+          Shapes:
+          {
+              Spheres:
+              (
+                  {
+                      shape_tag = "mysphere";
+                      center_x = 5e-6;
+                      center_y = 5e-6;
+                      center_z = 5e-6;
+                      radius = 4e-6;
+                  },
+                  {
+                      shape_tag = "another_sphere";
+                      ...
+                      ...
+                  }
+              );
+          };
+
+     In this example, two spherical shapes are defined in two
+     respective unnamed groups; only the first being shown in complete
+     detail.
+
+      -- Sub-variable of Spheres: string shape_tag
+          This string variable assigns a _name_ to the particular
+          shape, so it can be referred to later in the configuration
+          file.
+
+      -- Sub-variable of Spheres: floating-point center_x (units: m)
+
+      -- Sub-variable of Spheres: floating-point center_y (units: m)
+
+      -- Sub-variable of Spheres: floating-point center_z (units: m)
+          These variables determine the Cartesian coordinate of the
+          center of the sphere relative to the grid origin (*note
+          Coordinate Origin::).
+
+      -- Sub-variable of Spheres: floating-point radius (units: m)
+          This variable determines the radius of the sphere.
+
+
+
+File: angora.info,  Node: Materials,  Next: Simulation Space,  Prev: Shapes,  Up: Configuration Variables
+
+5.3 Materials
+=============
+
+Currently, Angora only supports isotropic, non-dispersive materials.
+Anisotropic and dispersive materials will also be supported in the
+future. Please send any comments, suggestions, and requests to
+<help@angorafdtd.org>.
+
+ -- Global variable: list Materials
+     The properties of a certain material type are specified in the
+     `Materials' list (*note Lists::).
+          Materials:
+          (
+              {
+                  material_tag = "this_material";
+                  rel_permittivity = 2.0;
+                  rel_permeability = 1.0;
+                  electric_conductivity = 0.0;
+                  magnetic_conductivity = 0.0;
+              },
+              {
+                  material_tag = "another_material";
+                  ...
+                  ...
+              }
+          );
+
+     In this example, two materials are defined in two respective
+     unnamed groups; only the first being shown in complete detail.
+
+      -- Sub-variable of Materials: string material_tag
+          This string variable assigns a _name_ to the particular
+          material, so it can be referred to later in the configuration
+          file.
+
+      -- Sub-variable of Materials: floating-point rel_permittivity
+          This (mandatory) variable specifies the relative permittivity
+          (or the dielectric constant) of the material. In SI units,
+          the absolute permittivity of the material is this variable
+          multiplied by the permittivity of free space (8.85418782E-12
+          F/m).
+
+      -- Sub-variable of Materials: floating-point rel_permeability
+               (default: `1.0')
+          This variable specifies the relative permeability (or the
+          magnetic constant) of the material. In SI units, the absolute
+          permeability of the material is this variable multiplied by
+          the permeability of free space (4piE-7).
+
+      -- Sub-variable of Materials: floating-point
+               electric_conductivity (units: S/m) (default: `0')
+          This variable specifies the electric conductivity (in
+          Siemens/m or Mho/m) of the material.
+
+      -- Sub-variable of Materials: floating-point
+               magnetic_conductivity (units: Ohm/m) (default: `0')
+          This variable specifies the magnetic conductivity (in Ohm/m)
+          of the material.
+
+
+
+File: angora.info,  Node: Simulation Space,  Next: Waveforms,  Prev: Materials,  Up: Configuration Variables
+
+5.4 Simulation Space
+====================
+
+ -- Global variable: group SimulationSpace
+     The `SimulationSpace' group is where all the objects inside the
+     simulation space are defined.
+          SimulationSpace:
+          {
+              Objects:
+              (
+                      ...
+                      ...
+              );
+              RandomMaterials:
+              {
+                      ...
+                      ...
+              };
+
+              ...
+              ...
+
+          };
+
+     In the above example, only two of the sub-variables of the
+     `SimulationSpace' group, `Objects' and `RandomMaterials', are
+     shown. The sub-variable `Objects' is a list (see *note Lists::),
+     whereas `RandomMaterials' is a group (see *note Groups::).
+
+     The definitions in the `SimulationSpace' group are processed *in
+     the order of placement*. Thus, the user has complete control over
+     which object is placed in the simulation space first. As a
+     consequence of this first-come-first-serve policy, objects can
+     overwrite regions of the simulation space occupied by other
+     objects.
+
+* Menu:
+
+* Objects::    Material objects defined as a combination of a `Shapes' object and a `Materials' object.
+* Planar Layers::    Planar material layers.
+* Random Materials::    Material blocks having random material properties with a specified spatial correlation function.
+* File Input::    Reading a region of the simulation grid from a file.
+* Ground Planes::    Perfectly-conducting planar sheets.
+
+
+File: angora.info,  Node: Objects,  Next: Planar Layers,  Up: Simulation Space
+
+5.4.1 Objects
+-------------
+
+ -- Sub-variable of SimulationSpace: list Objects
+     The `Objects' list defines material objects to be placed in the
+     simulation grid. An _object_ in this context is defined as a
+     combination of two abstract ingredients: A previously-defined
+     shape (see *note Shapes::), and a previously-defined material to
+     fill that shape (see *note Materials::). The shape and material
+     are referred to using their shape and material tags, which are
+     string variables assigned to them in their definitions.
+
+     Here is an example:
+
+          SimulationSpace:
+          {
+              Objects:
+              (
+                  {
+                      material_tag = "this_material";
+                      shape_tag = "mysphere";
+                  },
+                  {
+                      material_tag = "another_material";
+                      shape_tag = "mybox";
+                  }
+              );
+          };
+
+      -- Sub-variable of Objects: string material_tag
+          This string variable specifies the material that makes up the
+          object. It should match a previously-defined tag in a
+          `Materials' definition (*note Materials::).
+
+      -- Sub-variable of Objects: string shape_tag
+          This string variable specifies the geometrical shape of the
+          object. It should match a previously-defined tag in a
+          `Shapes' definition (*note Shapes::).
+
+
+
+File: angora.info,  Node: Planar Layers,  Next: Random Materials,  Prev: Objects,  Up: Simulation Space
+
+5.4.2 Planar Layers
+-------------------
+
+ -- Sub-variable of SimulationSpace: list MaterialSlabs
+     The purpose of the `MaterialSlab' list is to introduce *planar
+     stratification* into the simulation grid. Currently, Angora only
+     supports planar stratification along the z direction. The handling
+     of planar layers will be further improved in the future. Please
+     send any comments, suggestions, and requests to
+     <help@angorafdtd.org>.
+
+     Here is an example:
+
+          SimulationSpace:
+          {
+              MaterialSlabs:
+              (
+                  {
+                      tag = "material1";
+                      min_coord = 400.46;
+                      max_coord = 500.0;
+                  },
+                  {
+                      tag = "material2";
+                      min_coord = "min";
+                      max_coord = 300.0;
+                  }
+              );
+          };
+
+     In the above example, two material slabs are placed in the grid.
+     They are composed of `material1' and `material2', respectively.
+
+      -- Sub-variable of MaterialSlabs: string tag
+          This variable specifies the material that makes up the slab.
+          It should match a previously-defined tag in a `Materials'
+          definition (*note Materials::).
+
+      -- Sub-variable of MaterialSlabs: floating-point/string min_coord
+
+      -- Sub-variable of MaterialSlabs: floating-point/string max_coord
+          These two floating-point variables specify the lower and
+          upper coordinates (in grid cells) of the material slab with
+          respect to the grid origin (*note Coordinate Origin::). These
+          can be non-integer; in which case the layer boundaries are
+          suitably interpolated. These variables can also be assigned
+          the string values `"min"' or `"max"'; which correspond to the
+          lower and upper boundaries of the simulation grid,
+          respectively.
+
+     If the FDTD grid is terminated by absorbing PML boundaries (see
+     *note Perfectly-Matched Layer (PML)::), then the `MaterialSlab'
+     definitions effectively create _infinite planar layers_ that
+     extend horizontally toward infinity. When the `"min"' or `"max"'
+     strings are assigned as lower or upper coordinates of the slab,
+     the `MaterialSlab' definition amounts to placing a _half space_.
+     When the `MaterialSlab' variable is used, the incident beams (see
+     *note Incident Wave Conditions::) and the scattered far field (see
+     *note Near-Field-to-Far-Field Transform::) are both calculated as
+     if the material slab horizontally extends toward infinity.
+
+
+File: angora.info,  Node: Random Materials,  Next: File Input,  Prev: Planar Layers,  Up: Simulation Space
+
+5.4.3 Random Materials
+----------------------
+
+ -- Sub-variable of SimulationSpace: group RandomMaterials
+     Independent samples from a random distribution of material
+     properties with a specified correlation function can be generated
+     and placed into the simulation grid using the `RandomMaterials'
+     group. It contains sub-variables in the form of lists (see *note
+     Lists::) that correspond to specific correlation functions.
+     Currently, only the _Whittle-Matern_ family of correlation
+     functions is supported. More correlation functions can be added in
+     the future. Please send any comments, suggestions, and requests to
+     <help@angorafdtd.org>.
+
+     Although the spatial correlation of the generated random material
+     blocks can vary, the joint probability density function of the
+     material block is always a _multivariate normal (Gaussian)
+     function_.
+
+      -- Sub-variable of RandomMaterials: list WhittleMaternCorrelated
+          The Whittle-Matern family of correlations (see *note
+          Rogers09::) is a three-parameter isotropic stochastic model
+          that can represent a wide range of spatial correlations. The
+          Whittle-Matern correlation function B(r) for two points
+          separated in space by a distance of r is given by the formula
+
+          B(r)=2^(5/2-m)(sigma^2)*(r/lc)^(m-3/2)*BesselK(m-3/2,r/lc)/Gamma(m-3/2)
+
+          where BesselK(m-3/2,r/lc) is the modified Bessel function of
+          the second kind and order (m-3/2).
+             * m: The shape parameter that determines the overall
+               behavior of the correlation function. As m->infinity,
+               the function approaches a Gaussian distribution. If m=2,
+               the function reduces to a decaying exponential. For
+               m<3/2, the distribution acquires an inverse power law
+               dependence near the origin; approximating a fractal
+               distribution. For more details, see *note Rogers09::.
+
+             * lc: (For m>3/2:) The correlation length. (For m<=3/2:)
+               Loosely, the outer length scale where the fractal
+               approximation no longer holds.
+
+             * sigma: (For m>3/2:) The standard deviation of the
+               distribution at a given point (r=0). (For m<=3/2:) In
+               this range, the correlation function enters the fractal
+               regime with an inverse-power-law dependence at the
+               origin (see *note Rogers09::). The meaning of sigma
+               becomes more subtle in this regime. It can loosely be
+               associated with the amplitude of the correlation between
+               two points separated by lc.
+
+          The `WhittleMaternCorrelated' list creates blocks with random
+          material properties described by the Whittle-Matern
+          correlation function above. Here is an example of its usage:
+
+               SimulationSpace:
+               {
+                   RandomMaterials:
+                   {
+                       WhittleMaternCorrelated:
+                       (
+                           {
+                               constitutive_param_type = "rel_permittivity";
+                               mean = 1.33;
+                               std_dev = 0.05;
+                               corr_len = 100e-9;
+                               m = 2.0;
+                               back_coord = -10.0;
+                               front_coord = 10.0;
+                               left_coord = -10.0;
+                               right_coord = 10.0;
+                               lower_coord = -10.0;
+                               upper_coord = 10.0;
+                               random_seed = 0;
+                           }
+                       );
+                   };
+
+               };
+
+           -- Sub-variable of WhittleMaternCorrelated: string
+          constitutive_param_type
+               The Whittle-Matern correlation function can describe the
+               relative permittivity, relative permeability, or
+               electric conductivity (in Siemens/m) of the material
+               block. This is specified by assigning
+               `"rel_permittivity"', `"rel_permeability"', or
+               `"electric_conductivity"' to the
+               `constitutive_param_type' string variable.
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          mean (units: none or S/m)
+               A baseline constant value equal to `mean' is added to
+               the constitutive parameter described by the
+               Whittle-Matern correlation function. If `mean=0', then
+               the generated random distribution will have zero mean.
+               However, this will not necessarily be reflected to the
+               actual constitutive parameter values in the grid; since
+               Angora will automatically clip the constitutive
+               parameters (permittivity, permeability, conductivity,
+               etc.) from below to either unity or zero to avoid
+               instabilities. For this reason, `mean' should be high
+               enough to avoid this clipping as much as possible. As a
+               rule of thumb, `mean' should be 5 to 6 times the
+               standard deviation (`std_dev') above unity or zero.
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          std_dev (units: none or S/m)
+               This variable specifies the sigma parameter in the
+               definition of the Whittle-Matern correlation function.
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          corr_len (units: m)
+               This variable specifies the lc parameter in the
+               definition of the Whittle-Matern correlation function.
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point m
+               This variable specifies the m parameter in the
+               definition of the Whittle-Matern correlation function.
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          back_coord
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          front_coord
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          left_coord
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          right_coord
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          lower_coord
+
+           -- Sub-variable of WhittleMaternCorrelated: floating-point
+          upper_coord
+               These variables determine the bounding coordinates (in
+               grid cells) of the rectangular prism containing the
+               random material. The coordinates are with respect to the
+               grid origin (*note Coordinate Origin::).
+
+           -- Sub-variable of WhittleMaternCorrelated: integer/string
+          random_seed (default: determined by system time)
+               If you would like to create _exactly the same random
+               distribution_ each time the simulation is run, you can
+               assign an integer value to the `random_seed' variable.
+               Otherwise, you *should not* define this variable. This
+               value is used to initialize the random-number generator
+               in Angora. If the same seed is used to initialize the
+               random-number generator, the same sequence of random
+               numbers will be generated each time, resulting in the
+               same random distribution.
+
+               If multiple simulation runs are present (see *note
+               Multiple Simulation Runs::), you can create different
+               random samples for each simulation run by assigning the
+               string value `"run_index"' to `random_seed'. This will
+               initialize the intenal random-number generator with the
+               run index (ranging from `0' to `number_of_runs-1') of
+               each run. This way, a different random distribution will
+               be obtained in each simulation run; but a distribution
+               for a given simulation run will be _fixed_ in subsequent
+               executions of Angora.
+          See printed manual for an example of a random distribution.
+
+
+
+File: angora.info,  Node: File Input,  Next: Ground Planes,  Prev: Random Materials,  Up: Simulation Space
+
+5.4.4 File Input
+----------------
+
+ -- Sub-variable of SimulationSpace: list MaterialsFromFiles
+     Material information within rectangular regions of the FDTD
+     simulation grid can be read from files using a
+     `MaterialsFromFiles' list. Currently, only a single constitutive
+     parameter can be read from a file; and dispersive or anisotropic
+     materials are not supported. These issues will be handled more
+     comprehensively in a future version. Please send any comments,
+     suggestions, and requests to <help@angorafdtd.org>.
+
+     The material file should be in a simple custom binary format that
+     Angora can recognize. The order and type of each variable in the
+     file is explained below:
+        * `x-extent': The extent of the array in the x direction in
+          grid cells (integer, 4 bytes)
+
+        * `y-extent': The extent of the array in the y direction in
+          grid cells (integer, 4 bytes)
+
+        * `z-extent': The extent of the array in the z direction in
+          grid cells (integer, 4 bytes)
+
+        * A floating-point array of length (`x-extent') x (`y-extent')
+          x (`z-extent'). Each value in this array is either of type
+          `double' (8 bytes) or `float' (4 bytes), depending on the
+          `datatype' variable (see *note `datatype': datatype.). The
+          floating-point array should be laid out in the file in
+          _column-major_ order, meaning that the x dimension is looped
+          over first, then the y dimension, and finally the z dimension.
+          See printed manual for a graphical illustration of the
+          column-major order.
+
+
+     Here is an example usage of `MaterialsFromFiles':
+
+          SimulationSpace:
+          {
+              MaterialsFromFiles:
+              (
+                  {
+                      file_name = "path_to_file/materialfile";
+                      append_run_index_to_name = true;
+                      file_extension = "mat";
+                      constitutive_param_type = "rel_permittivity";
+                      anchor = "center";
+                      position_x = 131;
+                      position_y = 131;
+                      position_z = 131;
+                      datatype = "double";
+                      max_new_materials = 1000;
+                  }
+              );
+          };
+
+      -- Sub-variable of MaterialsFromFiles: string file_name
+          This string specifies the name of the binary file from which
+          the material information will be read. Path information can
+          be prepended to the file name, as shown in the example above.
+          This path is interpreted as being relative to `input_dir'
+          (see *note Paths::), unless it is preceded by a slash `/'.
+
+      -- Sub-variable of MaterialsFromFiles: string file_extension
+               (default: "")
+          This is the extension of the material file to be read. In the
+          above example, the file to be read is
+          `path_to_file/materialfile.mat'.
+
+      -- Sub-variable of MaterialsFromFiles: boolean
+     append_run_index_to_name
+          This boolean flag becomes useful if there are multiple
+          simulation runs (see *note Multiple Simulation Runs::), and a
+          different file needs to be read in each run. This can be
+          accomplished by appending the run index (which ranges from
+          `0' to `number_of_runs-1') to the file name specified by
+          `file_name'. For example, if there are 3 simulation runs
+          (`number_of_runs' is 3) the above assignment will tell Angora
+          to read the file `path_to_file/materialfile0.mat' in the
+          first run, `path_to_file/materialfile1.mat' in the second,
+          and `path_to_file/materialfile2.mat' in the third.
+
+          This variable is required for all simulations (hence no
+          default value) to help the user prevent easy mistakes such as
+          reading the same file for all simulation runs
+          unintentionally, reading `path_to_file/materialfile0.mat'
+          instead of `path_to_file/materialfile.mat', etc.
+
+      -- Sub-variable of MaterialsFromFiles: string
+     constitutive_param_type
+          The values read from the input file can be assigned to one of
+          the following constitutive parameters: relative permittivity,
+          relative permeability, or electric conductivity. This is
+          determined by assigning `"rel_permittivity"',
+          `"rel_permeability"', or `"electric_conductivity"' to the
+          `constitutive_param_type' string variable. Electric
+          conductivity is assumed to be in Siemens/m.
+
+      -- Sub-variable of MaterialsFromFiles: string anchor (default:
+               `"center"')
+          This string defines an anchor point inside the
+          rectangular-box-shaped region that is to be read from this
+          file. This anchor is then assigned a coordinate in the FDTD
+          grid, thereby determining the position of the rectangular box
+          in the grid. Valid values for `anchor' are:
+             * `"center"': center of the box
+
+             * `"BLL"': back-left-lower corner of the box
+
+             * `"BLU"': back-left-upper corner of the box
+
+             * `"BRL"': back-right-lower corner of the box
+
+             * `"BRU"': back-right-upper corner of the box
+
+             * `"FLL"': front-left-lower corner of the box
+
+             * `"FLU"': front-left-upper corner of the box
+
+             * `"FRL"': front-right-lower corner of the box
+
+             * `"FRU"': front-right-upper corner of the box
+          Here, as usual, "back"/"front" refers to the x coordinate,
+          "left"/"right" refers to the y coordinate, and
+          "lower"/"upper" refers to the z coordinate.
+
+      -- Sub-variable of MaterialsFromFiles: integer position_x
+
+      -- Sub-variable of MaterialsFromFiles: integer position_y
+
+      -- Sub-variable of MaterialsFromFiles: integer position_z
+          These integer values determine the Cartesian x,y, and z
+          coordinates of the anchor point (see above) assigned to the
+          rectangular region to be read from the file. The coordinates
+          are measured in grid cells from the grid origin (*note
+          Coordinate Origin::).
+
+      -- Sub-variable of MaterialsFromFiles: string datatype
+          The datatype for the values read from the file is determined
+          by this variable. It should be either `"double"' (8 bytes) or
+          `"float"' (4 bytes).
+
+      -- Sub-variable of MaterialsFromFiles: integer max_new_materials
+               (default: `1000')
+          Internally, Angora uses _material indexing_ to reduce memory
+          use for material arrays. Each material with a distinct set of
+          constitutive parameters is assigned an index value of type
+          `unsigned short' (2 bytes) that can range from `0' to
+          `65,535'. Instead of storing a floating-point value (which is
+          usually 4 or 8 bytes) for a permittivity value at a point,
+          Angora stores an _index_ that represents the material present
+          at that point.
+
+          Each time a material region is read into the FDTD grid using
+          `MaterialsFromFiles', a fixed number of new materials are
+          added to the material list. These materials cover a discrete
+          range of constitutive parameters between the minimum and
+          maximum values found in the file. Because of this
+          discretization, some loss of information is inevitable. The
+          number of new materials is determined by the variable
+          `max_new_materials'; which is by equal to 1000 default. With
+          the default value, the upper limit for the number of
+          materials will be reached after about 65 material regions are
+          inserted into the grid. If you wish to insert more material
+          regions, and the dynamic ranges of constitutive parameters in
+          your material files are not large, you can decrease
+          `max_new_materials'.
+
+
+File: angora.info,  Node: Ground Planes,  Prev: File Input,  Up: Simulation Space
+
+5.4.5 Ground Planes
+-------------------
+
+ -- Sub-variable of SimulationSpace: list GroundPlanes
+     Infinitely thin perfect-electric-conductor (PEC) sheets can be
+     placed in the grid using a `GroundPlanes' list. Currently, only
+     z-oriented (parallel to the xy plane) sheets at integer
+     (full-cell) positions are supported.
+
+          SimulationSpace:
+          {
+              GroundPlanes:
+              (
+                  {
+                      coord = 0.0;
+                  }
+              );
+          };
+
+      -- Sub-variable of GroundPlanes: integer coord
+          This integer variable specifies the z-coordinate (in grid
+          cells) of the ground plane with respect to the grid origin
+          (*note Coordinate Origin::).
+
+     The `GroundPlanes' variable also updates the layering
+     (stratification) information in the grid, much like
+     `MaterialSlabs' (*note Planar Layers::).
+
+
+
+File: angora.info,  Node: Waveforms,  Next: Point Sources,  Prev: Simulation Space,  Up: Configuration Variables
+
+5.5 Waveforms
+=============
+
+ -- Global variable: group Waveforms
+     In Angora, a _time waveform_ is defined as a self-contained
+     structure that can be used by other structures; such as a Hertzian
+     dipole source or a plane-wave injector. The library of available
+     time waveforms will be expanded in the future. Please send any
+     comments, suggestions, and requests to <help@angorafdtd.org>.
+
+     An example usage of `Waveforms':
+          Waveforms:
+          {
+              GaussianWaveforms:
+              (
+                  {
+                      ...
+                  }
+              );
+
+              DifferentiatedGaussianWaveforms:
+              (
+                  {
+                      ...
+                  }
+              );
+              ...
+              ...
+          };
+
+* Menu:
+
+* Gaussian Waveforms::
+* Differentiated-Gaussian Waveforms::
+* Modulated-Gaussian Waveforms::
+
+
+File: angora.info,  Node: Gaussian Waveforms,  Next: Differentiated-Gaussian Waveforms,  Up: Waveforms
+
+5.5.1 Gaussian Waveforms
+------------------------
+
+ -- Sub-variable of Waveforms: list GaussianWaveforms
+     This variable is used to define Gaussian time waveforms given by
+     the formula
+
+     f(t)=A*exp(-(t-n_tau*tau)^2/2tau^2)
+
+     Gaussian waveforms are defined as follows:
+
+          Waveforms:
+          {
+              GaussianWaveforms:
+              (
+                  {
+                      tag = "my_waveform";
+                      amplitude = 1.0;
+                      tau = 2.1291e-15;
+                      delay = 3;
+                  }
+              );
+          };
+
+      -- Sub-variable of GaussianWaveforms: string tag
+          This is the string tag by which the waveform will later be
+          referred to by another structure that requires a time
+          waveform in its definition.
+
+      -- Sub-variable of GaussianWaveforms: floating-point amplitude
+               (default: `1.0')
+          This specifies the variable A in *note the above equation:
+          eq:gaussian. defining the Gaussian waveform.
+
+      -- Sub-variable of GaussianWaveforms: floating-point tau (units:
+               sec)
+          This specifies the variable tau in *note the above equation:
+          eq:gaussian. defining the Gaussian waveform.
+
+      -- Sub-variable of GaussianWaveforms: floating-point delay
+               (default: `0.0')
+          This specifies the variable n_tau in *note the above
+          equation: eq:gaussian. defining the Gaussian waveform.
+
+
+File: angora.info,  Node: Differentiated-Gaussian Waveforms,  Next: Modulated-Gaussian Waveforms,  Prev: Gaussian Waveforms,  Up: Waveforms
+
+5.5.2 Differentiated-Gaussian Waveforms
+---------------------------------------
+
+ -- Sub-variable of Waveforms: list DifferentiatedGaussianWaveforms
+     This variable is used to define differentiated Gaussian time
+     waveforms, given by the formula
+
+     f(t)=A*(D^n/Dt^n][exp(-(t-n_tau*tau)^2/2tau^2)]
+
+     Differentiated Gaussian waveforms are defined as follows:
+
+          Waveforms:
+          {
+              DifferentiatedGaussianWaveforms:
+              (
+                  {
+                      tag = "my_waveform";
+                      amplitude = 1.0;
+                      tau = 2.1291e-15;
+                      delay = 3;
+                      n = 3;
+                  }
+              );
+          };
+
+      -- Sub-variable of DifferentiatedGaussianWaveforms: string tag
+          This is the string tag by which the waveform will later be
+          referred to by another structure that requires a time
+          waveform in its definition.
+
+      -- Sub-variable of DifferentiatedGaussianWaveforms:
+     floating-point amplitude (default: `1.0')
+          This specifies the variable A in *note the above equation:
+          eq:diffgaussian. defining the differentiated Gaussian
+          waveform.
+
+      -- Sub-variable of DifferentiatedGaussianWaveforms:
+     floating-point tau (units: sec)
+          This specifies the variable tau in *note the above equation:
+          eq:diffgaussian. defining the differentiated Gaussian
+          waveform.
+
+      -- Sub-variable of DifferentiatedGaussianWaveforms:
+     floating-point delay (default: `0.0')
+          This specifies the variable n_tau in *note the above
+          equation: eq:diffgaussian. defining the differentiated
+          Gaussian waveform.
+
+      -- Sub-variable of DifferentiatedGaussianWaveforms: integer n
+          This specifies the order of differentiation n in *note the
+          above equation: eq:diffgaussian. defining the differentiated
+          Gaussian waveform.
+
+
+File: angora.info,  Node: Modulated-Gaussian Waveforms,  Prev: Differentiated-Gaussian Waveforms,  Up: Waveforms
+
+5.5.3 Modulated-Gaussian Waveforms
+----------------------------------
+
+ -- Sub-variable of Waveforms: list ModulatedGaussianWaveforms
+     This variable is used to define sinusoidally-modulated Gaussian
+     time waveforms, given by the formula
+
+     f(t)=A*g(2*pi*f_0(t-n_tau\tau)+extra_phase)exp(-(t-n_tau*tau)^2/2tau^2)
+
+     where the function g(t) is a sinusoidal function, being either
+     sin(t) or cos(t) .
+
+     Modulated Gaussian waveforms are defined as follows:
+
+          Waveforms:
+          {
+              ModulatedGaussianWaveforms:
+              (
+                  {
+                      tag = "my_waveform";
+                      modulation_type = "sine";
+                      amplitude = 1.0;
+                      tau = 2.1291e-15;
+                      f_0 = 5.8929e14;
+                      delay = 3;
+                      phase = 90;
+                      differentiated = false;
+                  }
+              );
+          };
+
+      -- Sub-variable of ModulatedGaussianWaveforms: string tag
+          This is the string tag by which the waveform will later be
+          referred to by another structure that requires a time
+          waveform in its definition.
+
+      -- Sub-variable of ModulatedGaussianWaveforms: string
+     modulation_type
+          If assigned `"sine"', the modulation function g(t) in *note
+          the above equation: eq:modgaussian. becomes a sine. If
+          assigned `"cosine"', it becomes a cosine.
+
+      -- Sub-variable of ModulatedGaussianWaveforms: floating-point
+     amplitude (default: `1.0')
+          This specifies the variable A in *note the above equation:
+          eq:modgaussian. defining the modulated Gaussian waveform.
+
+      -- Sub-variable of ModulatedGaussianWaveforms: floating-point tau
+               (units: sec)
+          This specifies the variable tau in *note the above equation:
+          eq:modgaussian. defining the modulated Gaussian waveform.
+
+      -- Sub-variable of ModulatedGaussianWaveforms: floating-point f_0
+               (units: Hz)
+          This specifies the modulation frequency f_0 in *note the
+          above equation: eq:modgaussian. defining the modulated
+          Gaussian waveform.
+
+      -- Sub-variable of ModulatedGaussianWaveforms: floating-point
+     delay (default: `0.0')
+          This specifies the variable n_tau in *note the above
+          equation: eq:modgaussian. defining the modulated Gaussian
+          waveform.
+
+      -- Sub-variable of ModulatedGaussianWaveforms: floating-point
+     phase (units: degrees, default: `0.0')
+          This specifies the extra phase extra_delay in *note the above
+          equation: eq:modgaussian. defining the modulated Gaussian
+          waveform. This phase should be specified in _degrees_, which
+          is then converted internally to radians, which are the actual
+          units of extra_delay .
+
+
+File: angora.info,  Node: Point Sources,  Next: Near-Field-to-Far-Field Transform,  Prev: Waveforms,  Up: Configuration Variables
+
+5.6 Point Sources
+=================
+
+ -- Global variable: list PointSources
+     "Infinitesimal" electric dipole sources (also called _Hertzian_
+     dipoles) can be simulated in Angora using the `PointSources' list.
+
+     A Hertzian dipole at position (x0,y0,z0) is characterized by the
+     following current distribution in space:
+
+     J(x,y,z;t)=^a*j0(t)*delta(x-x0)delta(y-y0)delta(z-z0)
+
+     where delta(x) is the Dirac delta function. The vector ^a
+     determines the orientation of the dipole, which can be along the
+     x, y, or z directions.  The prefactor j0(t) is called the _current
+     moment_ of the dipole, with the units (Ampere*m).
+
+     Here is an example usage of `PointSources':
+
+          PointSources:
+          (
+              {
+                  position_x = 0;
+                  position_y = 0;
+                  position_z = 0;
+                  source_orientation = "y_directed";
+                  waveform_tag = "moment_waveform";
+                  j0 = 1.0;
+              }
+          );
+
+      -- Sub-variable of PointSources: integer position_x
+
+      -- Sub-variable of PointSources: integer position_y
+
+      -- Sub-variable of PointSources: integer position_z
+          These integer variables specify (in grid cells) the Cartesian
+          x, y, and z coordinates of the Hertzian dipole with respect
+          to the grid origin (*note Coordinate Origin::).
+
+      -- Sub-variable of PointSources: string source_orientation
+          This string specifies the spatial orientation of the Hertzian
+          dipole. It should be `"x_directed"', `"y_directed"', or
+          `"z_directed"'.
+
+      -- Sub-variable of PointSources: string waveform_tag
+          This string variable specifies the waveform of the current
+          moment j0(t) . The waveform is interpreted in (Ampere*m)
+          units. This should match a previously-defined tag in a
+          `Waveforms' definition (*note Waveforms::).
+
+      -- Sub-variable of PointSources: floating-point j0 (units:
+               Ampere/m, default: `1.0')
+          This is an extra prefactor applied to the current moment
+          waveform j0(t) .
+
+
+
+File: angora.info,  Node: Near-Field-to-Far-Field Transform,  Next: Optical Imaging,  Prev: Point Sources,  Up: Configuration Variables
+
+5.7 Near-Field-to-Far-Field Transform
+=====================================
+
+Blah.
+
+
+File: angora.info,  Node: Optical Imaging,  Next: Incident Wave Conditions,  Prev: Near-Field-to-Far-Field Transform,  Up: Configuration Variables
+
+5.8 Optical Imaging
+===================
+
+Blah.
+
+
+File: angora.info,  Node: Incident Wave Conditions,  Next: Recording,  Prev: Optical Imaging,  Up: Configuration Variables
+
+5.9 Incident Wave Conditions
+============================
+
+Blah.
+
+
+File: angora.info,  Node: Recording,  Next: Paths,  Prev: Incident Wave Conditions,  Up: Configuration Variables
+
+5.10 Recording
+==============
+
+Angora can record field values computed during a simulation into a file
+in a variety of ways. Field values can be recorded on a cross-section
+of the grid, along a line through the grid, or at a given point in the
+grid. Currently, Angora only supports the recording of the electric
+field. Recording of the magnetic field, as well as the energy,
+Poynting's vector, etc. will be implemented in the future. Please send
+any comments, suggestions, and requests to <help@angorafdtd.org>.
+
+ -- Global variable: string recorder_output_dir (default: `"recorder"')
+     This determines the subdirectory in which all the
+     recording-related stuff will be placed. Unless it has a slash `/'
+     up front; this path is interpreted as being relative to
+     `output_dir' (*note Paths::).
+
+          recorder_output_dir = "recorder";
+          Recorder:
+          {
+                  ...
+                  ...
+          };
+
+ -- Global variable: group Recorder
+     The `Recorder' group contains the sub-variables related to
+     different types of field recording. These are explained in the
+     following subsections.
+
+          Recorder:
+          {
+              MovieRecorders:
+              (
+                  {
+                      ...
+                      ...
+                  }
+              );
+              LineRecorders:
+              (
+                  {
+                      ...
+                      ...
+                  }
+              );
+              FieldValueRecorders:
+              (
+                  {
+                      ...
+                      ...
+                  }
+              );
+          };
+
+* Menu:
+
+* Movie Recording::
+* Line Recording::
+* Field-Value Recording::
+
+
+File: angora.info,  Node: Movie Recording,  Next: Line Recording,  Up: Recording
+
+5.10.1 Movie Recording
+----------------------
+
+Angora can record field components on a two-dimensional cross section
+of the grid into a custom movie file. The binary format used for movie
+recording is described in more detail in *note Movie File Format::.
+
+ -- Sub-variable of Recorder: string movie_recorder_output_dir
+          (default: `""')
+     This determines the subdirectory in which all the recorded movie
+     files will be placed. Unless it has a slash `/' up front; this
+     path is interpreted as being relative to `recorder_output_dir'
+     (see *note `recorder_output_dir': recorder_output_dir.).
+
+          Recorder:
+          {
+              movie_recorder_output_dir = "movies";
+              MovieRecorders:
+              (
+                  ...
+                  ...
+              );
+          };
+
+ -- Sub-variable of Recorder: list MovieRecorders
+     Field values on a two-dimensional cross section of the FDTD grid
+     can be recorded using the `MovieRecorders' list.
+
+          Recorder:
+          {
+              MovieRecorders:
+              (
+                  {
+                      recorded_section = "xz";
+                      recorded_position = 0;
+                      recorded_component = "Ex";
+                      recording_scale = "dB";
+                      recording_type = "uchar1";
+                      movie_dir = "this_movie_dir";
+                      movie_file_name = "MovieFile"
+                      movie_file_extension = "amv";
+                      only_records_material_info = false;
+                  }
+              );
+          };
+
+      -- Sub-variable of MovieRecorders: string recorded_section
+          This determines the cross section of the grid over which the
+          field is recorded. Currently, only xz, yz, and xy cross
+          sections are supported. These are represented by the string
+          values `"xz"', `"yz"', and `"xy"', respectively.
+
+      -- Sub-variable of MovieRecorders: integer recorded_position
+          This integer value specifies (in grid cells) the coordinate
+          of the recorded cross section along the perpendicular
+          direction (e.g., the z direction if `recorded_section' is
+          `"xy"'). The coordinate is relative to the grid origin (*note
+          Coordinate Origin::).
+
+      -- Sub-variable of MovieRecorders: string recorded_component
+          An individual movie recorder (in a group delineated by the
+          curly brackets `{}') only records a single scalar value
+          extracted from the vector-valued electric field. This could
+          be one of the Cartesian components of the electric field, or
+          its absolute value. These are represented by the string
+          values `"Ex"', `"Ey"', `"Ez"', and `"E"', respectively. If
+          you would like to record multiple Cartesian components of the
+          electric field, simply add other movie recorders (i.e., other
+          groups, see *note Groups::) to the `MovieRecorders' list with
+          the desired `recorded_component' values.
+
+      -- Sub-variable of MovieRecorders: string recording_scale
+          If `"linear"', the raw values are recorded. If `"absolute"',
+          the absolute value is taken before recording. If `"dB"', the
+          decibel value (20*log10(|x|)) is recorded.
+
+      -- Sub-variable of MovieRecorders: string recording_type
+          Movies can either be recorded either in raw floating-point
+          format, or in a single-byte compressed format. This is
+          specified by assigning the string values `"dbl8"' or
+          `"uchar1"' to the `recording_type' variable, respectively.
+          Using the single-byte format reduces the file size
+          considerably, but results in some data loss.
+
+          If `recording_type' is `"dbl8"', then the field values are
+          recorded in 8-byte `double' datatype, after processed in
+          accordance with the `recording_scale' specification above.
+          This provides practically lossless recording, albeit with
+          increased computational burden and file size.
+
+          With the `"uchar1"' option, the field values are reduced to
+          256 discrete bins within a fixed _dynamic range_. This
+          requires only a single byte per field value; reducing the
+          storage requirement by a factor of 8.
+             * If `recording_type' is `"dB"', the maximum and minimum
+               values in this dynamic range are determined by the
+               global variables `max_field_value' and `dB_accuracy'
+               (see *note Dynamic Range::):
+
+               max:  20*log10(|max_field_value|)
+
+               min:  20*log10(|max_field_value|)+(dB_accuracy)
+
+               The `dB_accuracy' variable should always be negative;
+               therefore the minimum value in the dynamic range is
+               lower than the maximum.
+
+             * If `recording_type' is `"linear"' or`"absolute"', the
+               maximum and minimum values are determined only by the
+               global variable `max_field_value' (see *note Dynamic
+               Range::):
+
+               max:  max_field_value
+
+               min:  (-max_field_value) or 0
+
+      -- Sub-variable of MovieRecorders: string movie_dir (default:
+               `""')
+          This determines the subdirectory in which this individual
+          movie file will be placed. Unless it has a slash `/' up
+          front; this path is interpreted as being relative to
+          `movie_recorder_output_dir' (see *note
+          `movie_recorder_output_dir': movie_recorder_output_dir.). By
+          default, no subdirectory is created inside
+          `movie_recorder_output_dir'.
+
+      -- Sub-variable of MovieRecorders: string movie_file_name
+               (default: `"MovieFile"')
+          This determines the base string in the full name of the movie
+          file. Other information is appended to the name of the file
+          to differentiate individual movie files (see the example
+          below).
+
+      -- Sub-variable of MovieRecorders: string movie_file_extension
+               (default: `"amv"')
+          This is the extension of the movie file name. If assigned the
+          value `""', no extension is added to the file.
+     Here is an example movie file name:
+          MovieFile_Ex_0_1.amv
+     The base string in the name of the file (`"MovieFile"') is
+     specified by the `movie_file_name' variable. The second part of
+     the file name, `"Ex"', is determined by the recorded field
+     component. The two integers that follow are the run index (see
+     *note Multiple Simulation Runs::) and the index of the movie
+     inside the `MovieRecorders' list. For example, if there are two
+     groups (two movies) in the `MovieRecorders' list, the first one
+     will write into
+          MovieFile_Ex_0_0.amv
+     while the second will write into
+          MovieFile_Ex_0_1.amv
+     If there are two simulation runs (i.e., `number_of_runs' is equal
+     to 2 - see *note Multiple Simulation Runs::), then the files
+     created in the second run will have `1' instead of `0' as the
+     first integer in the above file names. Finally, the extension
+     (`"amv"') of the movie files is determined by the variable
+     `movie_file_extension'.
+
+      -- Sub-variable of MovieRecorders: boolean
+     only_records_material_info (default: `false')
+          If set to `true', only the material information is recorded
+          into the file, and no field recording is performed during the
+          simulation.
+
+
+* Menu:
+
+* Movie File Format::    Custom binary format for the movie output.
+
+
+File: angora.info,  Node: Movie File Format,  Up: Movie Recording
+
+5.10.1.1 Movie File Format
+..........................
+
+Angora records movies in a custom binary format for better speed and
+performance. Please be aware that this format is subject to
+modification. The changes in the format will be documented in this
+manual as necessary. You may refer to the `ChangeLog' file in the
+Angora distribution for recent changes in the movie recording format.
+
+   The MATLAB script `angora_movie.m', distributed as part of the
+Angora package, reads an Angora movie file and displays it as a MATLAB
+movie. It can also save the movie in AVI format. This script is
+installed in the directory `$(prefix)/share/angora/' (see *note
+Compilation and Installation::). If Angora was installed without any
+`$(prefix)' configuration option, the default location is
+`/usr/local/share/angora/'.
+
+   The movie file is composed of chunks of data, ordered as follows.
+For each chunk, a short explanation (and maybe an alias) is given,
+followed by a description of the datatype in parantheses.
+
+   * major package version (integer, 4 bytes)
+
+   * minor package version (integer, 4 bytes)
+
+   * package revision number (integer, 4 bytes)
+
+   * number of bytes used to record each field component (integer, 4
+     bytes):  This is either equal to `1' or `8', depending on the
+     `recording_type' variable.
+
+   * spatial step size (double, 8 bytes)
+
+   * temporal step size (double, 8 bytes)
+
+   * time value that corresponds to the beginning of the simulation
+     (double, 8 bytes):  This is usually a negative value, since time
+     waveforms frequently begin before t=0.
+
+   * maximum value in the field discretization range (double, 8 bytes):
+     This is the maximum value in the discretization dynamic range for
+     single-byte recording (i.e., `recording_type' is `"uchar1"'). If
+     `recording_type' is `"dbl8"', this value is irrelevant. Same
+     applies to the next value in the file.
+
+   * minimum value in the field discretization range (double, 8 bytes)
+
+   * `length_1': length along the first dimension of the recorded array
+     (integer, 4 bytes):  If the xy section were recorded, this would
+     be the length of the array in the x dimension. This includes the
+     thickness of the PML sections in both directions.
+
+   * `length_2': length along the second dimension of the recorded
+     array (integer, 4 bytes):  If the xy section were recorded, this
+     would be the length of the array in the y dimension. This includes
+     the thickness of the PML sections in both directions.
+
+   * `length_time': number of time steps in the simulation (integer, 4
+     bytes)
+
+   * thickness of the PML region, in grid cells (integer, 4 bytes):
+     See *note Perfectly-Matched Layer (PML):: for more information on
+     the PML. The PML sections are included in the recorded cross
+     sectional area. They can easily be removed in post-processing.
+
+   * an array of length `length_1' with the actual physical coordinates
+     (in m) along the first dimension of the recorded cross section
+     (double, 8 bytes)
+
+   * an array of length `length_2' with the actual physical coordinates
+     (in m) along the second dimension of the recorded cross section
+     (double, 8 bytes)
+
+   * an array of length (`length_2' x `length_1') holding the
+     relative-permittivity values on the recorded cross section
+     (double, 8 bytes): See printed manual for a graphical illustration
+     of the 2D data layout in the movie-file .
+
+   * an array of length (`length_2' x `length_1') holding the electric
+     conductivity values (in Siemens/m) on the recorded cross section
+     (double, 8 bytes):  The 2D cross section is laid out in the movie
+     file in the same way as the previous array.
+
+   * arrays (movie frames) of length (`length_2' x `length_1') holding
+     the field values on the recorded cross section (double, 8 bytes OR
+     unsigned char, 1 byte - depending on `recording_type'):  The total
+     number of these movie frames is equal to `length_time', read
+     earlier from the binary file. Each of these frames is laid out in
+     the movie file in the same way as the previous arrays.
+
+
+File: angora.info,  Node: Line Recording,  Next: Field-Value Recording,  Prev: Movie Recording,  Up: Recording
+
+5.10.2 Line Recording
+---------------------
+
+Angora can record field components along a line into a file. The binary
+format used for line recording is described in more detail in *note
+Line File Format::.
+
+ -- Sub-variable of Recorder: string line_recorder_output_dir (default:
+          `""')
+     This determines the subdirectory in which all the recorded line
+     files will be placed. Unless it has a slash `/' up front; this
+     path is interpreted as being relative to `recorder_output_dir'
+     (see *note `recorder_output_dir': recorder_output_dir.).
+
+          Recorder:
+          {
+              line_recorder_output_dir = "lines";
+              LineRecorders:
+              (
+                  ...
+                  ...
+              );
+          };
+
+ -- Sub-variable of Recorder: list LineRecorders
+          Recorder:
+          {
+              LineRecorders:
+              (
+                  {
+                      line_orientation = "y_directed";
+                      line_position_x1 = 0;
+                      line_position_x2 = 0;
+                      recorded_component = "Ex";
+                      recording_scale = "linear";
+                      line_dir = "this_line_dir";
+                      line_file_name = "LineFile";
+                      line_file_extension = "aln";
+                  }
+              );
+          };
+
+      -- Sub-variable of LineRecorders: string line_orientation
+          There are three possible orientations for the line over which
+          the field values are recorded .These orientations are along
+          the three principal axes of the grid; namely, the x,y, and z
+          directions. These are specified by the strings
+          `"x_directed"', `"y_directed"', and `"z_directed"',
+          respectively.
+
+      -- Sub-variable of LineRecorders: integer line_position_x1
+          This is the first of the remaining two coordinates that
+          specify the position of the recorded line (in grid cells).
+          The coordinate is relative to the grid origin (*note
+          Coordinate Origin::). For example, if the line is oriented in
+          the y direction (`line_orientation' is `"y_directed"'), then
+          `line_position_x1' specifies the x coordinate of the line.
+
+      -- Sub-variable of LineRecorders: integer line_position_x2
+          This is the second of the remaining two coordinates that
+          specify the position of the recorded line (in grid cells).
+          The coordinate is relative to the grid origin (*note
+          Coordinate Origin::). For example, if the line is oriented in
+          the y direction (`line_orientation' is `"y_directed"'), then
+          `line_position_x2' specifies the z coordinate of the line.
+
+      -- Sub-variable of LineRecorders: string recorded_component
+          An individual line recorder (in a group delineated by the
+          curly brackets `{}') only records a single scalar value
+          extracted from the vector-valued electric field. This could
+          be one of the Cartesian components of the electric field, or
+          its absolute value. These are represented by the string
+          values `"Ex"', `"Ey"', `"Ez"', and `"E"', respectively. If
+          you would like to record multiple Cartesian components of the
+          electric field, simply add other line recorders (i.e., other
+          groups, see *note Groups::) to the `LineRecorders' list with
+          the desired `recorded_component' values.
+
+      -- Sub-variable of LineRecorders: string recording_scale
+          If `"linear"', the raw values are recorded. If `"absolute"',
+          the absolute value is taken before recording. If `"dB"', the
+          decibel value (20*log10(|x|)) is recorded.
+
+      -- Sub-variable of LineRecorders: string line_dir (default: `""')
+          This determines the subdirectory in which this individual
+          line file will be placed. Unless it has a slash `/' up front;
+          this path is interpreted as being relative to
+          `line_recorder_output_dir' (see *note
+          `line_recorder_output_dir': line_recorder_output_dir.). By
+          default, no subdirectory is created inside
+          `line_recorder_output_dir'.
+
+      -- Sub-variable of LineRecorders: string line_file_name (default:
+               `"LineFile"')
+          This determines the base string in the full name of the line
+          file. Other information is appended to the name of the file
+          to differentiate individual line files (see the example
+          below).
+
+      -- Sub-variable of LineRecorders: string line_file_extension
+               (default: `"aln"')
+          This is the extension of the line file name. If assigned the
+          value `""', no extension is added to the file.
+     Here is an example line file name:
+          LineFile_Ey_Y_0_1.aln
+     The base string in the name of the file (`"LineFile"') is
+     specified by the `line_file_name' variable. The second part of the
+     file name, `"Ey"', is determined by the recorded field component.
+     The following string `"Y"' indicates the orientation of the line,
+     which is y-directed for this example. The two integers that follow
+     are the run index (see *note Multiple Simulation Runs::) and the
+     index of the line recorder inside the `LineRecorders' list. For
+     example, if there are two groups (two line recorders) in the
+     `LineRecorders' list, the first one will write into
+          LineFile_Ey_Y_0_0.aln
+     while the second will write into
+          LineFile_Ey_Y_0_1.aln
+     If there are two simulation runs (i.e., `number_of_runs' is equal
+     to 2 - see *note Multiple Simulation Runs::), then the files
+     created in the second run will have `1' instead of `0' as the
+     first integer in the above file names. Finally, the extension
+     (`"aln"') of the line files is determined by the variable
+     `line_file_extension'.
+
+
+* Menu:
+
+* Line File Format::    Custom binary format for the line-recorder output.
+
+
+File: angora.info,  Node: Line File Format,  Up: Line Recording
+
+5.10.2.1 Line File Format
+.........................
+
+As with movies, Angora records the line files in a custom binary format
+for better speed and performance. Please be aware that this format is
+subject to modification. The changes in the format will be documented
+in this manual as necessary. You may refer to the `ChangeLog' file in
+the Angora distribution for recent changes in the line recording format.
+
+   The MATLAB script `angora_line.m', distributed as part of the Angora
+package, reads an Angora line file and displays it as a MATLAB movie.
+This script is installed in the directory `$(prefix)/share/angora/'
+(see *note Compilation and Installation::). If Angora was installed
+without any `$(prefix)' configuration option, the default location is
+`/usr/local/share/angora/'.
+
+   The line file is composed of chunks of data, ordered as follows. For
+each chunk, a short explanation (and maybe an alias) is given, followed
+by a description of the datatype in parantheses.
+
+   * major package version (integer, 4 bytes)
+
+   * minor package version (integer, 4 bytes)
+
+   * package revision number (integer, 4 bytes)
+
+   * temporal step size (double, 8 bytes)
+
+   * time value that corresponds to the beginning of the simulation
+     (double, 8 bytes):  This is usually a negative value, since time
+     waveforms frequently begin before t=0.
+
+   * `total_length': the number of recorded elements on each line
+     snapshot (integer, 4 bytes)
+
+   * `length_time': number of time steps in the simulation (integer, 4
+     bytes)
+
+   * thickness of the PML region, in grid cells (integer, 4 bytes):
+     See *note Perfectly-Matched Layer (PML):: for more information on
+     the PML. The recorded line includes two PML sections on opposite
+     ends, each with this length. These sections can easily be removed
+     in post-processing.
+
+   * arrays (line snapshots) of length `total_length' holding the field
+     values on the recorded line (double, 8 bytes):  The total number
+     of these line snapshots is equal to `length_time', read earlier
+     from the binary file.
+
+
+File: angora.info,  Node: Field-Value Recording,  Prev: Line Recording,  Up: Recording
+
+5.10.3 Field-Value Recording
+----------------------------
+
+Angora can record the time history of the field at a given position in
+the simulation grid. The format used for this sort of recording is
+*HDF5* (Hierarchical Data Format) (`http://www.hdfgroup.org/HDF5/').
+The HDF5 format was chosen for its standard interface, and the
+availability of free software tools for inspecting and modifying HDF5
+output. The HDF5 output created by the field-value recorder is
+explained in more detail in *note Field-Value File HDF5 Content::.
+
+ -- Sub-variable of Recorder: string field_value_recorder_output_dir
+          (default: `""')
+     This determines the subdirectory in which all the recorded
+     field-value files will be placed. Unless it has a slash `/' up
+     front; this path is interpreted as being relative to
+     `recorder_output_dir' (see *note `recorder_output_dir':
+     recorder_output_dir.).
+
+          Recorder:
+          {
+              field_value_recorder_output_dir = "fieldvalues";
+              FieldValueRecorders:
+              (
+                  ...
+                  ...
+              );
+          };
+
+ -- Sub-variable of Recorder: list FieldValueRecorders
+          Recorder:
+          {
+              FieldValueRecorders:
+              (
+                  {
+                      position_x = 0;
+                      position_y = 0;
+                      position_z = 0;
+                      recorded_component = "Ex";
+                      recording_scale = "linear";
+                      field_value_dir = "this_field_value_dir";
+                      field_value_file_name = "FieldValueFile";
+                      field_value_file_extension = "hd5";
+                  }
+              );
+          };
+
+      -- Sub-variable of FieldValueRecorders: integer position_x
+          This is the x coordinate (in grid cells) of the recorded
+          position in the simulation grid. It is relative to the grid
+          origin (*note Coordinate Origin::).
+
+      -- Sub-variable of FieldValueRecorders: integer position_y
+          This is the y coordinate (in grid cells) of the recorded
+          position in the simulation grid. It is relative to the grid
+          origin (*note Coordinate Origin::).
+
+      -- Sub-variable of FieldValueRecorders: integer position_z
+          This is the z coordinate (in grid cells) of the recorded
+          position in the simulation grid. It is relative to the grid
+          origin (*note Coordinate Origin::).
+
+      -- Sub-variable of FieldValueRecorders: string recorded_component
+          An individual field-value recorder (in a group delineated by
+          the curly brackets `{}') only records a single scalar value
+          extracted from the vector-valued electric field. This could
+          be one of the Cartesian components of the electric field, or
+          its absolute value. These are represented by the string
+          values `"Ex"', `"Ey"', `"Ez"', and `"E"', respectively. If
+          you would like to record multiple Cartesian components of the
+          electric field, simply add other field-value recorders (i.e.,
+          other groups, see *note Groups::) to the
+          `FieldValueRecorders' list with the desired
+          `recorded_component' values.
+
+      -- Sub-variable of FieldValueRecorders: string recording_scale
+          If `"linear"', the raw values are recorded. If `"absolute"',
+          the absolute value is taken before recording. If `"dB"', the
+          decibel value (20*log10(|x|)) is recorded.
+
+      -- Sub-variable of FieldValueRecorders: string field_value_dir
+               (default: `""')
+          This determines the subdirectory in which this individual
+          field-value file will be placed. Unless it has a slash `/' up
+          front; this path is interpreted as being relative to
+          `field_value_recorder_output_dir' (see *note
+          `field_value_recorder_output_dir':
+          field_value_recorder_output_dir.). By default, no
+          subdirectory is created inside
+          `field_value_recorder_output_dir'.
+
+      -- Sub-variable of FieldValueRecorders: string
+     field_value_file_name (default: `"FieldValueFile"')
+          This determines the base string in the full name of the
+          field-value file. Other information is appended to the name
+          of the file to differentiate individual field-value files
+          (see the example below).
+
+      -- Sub-variable of FieldValueRecorders: string
+     field_value_file_extension (default: `"hd5"')
+          This is the extension of the field-value file name. If
+          assigned the value `""', no extension is added to the file.
+          The HDF5 extension `"hd5"' is applied by default.
+     Here is an example field-value file name:
+          FieldValueFile_Ex_0_1.hd5
+     The base string in the name of the file (`"FieldValueFile"') is
+     specified by the `field_value_file_name' variable. The second part
+     of the file name, `"Ex"', is determined by the recorded field
+     component. The two integers that follow are the run index (see
+     *note Multiple Simulation Runs::) and the index of the field-value
+     recorder inside the `FieldValueRecorders' list. For example, if
+     there are two groups (two field-value recorders) in the
+     `FieldValueRecorders' list, the first one will write into
+          FieldValueFile_Ex_0_0.hd5
+     while the second will write into
+          FieldValueFile_Ex_0_1.hd5
+     If there are two simulation runs (i.e., `number_of_runs' is equal
+     to 2 - see *note Multiple Simulation Runs::), then the files
+     created in the second run will have `1' instead of `0' as the
+     first integer in the above file names. Finally, the extension
+     (`"hd5"') of the line files is determined by the variable
+     `field_value_file_extension'.
+
+
+* Menu:
+
+* Field-Value File HDF5 Content::    Explanation of the HDF5 content in the field-value-recorder output file.
+
+
+File: angora.info,  Node: Field-Value File HDF5 Content,  Up: Field-Value Recording
+
+5.10.3.1 Field-Value File HDF5 Content
+......................................
+
+The HDF5 file created as the output of the field-value recorder can be
+viewed and modified using freely-available tools. One of these tools is
+HDFView (http://www.hdfgroup.org/hdf-java-html/hdfview/), provided by
+the HDF Group. MATLAB also has built-in functions and tools that handle
+HDF5 files. For reference, a MATLAB script named `angora_fieldvalue.m'
+is distributed as part of the Angora package, which reads an Angora
+field-value file and plots the recorded waveform. This script is
+installed in the directory `$(prefix)/share/angora/' (see *note
+Compilation and Installation::). If Angora was installed without any
+`$(prefix)' configuration option, the default location is
+`/usr/local/share/angora/'.
+
+   The HDF5 datasets in the field-value file are the following:
+
+   * `angora_version':  An integer array of length 3 with the major
+     version, minor version, and revision numbers of the Angora package
+     used to create the file.
+
+   * `num_time_steps':  An integer value specifying the number of time
+     steps in the simulation.
+
+   * `time_step':  A floating-point value specifying the temporal step
+     in the simulation.
+
+   * `initial_time_value':  A floating-point value specifying the time
+     value corresponding to the beginning of the simulation. This is
+     usually a negative value, since time waveforms frequently begin
+     before t=0.
+
+   * `field_values':  A floating-point array of length `num_time_steps'
+     with the recorded field values.
+
+
+File: angora.info,  Node: Paths,  Next: Logging,  Prev: Recording,  Up: Configuration Variables
+
+5.11 Paths
+==========
+
+ -- Global variable: string angora_basepath (default: `"."')
+     This variable specifies the base directory for all the
+     input-output operations in Angora. If there is no slash `/' in
+     front of the path, it is interpreted as a relative path starting
+     from the working directory (i.e, the one from which Angora is
+     launched.)
+
+     Any other input or output directory will be assumed _relative_ to
+     `angora_basepath'. An overarching exception is when a directory is
+     specified with a slash `/' up front; in which case that directory
+     will be taken as an _absolute path_, and not relative to
+     `angora_basepath'.
+
+
+ -- Global variable: string output_dir (default: `"output"')
+     This is the base directory for all the output that will result
+     from Angora. It is interpreted as being relative to
+     `angora_basepath', unless it is preceded by a slash `/'. All other
+     output directories are created as subdirectories of this directory.
+
+     Example:
+
+          angora_basepath = "angora_stuff";
+          output_dir = "data";
+
+     With these variable assignments, all the output will be written
+     into subdirectories within `./angora_stuff/data/'.
+
+ -- Global variable: string input_dir
+     This is the base directory for all the input that will be read by
+     Angora. It is interpreted as being relative to `angora_basepath',
+     unless it is preceded by a slash `/'. Unless the path to an input
+     file is absolute (i.e., preceded by a slash `/'), it is
+     interpreted as being relative to `input_dir'.
+
+     Example:
+
+          angora_basepath = "angora_stuff";
+          input_dir = "input_data";
+
+     With these variable assignments, the input base directory becomes
+     `./angora_stuff/input_data/'.
+
+
+File: angora.info,  Node: Logging,  Next: Multiple Simulation Runs,  Prev: Paths,  Up: Configuration Variables
+
+5.12 Logging
+============
+
+You can keep a log of the simulations run by Angora in a log file,
+which contains several lines of information for each simulation. First,
+an estimate of the finishing time and duration of the simulation is
+written into the log entry. The actual finishing time and duration is
+added to the log entry upon completion of the simulation.
+
+   Here is an example entry for a simulation in the log file:
+
+     johndoe started Angora on 02/22/12 11:54:36AM
+         Estimated to finish on 02/22/12 11:54:42AM
+         Estimated duration : 6 seconds.
+         Simulation finished on 02/22/12 11:54:42AM
+         Elapsed time : 6 seconds.
+
+ -- Global variable: boolean enable_logging (default: `"true"')
+     If set to `true', Angora will keep a record of the simulations
+     that it runs in a log file. The name of this log file is specified
+     by the `log_file_name' variable, and the directory in which this
+     file resides is specified by the `log_output_dir' variable.
+
+ -- Global variable: string log_file_name (default: `"angora.log"')
+     This is the name of the Angora log file. It resides in the
+     directory specified by the `log_output_dir' variable.
+
+ -- Global variable: string log_output_dir (default: `"log"')
+     This is the directory in which the Angora log file is kept. Unless
+     it is preceded by a slash `/', it is taken as relative to the base
+     output directory `output_dir' (*note Paths::).
+
+
+File: angora.info,  Node: Multiple Simulation Runs,  Next: Miscellaneous,  Prev: Logging,  Up: Configuration Variables
+
+5.13 Multiple Simulation Runs
+=============================
+
+A number of consecutive Angora simulations can be set up in a single
+configuration file.
+
+ -- Global variable: integer number_of_runs (default: `1')
+     The number of simulation runs is specified by the `number_of_runs'
+     variable. The simulation runs (or _runs_ for short) are indexed
+     from `0' to `number_of_runs-1'. You can refer to these indices
+     later in the configuration file for enabling or disabling certain
+     configuration variables for certain runs.
+
+ -- Global variable: integer-array disabled_runs (default: none)
+     This array of integers (see *note Arrays::) lists the run indices
+     for simulations that will be skipped.
+
+     Example:
+
+          disabled_runs = [1,2,3,4,5];
+
+     If `number_of_runs' was `7', the above variable will cause only
+     the simulations with indices `0' and `6' to be run.
+
+
+ -- Global variable: integer-array disabled_run_range (default: none)
+     If you would like to disable simulations that correspond to a
+     _range_ of run indices, you can use this variable. This has to be
+     an array of integers with only two elements (*note Arrays::).
+     Simulations with run indices between (and including) these two
+     integers will be skipped.
+
+     The following variable assignment has the same effect as the one
+     in the previous example:
+
+          disabled_run_range = [1,5];
+
+   Certain variables can be _enabled_ or _disabled_ for any of the
+simulation runs using the `enabled_for_runs' variable. This variable
+can be used inside any group structure (see *note Groups::) to specify
+the run indices for which that group is enabled. For example,
+
+     number_of_runs = 4;
+     PointSources:
+     (
+         {
+             //point source #1
+             enabled_for_runs = [0,1,2];
+             position_x = 0;
+             position_y = 0;
+             position_z = 0;
+             source_orientation = "x_directed";
+             waveform_tag = "waveform1";
+         },
+         {
+             //point source #2
+             enabled_for_runs = [3];
+             position_x = 0;
+             position_y = 0;
+             position_z = 0;
+             source_orientation = "x_directed";
+             waveform_tag = "waveform2";
+         }
+     );
+
+   In this example, each group represents a collection of variable
+assignments that characterize an individual point source. With the
+`enabled_for_runs' variables set as shown, simulations `0', `1', and
+`2' will be run with the first point source; whereas simulation `3'
+will be run with the second point source.
+
+
+File: angora.info,  Node: Miscellaneous,  Prev: Multiple Simulation Runs,  Up: Configuration Variables
+
+5.14 Miscellaneous
+==================
+
+* Menu:
+
+* Auto-Saving the Configuration::    Keeping record of the simulation configuration.
+
+
+File: angora.info,  Node: Auto-Saving the Configuration,  Up: Miscellaneous
+
+5.14.1 Auto-Saving the Configuration
+------------------------------------
+
+Angora can automatically save a record of every simulation
+configuration that it processes.
+
+ -- Global variable: boolean auto_save_cfg (default: `"false"')
+     If set to `true', Angora will automatically write every simulation
+     configuration it runs into another configuration file, and save it
+     in the directory specified by `cfg_output_dir'. A time/date string
+     is appended to the name of the saved file to differentiate between
+     subsequent executions of the same configuration file.
+
+ -- Global variable: string cfg_output_dir (default: `"cfg"')
+     This is the directory in which the auto-saved configuration files
+     are placed. Unless it is preceded by a slash `/', it is taken as
+     relative to the base output directory `output_dir' (*note Paths::).
+
+
+File: angora.info,  Node: References,  Next: Indices,  Prev: Configuration Variables,  Up: Top
+
+6 References
+************
+
+J. A. Roden and S. D. Gedney, "Convolution PML (CPML): an efficient
+FDTD implementation of the CFD-PML for arbitrary media," Microw. Opt.
+Technol. Lett., vol. 27, pp. 334-9, Dec. 2000.
+
+   M. Kuzuoglu and R. Mittra, "Frequency dependence of the constitutive
+parameters of causal perfectly matched absorbers," IEEE Microwave
+Guided Wave Lett., vol. 6, pp. 447-449, Dec. 1996.
+
+   J.-P. Berenger,"Numerical reflection from FDTD-PMLs: a comparison of
+the split PML with the unsplit and CFS PMLs," IEEE Trans. Antennas
+Propag, vol. 50, pp.258-265, Mar 2002.
+
+   J. D. Rogers, I. R. Capoglu, V. Backman, "Nonscalar elastic light
+scattering from continuous media in the Born approximation", Optics
+Letters, vol. 34, no. 12, pp. 1891-1893, 2009.
+
+
+File: angora.info,  Node: Indices,  Prev: References,  Up: Top
+
+Indices
+*******
+
+* Menu:
+
+* Configuration Variable Index::    Index of Angora configuration variables.
+* Concept Index::    Index of Angora concepts.
+
+
+File: angora.info,  Node: Configuration Variable Index,  Next: Concept Index,  Up: Indices
+
+Configuration Variable Index
+============================
+
+ [index ]
+* Menu:
+
+* amplitude <1>:                         Modulated-Gaussian Waveforms.
+                                                              (line  47)
+* amplitude <2>:                         Differentiated-Gaussian Waveforms.
+                                                              (line  35)
+* amplitude:                             Gaussian Waveforms.  (line  34)
+* anchor:                                File Input.          (line 103)
+* angora_basepath:                       Paths.               (line   7)
+* append_run_index_to_name:              File Input.          (line  74)
+* auto_save_cfg:                         Auto-Saving the Configuration.
+                                                              (line  10)
+* back_coord:                            Random Materials.    (line 125)
+* back_x:                                Rectangular Boxes.   (line  42)
+* center_x:                              Spheres.             (line  39)
+* center_y:                              Spheres.             (line  41)
+* center_z:                              Spheres.             (line  43)
+* cfg_output_dir:                        Auto-Saving the Configuration.
+                                                              (line  17)
+* constitutive_param_type <1>:           File Input.          (line  93)
+* constitutive_param_type:               Random Materials.    (line  85)
+* coord:                                 Ground Planes.       (line  23)
+* corr_len:                              Random Materials.    (line 116)
+* courant:                               Courant Factor.      (line   7)
+* CPML_feature_size:                     Perfectly-Matched Layer (PML).
+                                                              (line  31)
+* datatype:                              File Input.          (line 141)
+* dB_accuracy:                           Dynamic Range.       (line  16)
+* delay <1>:                             Modulated-Gaussian Waveforms.
+                                                              (line  63)
+* delay <2>:                             Differentiated-Gaussian Waveforms.
+                                                              (line  47)
+* delay:                                 Gaussian Waveforms.  (line  44)
+* DifferentiatedGaussianWaveforms:       Differentiated-Gaussian Waveforms.
+                                                              (line   7)
+* disabled_run_range:                    Multiple Simulation Runs.
+                                                              (line  29)
+* disabled_runs:                         Multiple Simulation Runs.
+                                                              (line  17)
+* dx:                                    Spatial Step Size.   (line   7)
+* electric_conductivity:                 Materials.           (line  54)
+* enable_logging:                        Logging.             (line  21)
+* f_0:                                   Modulated-Gaussian Waveforms.
+                                                              (line  57)
+* field_value_dir:                       Field-Value Recording.
+                                                              (line  85)
+* field_value_file_extension:            Field-Value Recording.
+                                                              (line 103)
+* field_value_file_name:                 Field-Value Recording.
+                                                              (line  96)
+* field_value_recorder_output_dir:       Field-Value Recording.
+                                                              (line  16)
+* FieldValueRecorders:                   Field-Value Recording.
+                                                              (line  33)
+* file_extension:                        File Input.          (line  68)
+* file_name:                             File Input.          (line  60)
+* front_coord:                           Random Materials.    (line 128)
+* front_x:                               Rectangular Boxes.   (line  45)
+* GaussianWaveforms:                     Gaussian Waveforms.  (line   7)
+* GroundPlanes:                          Ground Planes.       (line   7)
+* input_dir:                             Paths.               (line  35)
+* j0:                                    Point Sources.       (line  56)
+* left_coord:                            Random Materials.    (line 131)
+* left_y:                                Rectangular Boxes.   (line  48)
+* line_dir:                              Line Recording.      (line  87)
+* line_file_extension:                   Line Recording.      (line 104)
+* line_file_name:                        Line Recording.      (line  97)
+* line_orientation:                      Line Recording.      (line  46)
+* line_position_x1:                      Line Recording.      (line  54)
+* line_position_x2:                      Line Recording.      (line  62)
+* line_recorder_output_dir:              Line Recording.      (line  12)
+* LineRecorders:                         Line Recording.      (line  28)
+* log_file_name:                         Logging.             (line  27)
+* log_output_dir:                        Logging.             (line  31)
+* lower_coord:                           Random Materials.    (line 137)
+* lower_z:                               Rectangular Boxes.   (line  54)
+* m:                                     Random Materials.    (line 120)
+* magnetic_conductivity:                 Materials.           (line  59)
+* material_tag <1>:                      Objects.             (line  33)
+* material_tag:                          Materials.           (line  34)
+* Materials:                             Materials.           (line  12)
+* MaterialsFromFiles:                    File Input.          (line   7)
+* MaterialSlabs:                         Planar Layers.       (line   7)
+* max_coord:                             Planar Layers.       (line  44)
+* max_field_value:                       Dynamic Range.       (line  11)
+* max_new_materials:                     File Input.          (line 147)
+* mean:                                  Random Materials.    (line  95)
+* min_coord:                             Planar Layers.       (line  42)
+* ModulatedGaussianWaveforms:            Modulated-Gaussian Waveforms.
+                                                              (line   7)
+* modulation_type:                       Modulated-Gaussian Waveforms.
+                                                              (line  41)
+* movie_dir:                             Movie Recording.     (line 121)
+* movie_file_extension:                  Movie Recording.     (line 138)
+* movie_file_name:                       Movie Recording.     (line 131)
+* movie_recorder_output_dir:             Movie Recording.     (line  12)
+* MovieRecorders:                        Movie Recording.     (line  28)
+* n:                                     Differentiated-Gaussian Waveforms.
+                                                              (line  52)
+* NCELLS_X:                              Grid Dimensions.     (line   7)
+* NCELLS_Y:                              Grid Dimensions.     (line   9)
+* NCELLS_Z:                              Grid Dimensions.     (line  11)
+* NPML:                                  Perfectly-Matched Layer (PML).
+                                                              (line   7)
+* NSTEPS:                                Number of Time Steps.
+                                                              (line   7)
+* number_of_runs:                        Multiple Simulation Runs.
+                                                              (line  10)
+* Objects:                               Objects.             (line   7)
+* only_records_material_info:            Movie Recording.     (line 162)
+* OriginX:                               Coordinate Origin.   (line   7)
+* OriginY:                               Coordinate Origin.   (line   9)
+* OriginZ:                               Coordinate Origin.   (line  11)
+* output_dir:                            Paths.               (line  21)
+* phase:                                 Modulated-Gaussian Waveforms.
+                                                              (line  69)
+* PointSources:                          Point Sources.       (line   7)
+* position_x <1>:                        Field-Value Recording.
+                                                              (line  51)
+* position_x <2>:                        Point Sources.       (line  35)
+* position_x:                            File Input.          (line 130)
+* position_y <1>:                        Field-Value Recording.
+                                                              (line  56)
+* position_y <2>:                        Point Sources.       (line  37)
+* position_y:                            File Input.          (line 132)
+* position_z <1>:                        Field-Value Recording.
+                                                              (line  61)
+* position_z <2>:                        Point Sources.       (line  39)
+* position_z:                            File Input.          (line 134)
+* radius:                                Spheres.             (line  48)
+* random_seed:                           Random Materials.    (line 147)
+* RandomMaterials:                       Random Materials.    (line   7)
+* recorded_component <1>:                Field-Value Recording.
+                                                              (line  66)
+* recorded_component <2>:                Line Recording.      (line  70)
+* recorded_component:                    Movie Recording.     (line  63)
+* recorded_position:                     Movie Recording.     (line  56)
+* recorded_section:                      Movie Recording.     (line  50)
+* Recorder:                              Recording.           (line  28)
+* recorder_output_dir:                   Recording.           (line  15)
+* recording_scale <1>:                   Field-Value Recording.
+                                                              (line  79)
+* recording_scale <2>:                   Line Recording.      (line  82)
+* recording_scale:                       Movie Recording.     (line  75)
+* recording_type:                        Movie Recording.     (line  80)
+* RectangularBoxes:                      Rectangular Boxes.   (line   7)
+* rel_permeability:                      Materials.           (line  47)
+* rel_permittivity:                      Materials.           (line  39)
+* right_coord:                           Random Materials.    (line 134)
+* right_y:                               Rectangular Boxes.   (line  51)
+* shape_tag <1>:                         Objects.             (line  38)
+* shape_tag <2>:                         Spheres.             (line  34)
+* shape_tag:                             Rectangular Boxes.   (line  36)
+* Shapes:                                Shapes.              (line   7)
+* SimulationSpace:                       Simulation Space.    (line   7)
+* source_orientation:                    Point Sources.       (line  44)
+* Spheres:                               Spheres.             (line   7)
+* std_dev:                               Random Materials.    (line 111)
+* tag <1>:                               Modulated-Gaussian Waveforms.
+                                                              (line  35)
+* tag <2>:                               Differentiated-Gaussian Waveforms.
+                                                              (line  29)
+* tag <3>:                               Gaussian Waveforms.  (line  28)
+* tag:                                   Planar Layers.       (line  37)
+* tau <1>:                               Modulated-Gaussian Waveforms.
+                                                              (line  52)
+* tau <2>:                               Differentiated-Gaussian Waveforms.
+                                                              (line  41)
+* tau:                                   Gaussian Waveforms.  (line  39)
+* upper_coord:                           Random Materials.    (line 140)
+* upper_z:                               Rectangular Boxes.   (line  57)
+* waveform_tag:                          Point Sources.       (line  49)
+* Waveforms:                             Waveforms.           (line   7)
+* WhittleMaternCorrelated:               Random Materials.    (line  23)
+
+
+File: angora.info,  Node: Concept Index,  Prev: Configuration Variable Index,  Up: Indices
+
+Concept Index
+=============
+
+ [index ]
+* Menu:
+
+* Arrays:                                Arrays.                (line 6)
+* Boolean values:                        Boolean Values.        (line 6)
+* Comments, inserting:                   Comments.              (line 6)
+* Compiling Angora:                      Compilation and Installation.
+                                                                (line 6)
+* Configuration format:                  Configuration Format.  (line 6)
+* Configuration variables:               Configuration Variables.
+                                                                (line 6)
+* Configuration variables, assigning:    Variable Assignment.   (line 6)
+* Configuration variables, value types:  Variable Types.        (line 6)
+* Configuration, auto-saving:            Auto-Saving the Configuration.
+                                                                (line 6)
+* Configuring Angora simulations:        Configuration Variables.
+                                                                (line 6)
+* Documentation, building:               Building the Documentation.
+                                                                (line 6)
+* Downloading Angora:                    Downloading.           (line 6)
+* Executing Angora:                      Execution.             (line 6)
+* Floating-point values:                 Floating-Point Values. (line 6)
+* Groups:                                Groups.                (line 6)
+* Including other configuration files:   Include Directives.    (line 6)
+* Installing Angora:                     Compilation and Installation.
+                                                                (line 6)
+* Integer values:                        Integer Values.        (line 6)
+* libconfig:                             Configuration Format.  (line 6)
+* Lists:                                 Lists.                 (line 6)
+* Log, keeping:                          Logging.               (line 6)
+* Logging:                               Logging.               (line 6)
+* MPI support:                           Parallel Execution.    (line 6)
+* MPI support, enabling:                 Enabling MPI Support.  (line 6)
+* Multiple runs:                         Multiple Simulation Runs.
+                                                                (line 6)
+* Multiple simulations:                  Multiple Simulation Runs.
+                                                                (line 6)
+* Parallelization:                       Parallel Execution.    (line 6)
+* Parallelization, enabling:             Enabling MPI Support.  (line 6)
+* Paths, input:                          Paths.                 (line 6)
+* Paths, output:                         Paths.                 (line 6)
+* Paths, specifying:                     Paths.                 (line 6)
+* Running Angora:                        Execution.             (line 6)
+* Simulations, configuring:              Configuration Variables.
+                                                                (line 6)
+* Simulations, parallelizing:            Parallel Execution.    (line 6)
+* String values:                         String Values.         (line 6)
+
+
+
+Tag Table:
+Node: Top600
+Node: Downloading1514
+Node: Compilation and Installation1956
+Node: Enabling MPI Support5560
+Node: Building the Documentation6403
+Node: Execution7325
+Node: Parallel Execution8361
+Node: Configuration Format9065
+Node: Variable Assignment9835
+Node: Variable Types10841
+Node: Integer Values11648
+Node: Floating-Point Values12165
+Node: Boolean Values12847
+Node: String Values13196
+Node: Groups14310
+Node: Arrays14902
+Node: Lists15330
+Node: Comments16410
+Node: Include Directives17235
+Node: Configuration Variables18255
+Node: Grid Properties20511
+Node: Courant Factor21386
+Node: Spatial Step Size21945
+Node: Grid Dimensions22392
+Node: Perfectly-Matched Layer (PML)23042
+Node: Number of Time Steps25341
+Node: Coordinate Origin25653
+Node: Dynamic Range26404
+Node: Shapes27655
+Node: Rectangular Boxes28875
+Node: Spheres30868
+Node: Materials32469
+Node: Simulation Space34930
+Node: Objects36574
+Node: Planar Layers38102
+Node: Random Materials40852
+Node: File Input49263
+Ref: datatype55616
+Node: Ground Planes57380
+Node: Waveforms58385
+Node: Gaussian Waveforms59414
+Ref: eq:gaussian59712
+Node: Differentiated-Gaussian Waveforms61009
+Ref: eq:diffgaussian61404
+Node: Modulated-Gaussian Waveforms63122
+Ref: eq:modgaussian63483
+Node: Point Sources66119
+Node: Near-Field-to-Far-Field Transform68399
+Node: Optical Imaging68622
+Node: Incident Wave Conditions68820
+Node: Recording69012
+Ref: recorder_output_dir69641
+Node: Movie Recording70857
+Ref: movie_recorder_output_dir71198
+Ref: movie_filename_example77197
+Node: Movie File Format78563
+Node: Line Recording82757
+Ref: line_recorder_output_dir83077
+Ref: line_filename_example87639
+Node: Line File Format88868
+Node: Field-Value Recording91013
+Ref: field_value_recorder_output_dir91633
+Ref: field_value_filename_example95831
+Node: Field-Value File HDF5 Content97051
+Node: Paths98697
+Node: Logging100580
+Node: Multiple Simulation Runs102143
+Node: Miscellaneous104862
+Node: Auto-Saving the Configuration105102
+Node: References106038
+Ref: Roden00106163
+Ref: Kuzuoglu96106349
+Ref: Berenger02106539
+Ref: Rogers09106718
+Node: Indices106903
+Node: Configuration Variable Index107120
+Node: Concept Index119731
+
+End Tag Table

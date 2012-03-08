@@ -1,0 +1,16 @@
+Copyright (c) 2005-2012, Ilker R. Capoglu
+
+For license information, see COPYING. For copyright information on other libraries used in this software, see LEGAL.
+
+The following configure options are available:
+
+  --enable-mpi-io         enables the MPI parallel I/O support
+                          [default=disabled]
+  --with-mpi[=DIR]        enable MPI support (with binary directory DIR/bin, if
+                          not in path)
+  --with-hdf5[=DIR]       enable HDF5 support (with binary directory DIR/bin, if
+                          not in path)
+  --with-blitz[=DIR]      location of blitz++ root directory, if not in path
+  --with-config[=DIR]     location of libconfig root directory, if not in
+                          path
+  --with-boost[=DIR]      location of Boost root directory, if not in path

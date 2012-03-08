@@ -1,0 +1,441 @@
+*************************************************************************************
+The Blitz++ library is distributed under the Blitz++ Artistic License, copied below:
+*************************************************************************************
+
+The "Blitz++ Artistic License"
+(with thanks and apologies to authors of the Perl Artistic License)
+
+Preamble
+
+The intent of this document is to state the conditions under which
+Blitz++ may be copied, such that the authors maintains some
+semblance of artistic control over the development of the package,
+while giving the users of the package the right to use and
+distribute Blitz++ in a more-or-less customary fashion, plus the
+right to make reasonable modifications.
+
+Definitions
+
+"Library" refers to the collection of files distributed by the
+Copyright Holder, and derivatives of that collection of files
+created through textual modification.
+
+"Standard Version" refers to such a Library if it has not been
+modified, or has been modified in accordance with the wishes of the
+Copyright Holder as specified below.
+
+"Copyright Holder" is whoever is named in the copyright or
+copyrights for the package.
+
+"You" is you, if you"re thinking about copying, modifying or
+distributing this Library.
+
+"Freely Available" means that no fee is charged for the item.
+It also means that recipients of the item may redistribute it
+under the same conditions they received it.
+
+"Reasonable copying fee" is whatever you can justify on the basis
+of media cost, duplication charges, time of people involved, and so
+on. (You will not be required to justify it to the Copyright Holder,
+but only to the computing community at large as a market that must
+bear the fee.)
+
+1. You may make and give away verbatim copies of the
+Standard Version of this Library without restriction, provided that
+you duplicate all of the original copyright notices, this license,
+and associated disclaimers.
+
+2. The Standard Version of the Library may be distributed as part
+of a collection of software, provided no more than a reasonable
+copying fee is charged for the software collection.
+
+3. You may apply bug fixes, portability fixes and other modifications
+derived from the Public Domain or from the Copyright Holder. A
+Library modified in such a way shall still be considered the
+Standard Version.
+
+4. You may otherwise modify your copy of this Library in any way,
+provided that you insert a prominent notice in each changed file
+stating how and when you changed that file, and provided that you do
+at least ONE of the following:
+
+a. place your modifications in the Public Domain or otherwise
+make them Freely Available, such as by posting said
+modifications to the Blitz++ development list,
+and allowing the Copyright Holder to include
+your modifications in the Standard Version of the Library.
+
+b. use the modified Library only within your corporation or
+organization.
+
+c. make other distribution arrangements with the Copyright
+Holder.
+
+5. You may distribute programs which use this Library
+in object code or executable form without restriction.
+
+6. Any object code generated as a result of using this Library
+does not fall under the copyright of this Library, but
+belongs to whomever generated it, and may be sold commercially.
+
+7. The name of the Copyright Holder or the Library may not be used to
+endorse or promote products derived from this software without
+specific prior written permission.
+
+8. THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+
+*************************************************************************************
+The libconfig library is distributed under the LGPL license, copied below:
+*************************************************************************************
+
+                   GNU LESSER GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+
+  This version of the GNU Lesser General Public License incorporates
+the terms and conditions of version 3 of the GNU General Public
+License, supplemented by the additional permissions listed below.
+
+  0. Additional Definitions.
+
+  As used herein, "this License" refers to version 3 of the GNU Lesser
+General Public License, and the "GNU GPL" refers to version 3 of the GNU
+General Public License.
+
+  "The Library" refers to a covered work governed by this License,
+other than an Application or a Combined Work as defined below.
+
+  An "Application" is any work that makes use of an interface provided
+by the Library, but which is not otherwise based on the Library.
+Defining a subclass of a class defined by the Library is deemed a mode
+of using an interface provided by the Library.
+
+  A "Combined Work" is a work produced by combining or linking an
+Application with the Library.  The particular version of the Library
+with which the Combined Work was made is also called the "Linked
+Version".
+
+  The "Minimal Corresponding Source" for a Combined Work means the
+Corresponding Source for the Combined Work, excluding any source code
+for portions of the Combined Work that, considered in isolation, are
+based on the Application, and not on the Linked Version.
+
+  The "Corresponding Application Code" for a Combined Work means the
+object code and/or source code for the Application, including any data
+and utility programs needed for reproducing the Combined Work from the
+Application, but excluding the System Libraries of the Combined Work.
+
+  1. Exception to Section 3 of the GNU GPL.
+
+  You may convey a covered work under sections 3 and 4 of this License
+without being bound by section 3 of the GNU GPL.
+
+  2. Conveying Modified Versions.
+
+  If you modify a copy of the Library, and, in your modifications, a
+facility refers to a function or data to be supplied by an Application
+that uses the facility (other than as an argument passed when the
+facility is invoked), then you may convey a copy of the modified
+version:
+
+   a) under this License, provided that you make a good faith effort to
+   ensure that, in the event an Application does not supply the
+   function or data, the facility still operates, and performs
+   whatever part of its purpose remains meaningful, or
+
+   b) under the GNU GPL, with none of the additional permissions of
+   this License applicable to that copy.
+
+  3. Object Code Incorporating Material from Library Header Files.
+
+  The object code form of an Application may incorporate material from
+a header file that is part of the Library.  You may convey such object
+code under terms of your choice, provided that, if the incorporated
+material is not limited to numerical parameters, data structure
+layouts and accessors, or small macros, inline functions and templates
+(ten or fewer lines in length), you do both of the following:
+
+   a) Give prominent notice with each copy of the object code that the
+   Library is used in it and that the Library and its use are
+   covered by this License.
+
+   b) Accompany the object code with a copy of the GNU GPL and this license
+   document.
+
+  4. Combined Works.
+
+  You may convey a Combined Work under terms of your choice that,
+taken together, effectively do not restrict modification of the
+portions of the Library contained in the Combined Work and reverse
+engineering for debugging such modifications, if you also do each of
+the following:
+
+   a) Give prominent notice with each copy of the Combined Work that
+   the Library is used in it and that the Library and its use are
+   covered by this License.
+
+   b) Accompany the Combined Work with a copy of the GNU GPL and this license
+   document.
+
+   c) For a Combined Work that displays copyright notices during
+   execution, include the copyright notice for the Library among
+   these notices, as well as a reference directing the user to the
+   copies of the GNU GPL and this license document.
+
+   d) Do one of the following:
+
+       0) Convey the Minimal Corresponding Source under the terms of this
+       License, and the Corresponding Application Code in a form
+       suitable for, and under terms that permit, the user to
+       recombine or relink the Application with a modified version of
+       the Linked Version to produce a modified Combined Work, in the
+       manner specified by section 6 of the GNU GPL for conveying
+       Corresponding Source.
+
+       1) Use a suitable shared library mechanism for linking with the
+       Library.  A suitable mechanism is one that (a) uses at run time
+       a copy of the Library already present on the user's computer
+       system, and (b) will operate properly with a modified version
+       of the Library that is interface-compatible with the Linked
+       Version.
+
+   e) Provide Installation Information, but only if you would otherwise
+   be required to provide such information under section 6 of the
+   GNU GPL, and only to the extent that such information is
+   necessary to install and execute a modified version of the
+   Combined Work produced by recombining or relinking the
+   Application with a modified version of the Linked Version. (If
+   you use option 4d0, the Installation Information must accompany
+   the Minimal Corresponding Source and Corresponding Application
+   Code. If you use option 4d1, you must provide the Installation
+   Information in the manner specified by section 6 of the GNU GPL
+   for conveying Corresponding Source.)
+
+  5. Combined Libraries.
+
+  You may place library facilities that are a work based on the
+Library side by side in a single library together with other library
+facilities that are not Applications and are not covered by this
+License, and convey such a combined library under terms of your
+choice, if you do both of the following:
+
+   a) Accompany the combined library with a copy of the same work based
+   on the Library, uncombined with any other library facilities,
+   conveyed under the terms of this License.
+
+   b) Give prominent notice with the combined library that part of it
+   is a work based on the Library, and explaining where to find the
+   accompanying uncombined form of the same work.
+
+  6. Revised Versions of the GNU Lesser General Public License.
+
+  The Free Software Foundation may publish revised and/or new versions
+of the GNU Lesser General Public License from time to time. Such new
+versions will be similar in spirit to the present version, but may
+differ in detail to address new problems or concerns.
+
+  Each version is given a distinguishing version number. If the
+Library as you received it specifies that a certain numbered version
+of the GNU Lesser General Public License "or any later version"
+applies to it, you have the option of following the terms and
+conditions either of that published version or of any later version
+published by the Free Software Foundation. If the Library as you
+received it does not specify a version number of the GNU Lesser
+General Public License, you may choose any version of the GNU Lesser
+General Public License ever published by the Free Software Foundation.
+
+  If the Library as you received it specifies that a proxy can decide
+whether future versions of the GNU Lesser General Public License shall
+apply, that proxy's public statement of acceptance of any version is
+permanent authorization for you to choose that version for the
+Library.
+
+
+*************************************************************************************
+The boost library is distributed under the Boost Software License, copied below:
+*************************************************************************************
+
+Boost Software License - Version 1.0 - August 17th, 2003
+
+Permission is hereby granted, free of charge, to any person or organization
+obtaining a copy of the software and accompanying documentation covered by
+this license (the "Software") to use, reproduce, display, distribute,
+execute, and transmit the Software, and to prepare derivative works of the
+Software, and to permit third-parties to whom the Software is furnished to
+do so, all subject to the following:
+
+The copyright notices in the Software and this entire statement, including
+the above license grant, this restriction and the following disclaimer,
+must be included in all copies of the Software, in whole or in part, and
+all derivative works of the Software, unless such copies or derivative
+works are solely in the form of machine-executable object code generated by
+a source language processor.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
+SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
+FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+
+*************************************************************************************
+The HDF5 library is distributed under the following license:
+*************************************************************************************
+
+Copyright Notice and License Terms for
+HDF5 (Hierarchical Data Format 5) Software Library and Utilities
+-----------------------------------------------------------------------------
+
+HDF5 (Hierarchical Data Format 5) Software Library and Utilities
+Copyright 2006-2011 by The HDF Group.
+
+NCSA HDF5 (Hierarchical Data Format 5) Software Library and Utilities
+Copyright 1998-2006 by the Board of Trustees of the University of Illinois.
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted for any purpose (including commercial purposes)
+provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions, and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions, and the following disclaimer in the documentation
+   and/or materials provided with the distribution.
+
+3. In addition, redistributions of modified forms of the source or binary
+   code must carry prominent notices stating that the original code was
+   changed and the date of the change.
+
+4. All publications or advertising materials mentioning features or use of
+   this software are asked, but not required, to acknowledge that it was
+   developed by The HDF Group and by the National Center for Supercomputing
+   Applications at the University of Illinois at Urbana-Champaign and
+   credit the contributors.
+
+5. Neither the name of The HDF Group, the name of the University, nor the
+   name of any Contributor may be used to endorse or promote products derived
+   from this software without specific prior written permission from
+   The HDF Group, the University, or the Contributor, respectively.
+
+DISCLAIMER:
+THIS SOFTWARE IS PROVIDED BY THE HDF GROUP AND THE CONTRIBUTORS
+"AS IS" WITH NO WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED.  In no
+event shall The HDF Group or the Contributors be liable for any damages
+suffered by the users arising out of the use of this software, even if
+advised of the possibility of such damage.
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+Contributors:   National Center for Supercomputing Applications (NCSA) at
+the University of Illinois, Fortner Software, Unidata Program Center (netCDF),
+The Independent JPEG Group (JPEG), Jean-loup Gailly and Mark Adler (gzip),
+and Digital Equipment Corporation (DEC).
+
+-----------------------------------------------------------------------------
+
+Portions of HDF5 were developed with support from the Lawrence Berkeley
+National Laboratory (LBNL) and the United States Department of Energy
+under Prime Contract No. DE-AC02-05CH11231.
+
+-----------------------------------------------------------------------------
+
+Portions of HDF5 were developed with support from the University of
+California, Lawrence Livermore National Laboratory (UC LLNL).
+The following statement applies to those portions of the product and must
+be retained in any redistribution of source code, binaries, documentation,
+and/or accompanying materials:
+
+   This work was partially produced at the University of California,
+   Lawrence Livermore National Laboratory (UC LLNL) under contract
+   no. W-7405-ENG-48 (Contract 48) between the U.S. Department of Energy
+   (DOE) and The Regents of the University of California (University)
+   for the operation of UC LLNL.
+
+   DISCLAIMER:
+   This work was prepared as an account of work sponsored by an agency of
+   the United States Government. Neither the United States Government nor
+   the University of California nor any of their employees, makes any
+   warranty, express or implied, or assumes any liability or responsibility
+   for the accuracy, completeness, or usefulness of any information,
+   apparatus, product, or process disclosed, or represents that its use
+   would not infringe privately- owned rights. Reference herein to any
+   specific commercial products, process, or service by trade name,
+   trademark, manufacturer, or otherwise, does not necessarily constitute
+   or imply its endorsement, recommendation, or favoring by the United
+   States Government or the University of California. The views and
+   opinions of authors expressed herein do not necessarily state or reflect
+   those of the United States Government or the University of California,
+   and shall not be used for advertising or product endorsement purposes.
+-----------------------------------------------------------------------------
+
+
+*************************************************************************************
+The KissFFT library is distributed under a revised BSD license, copied below:
+*************************************************************************************
+
+Copyright (c) 2003-2010 Mark Borgerding
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted
+provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions
+and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of
+conditions and the following disclaimer in the documentation and/or other materials provided with
+the distribution.
+    * Neither the author nor the names of any contributors may be used to endorse or promote
+products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+*************************************************************************************
+The source files f2c.h, z_div.c, and zgtsv.c are distributed under modified BSD
+licenses (see individual files for copyright and license info.)
+*************************************************************************************
+
+
+*************************************************************************************
+The source file gamma.c is part of the cephes math library, distributed under the
+following license:
+*************************************************************************************
+
+Cephes Math Library Release 2.8:  June, 2000
+Copyright 1984, 1987, 1989, 1992, 2000 by Stephen L. Moshier
+
+   Some software in this archive may be from the book _Methods and
+Programs for Mathematical Functions_ (Prentice-Hall or Simon & Schuster
+International, 1989) or from the Cephes Mathematical Library, a
+commercial product. In either event, it is copyrighted by the author.
+What you see here may be used freely but it comes with no support or
+guarantee.
+
+   The two known misprints in the book are repaired here in the
+source listings for the gamma function and the incomplete beta
+integral.
+
+
+   Stephen L. Moshier
+   moshier@na-net.ornl.gov

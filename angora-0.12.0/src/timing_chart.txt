@@ -1,0 +1,86 @@
+In the following:
+    E,H  : the electric and magnetic field in the main grid.
+    Einc,Hinc : the electric and magnetic field in the auxiliary grid used to calculate the incident field.
+    waveformE,waveformH : the electric and magnetic field waveforms used to excite the auxiliary grid. The excitation is either by hard or soft sourcing. In hard sourcing of the E-field (as in the free-space plane-wave injector), waveformH is not used.
+
+Electric field (x), magnetic field (*)
+
+Before the time updating begins, the arrays are at the following time positions:  (Assuming dt_g = dt/3)
+
+             E->    x_______________________:_______________________:_________>time (notches in dt)
+
+             H->    ____________*_______________________:_____________________>time (notches in dt)
+
+          Hinc->    ____*_______:_______:_______:_____________________________>time (notches in dt_g)
+
+          Einc->    x_______:_______:_______:_______:_________________________>time (notches in dt_g)
+
+     waveformE->    ________x_______:_______:_______:_________________________>time (notches in dt_g)
+
+     waveformH->    ____*_______:_______:_______:_____________________________>time (notches in dt_g)
+
+
+The E-field is updated in the main grid:
+
+             E->    :_______________________x_______________________:_________>time (notches in dt)
+
+             H->    ____________*_______________________:_____________________>time (notches in dt)
+
+          Hinc->    ____*_______:_______:_______:_____________________________>time (notches in dt_g)
+
+          Einc->    x_______:_______:_______:_______:_________________________>time (notches in dt_g)
+
+     waveformE->    ________x_______:_______:_______:_________________________>time (notches in dt_g)
+
+     waveformH->    ____*_______:_______:_______:_____________________________>time (notches in dt_g)
+
+
+(This is the time at which the incident fields Einc, Hinc are written in a file, if this functionality is enabled.)
+
+
+The incident electric and magnetic fields Einc and Hinc are updated until Hinc is at n+1/2 (first Einc,then Hinc.) The incident H-field Hinc is saved in the incident field history. Hinc is used to correct the E-field in the main grid.
+
+             E->    :_______________________x_______________________:_________>time (notches in dt)
+
+             H->    ____________*_______________________:_____________________>time (notches in dt)
+
+          Hinc->    ____:_______*_______:_______:_____________________________>time (notches in dt_g)
+
+          Einc->    :_______x_______:_______:_______:_________________________>time (notches in dt_g)
+
+     waveformE->    ________:_______x_______:_______:_________________________>time (notches in dt_g)
+
+     waveformH->    ____:_______*_______:_______:_____________________________>time (notches in dt_g)
+
+
+The H-field is updated in the main grid:
+
+             E->    :_______________________x_______________________:_________>time (notches in dt)
+
+             H->    ____________:_______________________*_____________________>time (notches in dt)
+
+          Hinc->    ____:_______*_______:_______:_____________________________>time (notches in dt_g)
+
+          Einc->    :_______x_______:_______:_______:_________________________>time (notches in dt_g)
+
+     waveformE->    ________:_______x_______:_______:_________________________>time (notches in dt_g)
+
+     waveformH->    ____:_______*_______:_______:_____________________________>time (notches in dt_g)
+
+
+The incident electric and magnetic fields Einc and Hinc are updated until Einc is at n+1 (first Einc,then Hinc.) The incident E-field Einc is saved in the incident field history. (Note that the saved Einc is dt/2 ahead of the saved Hinc.) Einc is used to correct the H-field in the main grid.
+
+             E->    :_______________________x_______________________:_________>time (notches in dt)
+
+             H->    ____________:_______________________*_____________________>time (notches in dt)
+
+          Hinc->    ____:_______:_______:_______*_____________________________>time (notches in dt_g)
+
+          Einc->    :_______:_______:_______x_______:_________________________>time (notches in dt_g)
+
+     waveformE->    ________:_______:_______:_______x_________________________>time (notches in dt_g)
+
+     waveformH->    ____:_______:_______:_______*_____________________________>time (notches in dt_g)
+
+
+The above procedure is repeated at each time step.
